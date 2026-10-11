@@ -1,0 +1,63 @@
+model Booking {
+  id                    String        @id @default(cuid())
+  bookingReference      String        @unique // e.g. "AUR-2025-9014"
+  userId                String
+  user                  User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sanctuaryId           String
+  sanctuary             Sanctuary     @relation(fields: [sanctuaryId], references: [id])
+  accommodationId       String
+  accommodationCategory AccommodationCategory @relation(fields: [accommodationId], references: [id])
+  roomUnitId            String?
+  roomUnit              RoomUnit?     @relation(fields: [roomUnitId], references: [id])
+
+  checkInDate           DateTime
+  checkOutDate          DateTime
+  numberOfNights        Int
+  adultsCount           Int           @default(1)
+  childrenCount         Int           @default(0)
+  specialRequests       String?
+
+  status                BookingStatus @default(PENDING_PAYMENT)
+  currency              String        @default("EUR")
+  roomNightlyTotal      Float
+  experiencesTotal      Float         @default(0.0)
+  taxesAndServiceTotal  Float
+  cityTaxTotal          Float
+  grandTotal            Float
+  depositPaid           Float         @default(0.0)
+  balanceDueAtCheckIn   Float
+
+  qrCodeData            String?
+  lineItems             BookingLineItem[]
+  folio                 PaymentFolio?
+
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+}
+
+model BookingLineItem {
+  id          String   @id @default(cuid())
+  bookingId   String
+  booking     Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  itemType    String   // ROOM_STAY, EXPERIENCE_BOOKING, SPA_TREATMENT, ADD_ON
+  title       String
+  description String?
+  quantity    Int      @default(1)
+  unitPrice   Float
+  currency    String   @default("EUR")
+  scheduledTime DateTime?
+
+  createdAt   DateTime @default(now())
+}
+
+model PaymentFolio {
+  id          String   @id @default(cuid())
+  bookingId   String   @unique
+  booking     Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  status      String   @default("OPEN") // OPEN, SETTLED, REFUNDED
+  currency    String   @default("EUR")
+  payments    Json     // Array of recorded transaction charges & methods
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

@@ -1,0 +1,69 @@
+model Sanctuary {
+    id          String   @id @default(cuid())
+    slug        String   @unique
+    code        String   @unique // e.g. "AMA"
+    name        String
+    tagline     String
+    city        String
+    region      String
+    country     String
+    latitude    Float
+    longitude   Float
+    mapUrl      String?
+    timezone    String   @default("Europe/Rome")
+    currency    String   @default("EUR")
+    status      String   @default("ACTIVE")
+    contactEmail String
+    contactPhone String
+  
+    // Editorial & Media stored in JSONB or Relations
+    mediaData   Json
+    editorial   Json
+    arrivalGuide Json
+  
+    accommodations AccommodationCategory[]
+    roomUnits      RoomUnit[]
+    experiences    Experience[]
+    diningVenues   DiningVenue[]
+    staff          StaffMember[]
+    bookings       Booking[]
+    rateRules      RateRule[]
+  
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+}
+
+model DiningVenue {
+  id                 String    @id @default(cuid())
+  sanctuaryId        String
+  sanctuary          Sanctuary @relation(fields: [sanctuaryId], references: [id], onDelete: Cascade)
+  name               String
+  cuisineType        String
+  michelinStars      Int?
+  dressCode          String
+  hours              String
+  mediaData          Json
+
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+}
+
+model Experience {
+  id              String    @id @default(cuid())
+  sanctuaryId     String
+  sanctuary       Sanctuary @relation(fields: [sanctuaryId], references: [id], onDelete: Cascade)
+  slug            String    @unique
+  title           String
+  category        String
+  tagline         String
+  durationMinutes Int
+  pricePerPerson  Float
+  currency        String    @default("EUR")
+  maxPartySize    Int
+  mediaData       Json
+  narrative       Json
+  scheduleData    Json
+
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}

@@ -1,0 +1,97 @@
+model AccommodationCategory {
+  id              String    @id @default(cuid())
+  sanctuaryId     String
+  sanctuary       Sanctuary @relation(fields: [sanctuaryId], references: [id], onDelete: Cascade)
+  
+  slug            String    @unique
+  name            String
+  category        String    // SUITE, VILLA, PENTHOUSE
+  tagline         String
+  
+  // Dimensions & Specs
+  squareMeters    Float
+  squareFeet      Float
+  maxOccupancy    Int
+  bedroomsCount   Int
+  bathroomsCount  Int
+  bedConfiguration String
+  viewOrientation String
+
+  // Base Pricing
+  basePriceNightly Float
+  currency        String    @default("EUR")
+  cleaningFee     Float?
+  cityTaxPerGuest Float     @default(5.0)
+  vatRate         Float     @default(10.0)
+  minStayNights   Int       @default(1)
+
+  // Rich JSON fields
+  mediaData       Json
+  narrative       Json
+  features        Json
+  privileges      Json
+  amenityTags     String[]
+  sensoryCapabilities Json
+
+  roomUnits       RoomUnit[]
+  bookings        Booking[]
+  rateRules       RateRule[]
+
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model RoomUnit {
+  id                    String             @id @default(cuid())
+  sanctuaryId           String
+  sanctuary             Sanctuary          @relation(fields: [sanctuaryId], references: [id], onDelete: Cascade)
+  accommodationId       String
+  accommodationCategory AccommodationCategory @relation(fields: [accommodationId], references: [id], onDelete: Cascade)
+
+  unitCode              String             // e.g. "402"
+  floorLevel            String             // e.g. "Level IV"
+  wing                  String?
+  
+  status                HousekeepingStatus @default(CLEAN_INSPECTED)
+  isOccupied            Boolean            @default(false)
+  currentBookingId      String?
+  maintenanceFlag       Boolean            @default(false)
+  maintenanceReason     String?
+  lastInspectedAt       DateTime?
+
+  assignedStaffId       String?
+  assignedStaff         StaffMember?       @relation(fields: [assignedStaffId], references: [id])
+
+  housekeepingTasks     HousekeepingTask[]
+  bookings              Booking[]
+
+  createdAt             DateTime           @default(now())
+  updatedAt             DateTime           @updatedAt
+
+  @@unique([sanctuaryId, unitCode])
+}
+
+model RateRule {
+  id                    String                @id @default(cuid())
+  sanctuaryId           String
+  sanctuary             Sanctuary             @relation(fields: [sanctuaryId], references: [id], onDelete: Cascade)
+  accommodationId       String
+  accommodationCategory AccommodationCategory @relation(fields: [accommodationId], references: [id], onDelete: Cascade)
+  name                  String
+  startDate             DateTime
+  endDate               DateTime
+  multiplier            Float                 @default(1.0)
+  fixedOverridePrice    Float?
+  minimumStayNights     Int                   @default(1)
+  closedForArrival      Boolean               @default(false)
+  closedForDeparture    Boolean               @default(false)
+  sovereignKeyDiscount  Float                 @default(10.0)
+  isActive              Boolean               @default(true)
+
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+}
+
+
+
+

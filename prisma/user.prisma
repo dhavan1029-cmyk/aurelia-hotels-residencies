@@ -1,0 +1,34 @@
+model User {
+  id                  String        @id @default(cuid())
+  email               String        @unique
+  passwordHash        String?
+  phoneNumber         String?
+  title               String?
+  firstName           String
+  lastName            String
+  avatarUrl           String?
+  role                UserRole      @default(GUEST)
+  sovereignTier       SovereignTier @default(EXPLORER)
+  sovereignKeyNumber  String        @unique
+  lifetimeStaysCount  Int           @default(0)
+  lifetimeSpendTotal  Float         @default(0.0)
+
+  profile             GuestProfile?
+  bookings            Booking[]
+
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+}
+
+model GuestProfile {
+  id                  String   @id @default(cuid())
+  userId              String   @unique
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  passportData        Json?
+  preferences         Json?
+  sensoryPreferences  Json     // Circadian, pillow, tea, aroma, baths
+
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
