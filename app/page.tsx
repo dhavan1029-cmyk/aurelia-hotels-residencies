@@ -1,7 +1,11 @@
+import { HomePage } from "@/components/pages/hotel/HomePage";
+
 export default function Home() {
 	return (
     	<div className="bg-white">
-      		<h1>hello world</h1>
+			
+            <HomePage></HomePage>
+            
     	</div>
   	);
 }
