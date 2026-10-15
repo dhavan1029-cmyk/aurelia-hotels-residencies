@@ -1,10 +1,8 @@
-
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Button } from '../ui/Button';
 
-export interface SuiteFeatureItem {
+export interface SuiteAmenityItem {
     icon?: React.ReactNode;
     label: string;
 }
@@ -13,343 +11,297 @@ export interface SuiteCardProps {
     id: string;
     slug: string;
     name: string;
-    category: string;
-    badgeVariant?: 'gold' | 'dark' | 'neutral';
-    sanctuaryNumber?: string;
+    category?: string;
+    badgeLabel?: string;
     elevationTag?: string;
-    metaEyebrow?: string;
-    highlightTag?: string;
-    tagline: string;
-    squareMeters?: number;
-    squareFeet?: number;
-    maxOccupancy?: number;
-    bedDetails?: string;
-    basePriceNightly: number;
-    minNights?: number;
+    pricePerNight: number;
     currency?: string;
+    pricePeriodSuffix?: string;
+    minStayNotice?: string;
+    specsText?: string;
+    description: string;
     heroImageUrl: string;
     photoCount?: number;
-    privilegeText?: string;
-    amenityTags?: string[];
-    features?: SuiteFeatureItem[];
-    viewAllHref?: string;
-    variant?: 'featured' | 'compact-horizontal' | 'standard';
+    privilegeNotice?: string;
+    amenities?: SuiteAmenityItem[];
+    pillTags?: string[];
+    featureOverlayText?: string;
+    featureOverlayIcon?: React.ReactNode;
+    primaryCtaLabel?: string;
+    secondaryCtaLabel?: string;
+    onPrimaryAction?: () => void;
+    onSecondaryAction?: () => void;
+    variant?: 'master-featured' | 'coastal-grid';
     className?: string;
 }
 
 export function SuiteCard({
+    id,
     slug,
     name,
     category,
-    badgeVariant = 'dark',
-    sanctuaryNumber,
+    badgeLabel,
     elevationTag,
-    metaEyebrow,
-    highlightTag,
-    tagline,
-    squareMeters,
-    squareFeet,
-    maxOccupancy,
-    bedDetails,
-    basePriceNightly,
-    minNights,
-    currency = 'USD',
+    pricePerNight,
+    currency = '€',
+    pricePeriodSuffix = '/ night',
+    minStayNotice,
+    specsText,
+    description,
     heroImageUrl,
     photoCount,
-    privilegeText,
-    amenityTags = [],
-    features = [],
-    variant = 'standard',
+    privilegeNotice,
+    amenities = [],
+    pillTags = [],
+    featureOverlayText,
+    featureOverlayIcon,
+    primaryCtaLabel = 'Reserve Suite',
+    secondaryCtaLabel = 'View Sanctuary Details',
+    onPrimaryAction,
+    onSecondaryAction,
+    variant = 'coastal-grid',
     className = '',
 }: SuiteCardProps) {
-    const currencySymbol = currency === 'EUR' ? '€' : currency === 'USD' ? '$' : currency;
-
-    // -------------------------------------------------------------
-    // VARIANT 1: COMPACT HORIZONTAL CARD (Right Bento Column)
-    // -------------------------------------------------------------
-    if (variant === 'compact-horizontal') {
+    // -------------------------------------------------------------------------
+    // VARIANT 1: MASTER FEATURED HORIZONTAL BENTO (Top Azure Ocean Suite)
+    // -------------------------------------------------------------------------
+    if (variant === 'master-featured') {
         return (
-            <div
-                className={`bg-white border border-[#e8e4dc] rounded-2xl p-5 sm:p-6 shadow-[0_4px_24px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_32px_rgba(31,30,29,0.06)] transition-all duration-300 flex flex-col sm:flex-row gap-5 ${className}`}
+            <article
+                className={`w-full bg-white border border-[#e8e4dc] rounded-2xl overflow-hidden shadow-[0_4px_30px_rgba(0,0,0,0.03)] grid grid-cols-1 lg:grid-cols-12 ${className}`}
             >
-                {/* Thumbnail Media */}
-                <div className="relative w-full sm:w-44 h-44 sm:h-auto rounded-xl overflow-hidden shrink-0 bg-[#eeeae2]">
+                {/* Left 7 Columns: Media Container with Badges, Valet Banner & Photo Counter */}
+                <div className="lg:col-span-7 relative min-h-95 sm:min-h-115 lg:min-h-125 bg-[#eeeae2] overflow-hidden">
                     <Image
                         src={heroImageUrl}
                         alt={name}
                         fill
-                        sizes="(max-width: 640px) 100vw, 176px"
-                        className="object-cover object-center hover:scale-105 transition-transform duration-500"
-                    />
-                    <div className="absolute top-2.5 left-2.5 z-10">
-                        <span
-                            className={`px-2.5 py-0.5 rounded-sm font-sans text-[9px] font-semibold uppercase tracking-wider ${
-                                badgeVariant === 'gold'
-                                    ? 'bg-[#8e763b] text-white'
-                                    : 'bg-black/60 backdrop-blur-md text-white'
-                            }`}
-                        >
-                            {category}
-                        </span>
-                    </div>
-                </div>
-
-                {/* Details */}
-                <div className="flex flex-col justify-between flex-1">
-                    <div>
-                        <div className="flex items-start justify-between gap-2">
-                            <h4 className="font-serif text-xl text-[#1f1e1d] font-normal tracking-tight">
-                                {name}
-                            </h4>
-                            <div className="text-right shrink-0">
-                                <span className="font-serif text-base font-bold text-[#1f1e1d]">
-                                    {currencySymbol}{basePriceNightly.toLocaleString()}
-                                </span>
-                                <span className="text-[10px] text-[#78756d] font-sans block leading-none">
-                                    /nt
-                                </span>
-                            </div>
-                        </div>
-
-                        {(metaEyebrow || (squareMeters && bedDetails)) && (
-                            <span className="block text-[10px] uppercase tracking-wider text-[#8e763b] font-medium mt-1">
-                                {metaEyebrow || `${squareMeters} M² • ${bedDetails}`}
-                            </span>
-                        )}
-
-                        <p className="mt-2 text-xs text-[#6e6b64] font-sans font-light leading-relaxed line-clamp-2">
-                            {tagline}
-                        </p>
-                    </div>
-
-                    <div className="mt-4 pt-3 border-t border-[#f4f0e6] flex items-center justify-between text-[11px] font-sans">
-                        <span className="text-[#78756d]">{privilegeText || 'Private Butler Included'}</span>
-                        <Link
-                            href={`/checkout?suite=${slug}`}
-                            className="group inline-flex items-center gap-1 font-semibold uppercase tracking-[0.2em] text-[#8e763b] hover:text-[#1f1e1d] transition-colors"
-                        >
-                            <span>RESERVE</span>
-                            <span className="transform transition-transform duration-300 group-hover:translate-x-1">
-                                →
-                            </span>
-                        </Link>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
-    // -------------------------------------------------------------
-    // VARIANT 2: FEATURED HERO BENTO CARD (Left Bento Column)
-    // -------------------------------------------------------------
-    if (variant === 'featured') {
-        return (
-            <div
-                className={`bg-white border border-[#e8e4dc] rounded-2xl overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.03)] hover:shadow-[0_16px_40px_rgba(31,30,29,0.06)] transition-all duration-500 flex flex-col ${className}`}
-            >
-                {/* Image Media with Badges & Floating Price Tag */}
-                <div className="relative aspect-16/11 sm:aspect-16/10 w-full overflow-hidden bg-[#eeeae2]">
-                    <Image
-                        src={heroImageUrl}
-                        alt={name}
-                        fill
-                        sizes="(max-width: 1024px) 100vw, 60vw"
-                        className="object-cover object-center transform transition-transform duration-700 ease-out hover:scale-105"
+                        priority
+                        sizes="(max-width: 1024px) 100vw, 58vw"
+                        className="object-cover object-center transform transition-transform duration-700 hover:scale-105"
                     />
 
-                    {/* Top Left Badges */}
+                    {/* Top Badges Row */}
                     <div className="absolute top-4 left-4 z-10 flex flex-wrap items-center gap-2">
-                        {sanctuaryNumber && (
-                            <span className="inline-block px-3 py-1.5 rounded-sm bg-white/95 backdrop-blur-md text-[#1f1e1d] font-sans text-[10px] font-semibold uppercase tracking-[0.22em] shadow-sm">
-                                {sanctuaryNumber}
+                        {badgeLabel && (
+                            <span className="px-3 py-1 bg-[#8e763b]/90 backdrop-blur-md rounded-md text-[10px] font-sans font-semibold uppercase tracking-[0.2em] text-white shadow-xs">
+                                {badgeLabel}
                             </span>
                         )}
-                        <span className="inline-block px-3 py-1.5 rounded-sm bg-black/60 backdrop-blur-md text-white font-sans text-[10px] font-semibold uppercase tracking-[0.22em]">
-                            {category}
-                        </span>
                         {elevationTag && (
-                            <span className="inline-block px-3 py-1.5 rounded-sm bg-white/80 backdrop-blur-md text-[#2a2825] font-sans text-[10px] font-semibold uppercase tracking-[0.22em]">
+                            <span className="px-3 py-1 bg-white/85 backdrop-blur-md rounded-md text-[10px] font-sans font-semibold uppercase tracking-[0.2em] text-[#33312e] shadow-xs">
                                 {elevationTag}
                             </span>
                         )}
                     </div>
 
-                    {/* Floating Bottom Right Price Tag */}
-                    <div className="absolute bottom-4 right-4 z-10 bg-white/95 backdrop-blur-md px-4 py-2 rounded-sm shadow-md border border-[#e8e4dc]/80 text-right">
-                        <span className="text-[10px] font-sans text-[#78756d] uppercase tracking-wider block">
-                            From
-                        </span>
-                        <div className="flex items-baseline gap-1">
-                            <span className="font-serif text-lg sm:text-xl font-bold text-[#1f1e1d] leading-none">
-                                {currencySymbol}{basePriceNightly.toLocaleString()}
+                    {/* Bottom Valet Privilege Micro-Banner */}
+                    {privilegeNotice && (
+                        <div className="absolute bottom-4 left-4 right-20 sm:right-auto sm:max-w-md z-10 bg-white/95 backdrop-blur-md rounded-xl p-3 sm:px-4 sm:py-3 border border-[#ded9ce] shadow-md">
+                            <span className="block text-[8px] sm:text-[9px] font-sans font-semibold uppercase tracking-[0.2em] text-[#8e763b]">
+                                DIRECT RESERVATION PRIVILEGES
                             </span>
-                            <span className="text-[11px] font-sans text-[#78756d]">
-                                / night
-                            </span>
+                            <p className="text-[11px] font-sans text-[#2c2a26] font-medium leading-tight mt-0.5">
+                                {privilegeNotice}
+                            </p>
                         </div>
-                    </div>
-                </div>
+                    )}
 
-                {/* Content Area */}
-                <div className="p-6 sm:p-8 flex flex-col flex-1 justify-between">
-                    <div>
-                        {/* Meta Eyebrows Strip */}
-                        <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] font-sans text-[#78756d] uppercase tracking-wider mb-2.5">
-                            <span className="font-medium text-[#8e763b]">
-                                {metaEyebrow || `${squareMeters || 125} M² • ${bedDetails || 'CLIFF EDGE PAVILION'}`}
-                            </span>
-                            {highlightTag && (
-                                <span className="flex items-center gap-1.5 text-[#55524d]">
-                                    <svg
-                                        className="w-3.5 h-3.5 text-[#8e763b]"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                    >
-                                        <path d="M2 12h20M2 17h20M2 7h20" />
-                                    </svg>
-                                    {highlightTag}
-                                </span>
-                            )}
-                        </div>
-
-                        {/* Title */}
-                        <h3 className="font-serif text-2xl sm:text-3xl text-[#1f1e1d] font-normal tracking-tight">
-                            {name}
-                        </h3>
-
-                        {/* Body Description */}
-                        <p className="mt-3 text-xs sm:text-[13px] text-[#6e6b64] font-sans font-light leading-relaxed">
-                            {tagline}
-                        </p>
-
-                        {/* Feature Pills / Amenities */}
-                        {(features.length > 0 || amenityTags.length > 0) && (
-                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-6 mt-6 border-t border-[#f0ece3] text-[11px] font-sans text-[#4a4742]">
-                                {features.length > 0 ? (
-                                    features.map((feat, idx) => (
-                                        <div key={idx} className="flex items-center gap-2">
-                                            {feat.icon || (
-                                                <svg className="w-4 h-4 text-[#8e763b] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                                                    <circle cx="12" cy="12" r="9" />
-                                                </svg>
-                                            )}
-                                            <span>{feat.label}</span>
-                                        </div>
-                                    ))
-                                ) : (
-                                    amenityTags.map((tag, idx) => (
-                                        <div key={idx} className="flex items-center gap-2">
-                                            <span className="w-1.5 h-1.5 rounded-full bg-[#8e763b] shrink-0" />
-                                            <span>{tag.replace(/_/g, ' ')}</span>
-                                        </div>
-                                    ))
-                                )}
-                            </div>
-                        )}
-                    </div>
-
-                    {/* Actions Footer */}
-                    <div className="flex items-center justify-between pt-6 mt-6 border-t border-[#f0ece3]">
-                        <Link
-                            href={`/suites/${slug}`}
-                            className="text-[11px] font-sans font-semibold uppercase tracking-[0.25em] text-[#8e763b] hover:text-[#1f1e1d] transition-colors"
-                        >
-                            FLOORPLAN & DETAILS
-                        </Link>
-
-                        <Link href={`/checkout?suite=${slug}`}>
-                            <Button
-                                variant="primary"
-                                size="md"
-                                className="bg-[#1f1e1d] text-white hover:bg-[#353330] px-6 py-3 text-[11px] tracking-[0.2em] font-semibold uppercase rounded-sm transition-all"
-                            >
-                                RESERVE SUITE
-                            </Button>
-                        </Link>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
-    // -------------------------------------------------------------
-    // VARIANT 3: STANDARD VERTICAL GRID CARD (Catalog & Grids)
-    // -------------------------------------------------------------
-    return (
-        <article
-            className={`group bg-white border border-[#e8e4dc] transition-all duration-300 hover:shadow-xl rounded-2xl overflow-hidden flex flex-col ${className}`}
-        >
-            <div className="relative aspect-16/10 overflow-hidden bg-[#eeeae2]">
-                <Image
-                    src={heroImageUrl}
-                    alt={name}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
-                />
-
-                <div className="absolute top-4 left-4 flex gap-2 z-10">
-                    <span className="px-2.5 py-1 bg-[#8e763b] text-white font-sans text-[10px] tracking-[0.2em] uppercase font-semibold rounded-sm shadow-sm">
-                        {category}
-                    </span>
-                </div>
-
-                <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-white text-[11px] font-sans drop-shadow-md z-10">
-                    <span className="flex items-center gap-1.5 bg-black/50 backdrop-blur-sm px-2.5 py-1 rounded-sm text-[10px] uppercase tracking-wider">
-                        {highlightTag || (squareMeters ? `${squareMeters} m²` : 'Private Sanctuary')}
-                    </span>
-
-                    <div className="text-right bg-black/50 backdrop-blur-sm px-2.5 py-1 rounded-sm">
-                        <span className="font-serif text-base font-medium text-white">
-                            {currencySymbol}{basePriceNightly.toLocaleString()}
-                        </span>
-                        <span className="text-[9px] text-white/80 block uppercase tracking-wider">
-                            / night {minNights ? `• ${minNights}nt min` : ''}
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <div className="p-6 md:p-7 flex flex-col flex-1 justify-between gap-5">
-                <div>
-                    <h3 className="font-serif text-2xl text-[#1f1e1d] font-normal tracking-tight group-hover:text-[#8e763b] transition-colors">
-                        {name}
-                    </h3>
-                    <p className="text-xs text-[#6e6b64] font-sans mt-2 leading-relaxed">
-                        {tagline}
-                    </p>
-
-                    {amenityTags.length > 0 && (
-                        <div className="flex flex-wrap gap-1.5 mt-4">
-                            {amenityTags.slice(0, 3).map((tag, idx) => (
-                                <span
-                                    key={idx}
-                                    className="px-2 py-0.5 bg-[#f6f3ee] border border-[#e8e4dc] text-[9px] uppercase tracking-widest text-[#6e6b64] font-medium rounded-sm"
-                                >
-                                    {tag.replace(/_/g, ' ')}
-                                </span>
-                            ))}
+                    {/* Bottom Right Photo Counter Pill */}
+                    {photoCount && (
+                        <div className="absolute bottom-4 right-4 z-10 bg-black/70 backdrop-blur-md px-3 py-1.5 rounded-lg text-white flex items-center gap-1.5 text-[10px] font-sans font-semibold tracking-wider uppercase">
+                            <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2" />
+                                <circle cx="8.5" cy="8.5" r="1.5" />
+                                <polyline points="21 15 16 10 5 21" />
+                            </svg>
+                            <span>{photoCount} PHOTOGRAPHS</span>
                         </div>
                     )}
                 </div>
 
-                <div className="pt-4 border-t border-[#f0ece3] flex items-center justify-between">
-                    <Link
-                        href={`/suites/${slug}`}
-                        className="text-[11px] font-sans font-semibold uppercase tracking-[0.2em] text-[#8e763b] hover:text-[#1f1e1d] transition-colors"
-                    >
-                        DETAILS
-                    </Link>
-                    <Link href={`/checkout?suite=${slug}`}>
-                        <Button variant="primary" size="sm" className="bg-[#1f1e1d] text-white hover:bg-[#353330] px-4 py-2 text-[10px] tracking-[0.2em] font-semibold uppercase rounded-sm">
-                            RESERVE
-                        </Button>
-                    </Link>
+                {/* Right 5 Columns: Editorial Content & CTAs */}
+                <div className={"lg:col-span-5 p-6 sm:p-8 lg:p-10 flex flex-col justify-between"}>
+                    <div>
+                        {/* Header: Category Eyebrow & Price */}
+                        <div className="flex items-start justify-between gap-4 border-b border-[#f2ede4] pb-4">
+                            <div>
+                                <span className="block text-[10px] font-sans font-semibold uppercase tracking-[0.25em] text-[#8e763b]">
+                                    {category}
+                                </span>
+                                <h3 className="font-serif text-2xl sm:text-3xl text-[#1f1e1d] font-normal tracking-tight mt-1">
+                                    {name}
+                                </h3>
+                            </div>
+                            <div className="text-right shrink-0">
+                                <div className="font-serif text-2xl sm:text-[26px] font-normal text-[#1f1e1d]">
+                                    {currency}{pricePerNight.toLocaleString()}
+                                </div>
+                                <span className="text-[10px] text-[#7d7a73] font-sans uppercase tracking-wider block">
+                                    {pricePeriodSuffix}
+                                </span>
+                            </div>
+                        </div>
+
+                        {/* Specs Text */}
+                        {specsText && (
+                            <p className="mt-3.5 text-xs font-sans text-[#78756e] font-normal">
+                                {specsText}
+                            </p>
+                        )}
+
+                        {/* Narrative Description */}
+                        <p className="mt-3 text-xs sm:text-[13px] text-[#55524d] font-sans font-light leading-relaxed">
+                            {description}
+                        </p>
+
+                        {/* 4 Amenity Line Items (2x2 Grid) */}
+                        {amenities.length > 0 && (
+                            <div className="mt-6 pt-5 border-t border-[#f2ede4] grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-sans text-[#2e2c29]">
+                                {amenities.map(function (amenity, idx) {
+                                    return (
+                                        <div key={idx} className="flex items-center gap-2.5">
+                                            <span className="text-[#8e763b] shrink-0">
+                                                {amenity.icon || (
+                                                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                                                        <circle cx="12" cy="12" r="9" />
+                                                    </svg>
+                                                )}
+                                            </span>
+                                            <span className="font-medium text-[11px]">{amenity.label}</span>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Dual Action Buttons */}
+                    <div className="mt-8 pt-5 border-t border-[#f2ede4] flex flex-col sm:flex-row items-stretch justify-around sm:items-center gap-3">
+                        <Link
+                            href={`/checkout?suite=${slug}`}
+                            onClick={onPrimaryAction}
+                            className="inline-flex items-center justify-center px-6 py-3.5 bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-[11px] font-semibold uppercase tracking-[0.2em] rounded-lg transition-all duration-200 shadow-sm text-center"
+                        >
+                            <span>{primaryCtaLabel}</span>
+                            <span className="ml-1.5">→</span>
+                        </Link>
+                        <Link
+                            href={`/suites/${slug}`}
+                            onClick={onSecondaryAction}
+                            className="inline-flex items-center justify-center px-6 py-3.5 bg-[#f6f3ee] hover:bg-[#eeeae2] text-[#2c2a26] border border-[#ded9ce] font-sans text-[11px] font-medium uppercase tracking-[0.18em] rounded-lg transition-all duration-200 text-center"
+                        >
+                            {secondaryCtaLabel}
+                        </Link>
+                    </div>
                 </div>
+            </article>
+        );
+    }
+
+    // -------------------------------------------------------------------------
+    // VARIANT 2: COASTAL GRID CARD (Bottom Cliff Villa & Citrus Pavilion)
+    // -------------------------------------------------------------------------
+    return (
+        <article
+            className={`w-full bg-white border border-[#e8e4dc] rounded-2xl overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.03)] flex flex-col justify-between ${className}`}
+        >
+            <div>
+                {/* Media Image with Badges, Feature Overlay & Embedded Price Tag */}
+                <div className="relative aspect-16/10 sm:aspect-16/10.5 w-full bg-[#eeeae2] overflow-hidden">
+                    <Image
+                        src={heroImageUrl}
+                        alt={name}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                        className="object-cover object-center transform transition-transform duration-700 hover:scale-105"
+                    />
+
+                    {/* Top Badges */}
+                    <div className="absolute top-3.5 left-3.5 z-10 flex flex-wrap items-center gap-1.5">
+                        {badgeLabel && (
+                            <span className="px-2.5 py-1 bg-[#8e763b]/90 backdrop-blur-md rounded-md text-[9px] font-sans font-semibold uppercase tracking-[0.18em] text-white shadow-xs">
+                                {badgeLabel}
+                            </span>
+                        )}
+                    </div>
+
+                    {/* Bottom Overlay Row: Feature Indicator (Left) & Price Tag (Right) */}
+                    <div className="absolute bottom-3 left-3 right-3 z-10 flex items-end justify-between gap-2 text-white">
+                        {featureOverlayText && (
+                            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-black/60 backdrop-blur-md text-[10px] font-sans font-medium tracking-wide">
+                                {featureOverlayIcon || (
+                                    <svg className="w-3.5 h-3.5 text-[#bfa76f]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                        <path d="M2 12h20M2 17h20M2 7h20" />
+                                    </svg>
+                                )}
+                                <span>{featureOverlayText}</span>
+                            </div>
+                        )}
+
+                        <div className="text-right bg-black/60 backdrop-blur-md px-3 py-1 rounded-md ml-auto">
+                            <span className="font-serif text-lg font-normal leading-none block">
+                                {currency}{pricePerNight.toLocaleString()}
+                            </span>
+                            <span className="text-[9px] font-sans text-white/80 block uppercase tracking-wider">
+                                {pricePeriodSuffix} {minStayNotice ? `• ${minStayNotice}` : ''}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Details Body */}
+                <div className="p-6">
+                    <h4 className="font-serif text-2xl text-[#1f1e1d] font-normal tracking-tight">
+                        {name}
+                    </h4>
+
+                    {specsText && (
+                        <p className="mt-1.5 text-xs font-sans text-[#78756e] leading-snug">
+                            {specsText}
+                        </p>
+                    )}
+
+                    <p className="mt-3 text-xs text-[#55524d] font-sans font-light leading-relaxed">
+                        {description}
+                    </p>
+
+                    {/* Pill Tags */}
+                    {pillTags.length > 0 && (
+                        <div className="mt-4 flex flex-wrap gap-1.5">
+                            {pillTags.map(function (tag, idx) {
+                                return (
+                                    <span
+                                        key={idx}
+                                        className="px-2.5 py-1 bg-[#f6f3ee] border border-[#e8e4dc] rounded-md text-[9px] font-sans font-semibold uppercase tracking-[0.16em] text-[#55524d]"
+                                    >
+                                        {tag}
+                                    </span>
+                                );
+                            })}
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            {/* Bottom Actions Row */}
+            <div className="px-6 pb-6 pt-2 flex items-center justify-between gap-3 border-t border-[#f2ede4] mt-2">
+                <Link
+                    href={`/checkout?suite=${slug}`}
+                    onClick={onPrimaryAction}
+                    className="flex-1 inline-flex items-center justify-center px-4 py-3 bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-[10px] font-semibold uppercase tracking-[0.2em] rounded-lg transition-all duration-200 shadow-sm text-center"
+                >
+                    <span>{primaryCtaLabel}</span>
+                    <span className="ml-1">→</span>
+                </Link>
+
+                <Link
+                    href={`/suites/${slug}`}
+                    onClick={onSecondaryAction}
+                    className="inline-flex items-center justify-center px-4 py-3 bg-[#f6f3ee] hover:bg-[#eeeae2] text-[#2c2a26] border border-[#ded9ce] font-sans text-[10px] font-medium uppercase tracking-[0.18em] rounded-lg transition-all duration-200 text-center"
+                >
+                    {secondaryCtaLabel}
+                </Link>
             </div>
         </article>
     );

@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { Navbar } from '../../layout/Navbar';
 import { Footer } from '../../layout/Footer';
 import { BookingBar } from '../../hotel/BookingBar';
-import { SuiteCard } from '../../hotel/SuiteCard';
+import { SuiteCard, SuiteCardProps } from '../../hotel/SuiteCard';
 
 export interface TestimonialItem {
     quote: string;
@@ -14,27 +14,27 @@ export interface TestimonialItem {
 }
 
 export function HomePage() {
-    const featuredSuite = {
+    const featuredSuite: SuiteCardProps = {
         id: 'suite-402',
         slug: 'azure-master-ocean-suite',
         name: 'The Azure Master Ocean Suite',
-        category: 'SIGNATURE OCEANFRONT',
+        categoryEyebrow: 'MASTER SANCTUARY SUITE',
         sanctuaryNumber: 'SANCTUARY 01',
-        elevationTag: 'CLIFF EDGE',
-        metaEyebrow: '125 M² • CLIFF EDGE PAVILION',
-        highlightTag: 'HEATED PLUNGE POOL',
-        tagline:
-            'Floor-to-ceiling panoramic vistas of the Amalfi coastline. Custom white oak millwork, hand-spun linen drapery, freestanding carved travertine soaking tub, and open-air sunset loggia.',
-        squareMeters: 125,
-        squareFeet: 1345,
-        maxOccupancy: 3,
-        basePriceNightly: 1450,
-        currency: 'USD',
+        badgeLabel: 'SIGNATURE OCEANFRONT',
+        elevationTag: 'LEVEL IV ELEVATION',
+        pricePerNight: 1450,
+        currency: '€',
+        pricePeriodSuffix: '/ night',
+        specsText: '132 m² / 1,420 sq ft • King Panoramic Terrace • Heated Plunge Pool • Max 3 Guests',
+        description:
+            'Floor-to-ceiling panoramic vistas of the Amalfi coastline. Custom white oak millwork, hand-spun linen drapery, freestanding carved travertine soaking tub, and open-air sunset loggia with heated basalt plunge pool.',
         heroImageUrl: '/suite-402.png',
-        features: [
+        photoCount: 12,
+        privilegeNotice: 'Dedicated Aurelia Valet & Daily Thermal Hydrotherapy Access Included',
+        amenities: [
             {
                 icon: (
-                    <svg className="w-4 h-4 text-[#8e763b] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <svg className="w-4 h-4 text-[#8e763b] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
                         <path d="M2 19h20M4 19V9a2 2 0 012-2h12a2 2 0 012 2v10M2 14h20" />
                     </svg>
                 ),
@@ -42,7 +42,7 @@ export function HomePage() {
             },
             {
                 icon: (
-                    <svg className="w-4 h-4 text-[#8e763b] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <svg className="w-4 h-4 text-[#8e763b] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
                         <path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2" />
                         <circle cx="9" cy="7" r="4" />
                         <path d="M22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
@@ -52,7 +52,7 @@ export function HomePage() {
             },
             {
                 icon: (
-                    <svg className="w-4 h-4 text-[#8e763b] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <svg className="w-4 h-4 text-[#8e763b] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
                         <path d="M8 22h8M12 11v11M19 3l-7 8-7-8h14z" />
                     </svg>
                 ),
@@ -60,46 +60,75 @@ export function HomePage() {
             },
             {
                 icon: (
-                    <svg className="w-4 h-4 text-[#8e763b] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <svg className="w-4 h-4 text-[#8e763b] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
                         <path d="M12 8v4l3 3M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                 ),
                 label: '24/7 Butler Service',
             },
         ],
+        primaryCtaLabel: 'Reserve Suite',
+        secondaryCtaLabel: 'View Sanctuary Details',
     };
 
-    // 2. Secondary accommodations for Right Column (variant="compact-horizontal")
-    const secondarySuites = [
+    // 2. Secondary Accommodations Data for 2-Col Grid (variant="coastal-grid")
+    const secondarySuites: SuiteCardProps[] = [
         {
             id: 'villa-limestone',
-            slug: 'the-limestone-villa',
-            name: 'The Limestone Villa',
-            category: 'VILLA',
-            badgeVariant: 'gold' as const,
-            metaEyebrow: '210 M² • 2 KING BEDROOMS',
-            tagline:
-                'Multi-level independent estate with infinity edge pool, private heliport access, and dedicated sommelier cellar.',
-            squareMeters: 210,
-            basePriceNightly: 2850,
-            currency: 'USD',
-            privilegeText: 'Private Butler Included',
+            slug: 'the-limestone-cliff-villa',
+            name: 'The Limestone Cliff Villa',
+            categoryEyebrow: 'PRIVATE CLIFFTOP ESTATE',
+            sanctuaryNumber: 'SANCTUARY 02',
+            badgeLabel: 'ESTATE RESIDENCE',
+            elevationTag: 'CLIFFTOP LEVEL VI',
+            pricePerNight: 2850,
+            currency: '€',
+            pricePeriodSuffix: '/ night',
+            minStayNotice: '2-Night Min',
+            featureOverlayText: 'Private 14m Heated Infinity Pool',
+            featureOverlayIcon: (
+                <svg className="w-3.5 h-3.5 text-[#bfa76f]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M2 12h20M2 17h20M2 7h20" />
+                </svg>
+            ),
+            specsText: 'Independent Clifftop Wing • Private Estate • 210 m² • 2 King Bedrooms • Infinity Edge Pool • Helipad Access',
+            description:
+                'Multi-level independent estate carved directly into the sheer cliffside face with total privacy. Includes dedicated estate butler, demonstration kitchen, and arrival via sea tender or helipad.',
             heroImageUrl: '/limestone-villa.png',
+            photoCount: 8,
+            privilegeNotice: 'Includes Dedicated Majordomo & Arrival Sea Tender',
+            pillTags: ['DEDICATED ESTATE BUTLER', 'PRIVATE HELIPAD ACCESS', 'ALFRESCO FIRE HEARTH'],
+            primaryCtaLabel: 'Reserve Villa',
+            secondaryCtaLabel: 'View Details',
         },
         {
             id: 'garden-pavilion',
-            slug: 'garden-pavilion',
-            name: 'Garden Pavilion',
-            category: 'PAVILION',
-            badgeVariant: 'dark' as const,
-            metaEyebrow: '85 M² • SUNKEN MARBLE TUB',
-            tagline:
-                'Nestled in private wild olive groves with an open-air rainfall bathroom and sweet orange orchard patio.',
-            squareMeters: 85,
-            basePriceNightly: 920,
-            currency: 'USD',
-            privilegeText: 'Courtyard Breakfast',
+            slug: 'the-citrus-garden-pavilion',
+            name: 'The Citrus Garden Pavilion',
+            categoryEyebrow: 'GARDEN SOLARIUM',
+            sanctuaryNumber: 'SANCTUARY 03',
+            badgeLabel: 'LEMON GROVE RETREAT',
+            elevationTag: 'GARDEN LEVEL I',
+            pricePerNight: 920,
+            currency: '€',
+            pricePeriodSuffix: '/ night',
+            minStayNotice: 'Thermal Spa Pass',
+            featureOverlayText: 'Private Walled Lemon Grove',
+            featureOverlayIcon: (
+                <svg className="w-3.5 h-3.5 text-[#bfa76f]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="9" />
+                    <path d="M12 3v9l4 4" />
+                </svg>
+            ),
+            specsText: 'Level I • Lemon Grove Seclusion • 85 m² • King Bed & Solarium • Sunken Marble Tub',
+            description:
+                'Enclosed within 200-year-old Amalfi lemon groves. Features fragrant private herbal terraces, an indoor glass solarium reading pavilion, sunken Carrara marble immersion tub, and gentle ocean breezes.',
             heroImageUrl: '/garden-pavillion.png',
+            photoCount: 6,
+            privilegeNotice: 'Includes Organic Grove Breakfast & Thermal Spa Pass',
+            pillTags: ['WALLED GARDEN PRIVACY', 'GLASS SOLARIUM LOUNGE', 'BOTANICAL BATH RITUAL'],
+            primaryCtaLabel: 'Reserve Pavilion',
+            secondaryCtaLabel: 'View Details',
         },
     ];
 
@@ -137,8 +166,7 @@ export function HomePage() {
 
     return (
         <div className="min-h-screen bg-[#fcf9f4] text-[#1f1e1d] flex flex-col font-sans">
-            <Navbar />
-
+            
             {/* Hero Section */}
             <section className="relative w-full min-h-[92vh] lg:min-h-[96vh] flex flex-col justify-between overflow-hidden bg-[#1f1e1d]">
                 {/* Background Image using Next.js Image Component */}
@@ -271,41 +299,43 @@ export function HomePage() {
                     </div>
 
                     {/* Asymmetric Bento Showcase Grid */}
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 items-start">
+                    <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 break-inside-avoid items-start break-inside-avoid">
                         {/* LEFT COLUMN: Large Featured Suite Card (7 Columns) */}
-                        <div className="lg:col-span-7">
-                            <SuiteCard {...featuredSuite} variant="featured" />
+                        <div className="order-1 lg:col-span-8 lg:row-start-1">
+                            <SuiteCard {...featuredSuite} variant="master-featured" />
+                            
                         </div>
 
                         {/* RIGHT COLUMN: Stacked Secondary Cards & Concierge Callout (5 Columns) */}
-                        <div className="lg:col-span-5 flex flex-col gap-6">
+                        <div className="order-2 lg:col-span-4 lg:row-span-2 flex flex-col gap-6">
                             {secondarySuites.map((suite) => (
                                 <SuiteCard
                                     key={suite.id}
                                     {...suite}
-                                    variant="compact-horizontal"
+                                    variant="coastal-grid"
                                 />
                             ))}
-
-                            {/* Dark Bespoke Inquiries Banner Card */}
-                            <div className="bg-[#1f1e1d] text-[#fcf9f4] border border-[#383530] rounded-2xl p-6 sm:p-7 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-lg">
-                                <div>
-                                    <h4 className="font-serif text-xl sm:text-2xl font-normal text-white tracking-tight">
-                                        Bespoke Multi-Week Stays
-                                    </h4>
-                                    <p className="mt-1 text-xs text-[#a4a098] font-sans font-light max-w-sm">
-                                        Direct inquiries for entire wing reservations and private yacht mooring.
-                                    </p>
-                                </div>
-
-                                <a
-                                    href="tel:+39089875000"
-                                    className="px-5 py-3 rounded-sm bg-[#bfa76f] hover:bg-[#aa935e] text-white font-sans text-[11px] font-semibold uppercase tracking-[0.2em] whitespace-nowrap transition-all shadow-md self-stretch sm:self-auto text-center"
-                                >
-                                    CALL CONCIERGE
-                                </a>
-                            </div>
                         </div>
+
+                        {/* Dark Bespoke Inquiries Banner Card */}
+                        <div className="order-3 lg:col-span-8 lg:col-start-1 lg:row-start-2 bg-[#1f1e1d] text-[#fcf9f4] border border-[#383530] rounded-2xl p-6 sm:p-7 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-lg lg:transform lg:-translate-y-58">
+                            <div>
+                                <h4 className="font-serif text-xl sm:text-2xl font-normal text-white tracking-tight">
+                                    Bespoke Multi-Week Stays
+                                </h4>
+                                <p className="mt-1 text-xs text-[#a4a098] font-sans font-light max-w-sm">
+                                    Direct inquiries for entire wing reservations and private yacht mooring.
+                                </p>
+                            </div>
+
+                            <a
+                                href="tel:+39089875000"
+                                className="px-5 py-3 rounded-sm bg-[#bfa76f] hover:bg-[#aa935e] text-white font-sans text-[11px] font-semibold uppercase tracking-[0.2em] whitespace-nowrap transition-all shadow-md self-stretch sm:self-auto text-center"
+                            >
+                                CALL CONCIERGE
+                            </a>
+                        </div>
+
                     </div>
                 </div>
             </section>
@@ -313,7 +343,7 @@ export function HomePage() {
             {/* Dining Venue Section */}
             <section className='px-6 md:px-0'>
                 <article
-                    className={`max-w-7xl mx-auto my-20 bg-white border border-[#e8e4dc] rounded-3xl p-8 sm:p-10 lg:p-12 shadow-[0_4px_30px_rgba(0,0,0,0.03)]`}
+                    className={`max-w-7xl mx:30 lg:mx-auto my-20 bg-white border border-[#e8e4dc] rounded-3xl p-8 sm:p-10 lg:p-12 shadow-[0_4px_30px_rgba(0,0,0,0.03)]`}
                 >
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
                         {/* Left Content Column (6 cols on desktop) */}

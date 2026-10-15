@@ -12,7 +12,7 @@ export function Footer() {
     })
 
     return (
-        <footer className="bg-[#1f1e1d] text-[#e8e4dc] pt-20 pb-12 border-t border-[#343230]">
+        <footer className="bg-[#1f1e1d] bottom-0 text-[#e8e4dc] pt-20 pb-12 border-t border-[#343230]">
             <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12 pb-16 border-b border-[#343230]">
                 {/* Monograph Column */}
                 <div className="md:col-span-1 flex flex-col gap-4">
