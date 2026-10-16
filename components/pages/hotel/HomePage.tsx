@@ -18,8 +18,7 @@ export function HomePage() {
         id: 'suite-402',
         slug: 'azure-master-ocean-suite',
         name: 'The Azure Master Ocean Suite',
-        categoryEyebrow: 'MASTER SANCTUARY SUITE',
-        sanctuaryNumber: 'SANCTUARY 01',
+        category: 'MASTER SANCTUARY SUITE',
         badgeLabel: 'SIGNATURE OCEANFRONT',
         elevationTag: 'LEVEL IV ELEVATION',
         pricePerNight: 1450,
@@ -77,8 +76,7 @@ export function HomePage() {
             id: 'villa-limestone',
             slug: 'the-limestone-cliff-villa',
             name: 'The Limestone Cliff Villa',
-            categoryEyebrow: 'PRIVATE CLIFFTOP ESTATE',
-            sanctuaryNumber: 'SANCTUARY 02',
+            category: 'PRIVATE CLIFFTOP ESTATE',
             badgeLabel: 'ESTATE RESIDENCE',
             elevationTag: 'CLIFFTOP LEVEL VI',
             pricePerNight: 2850,
@@ -105,8 +103,7 @@ export function HomePage() {
             id: 'garden-pavilion',
             slug: 'the-citrus-garden-pavilion',
             name: 'The Citrus Garden Pavilion',
-            categoryEyebrow: 'GARDEN SOLARIUM',
-            sanctuaryNumber: 'SANCTUARY 03',
+            category: 'GARDEN SOLARIUM',
             badgeLabel: 'LEMON GROVE RETREAT',
             elevationTag: 'GARDEN LEVEL I',
             pricePerNight: 920,
@@ -220,7 +217,7 @@ export function HomePage() {
                         <div className="mt-8 flex flex-wrap flex-col md:flex-row items-center justify-center md:justify-normal gap-8 md:gap-5">
                             {/* Primary Gold CTA */}
                             <Link
-                                href="/suites"
+                                href="/accommodations"
                                 className="inline-flex items-center gap-2 px-7 py-3.5 bg-[#bfa76f] hover:bg-[#a99159] text-white font-sans text-[11px] sm:text-[12px] font-semibold uppercase tracking-[0.2em] rounded-sm transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0"
                             >
                                 <span>Explore Signature Suites</span>
@@ -288,7 +285,7 @@ export function HomePage() {
                         </div>
 
                         <Link
-                            href={'/suites'}
+                            href={'/accommodations'}
                             className="group inline-flex items-center gap-2 text-[11px] sm:text-[12px] font-sans font-semibold uppercase tracking-[0.25em] text-[#8e763b] hover:text-[#1f1e1d] transition-colors py-1 self-start sm:self-auto"
                         >
                             <span>VIEW ALL 18 ACCOMMODATIONS</span>
@@ -299,7 +296,7 @@ export function HomePage() {
                     </div>
 
                     {/* Asymmetric Bento Showcase Grid */}
-                    <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 break-inside-avoid items-start break-inside-avoid">
+                    <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 break-inside-avoid items-start">
                         {/* LEFT COLUMN: Large Featured Suite Card (7 Columns) */}
                         <div className="order-1 lg:col-span-8 lg:row-start-1">
                             <SuiteCard {...featuredSuite} variant="master-featured" />
@@ -318,7 +315,7 @@ export function HomePage() {
                         </div>
 
                         {/* Dark Bespoke Inquiries Banner Card */}
-                        <div className="order-3 lg:col-span-8 lg:col-start-1 lg:row-start-2 bg-[#1f1e1d] text-[#fcf9f4] border border-[#383530] rounded-2xl p-6 sm:p-7 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-lg lg:transform lg:-translate-y-58">
+                        <div className="order-3 lg:col-span-8 lg:col-start-1 lg:row-start-2 bg-[#1f1e1d] text-[#fcf9f4] border border-[#383530] rounded-lg p-6 sm:p-7 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-lg lg:transform lg:-translate-y-58">
                             <div>
                                 <h4 className="font-serif text-xl sm:text-2xl font-normal text-white tracking-tight">
                                     Bespoke Multi-Week Stays
@@ -411,7 +408,7 @@ export function HomePage() {
                         {/* Right Dual Photography Column (6 cols on desktop) */}
                         <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 w-full">
                             {/* Primary Image: Sunset Open-Air Terrace */}
-                            <div className="relative aspect-4/5 sm:aspect-3/4 w-full rounded-2xl overflow-hidden bg-[#eeeae2] shadow-sm">
+                            <div className="relative aspect-4/5 sm:aspect-3/4 w-full rounded-lg overflow-hidden bg-[#eeeae2] shadow-sm">
                                 <Image
                                     src={'/limestone-villa.png'}
                                     alt={`Ristorante Il Belvedere open-air sunset dining terrace overlooking the Mediterranean`}
@@ -422,7 +419,7 @@ export function HomePage() {
                             </div>
 
                             {/* Secondary Image: Sunlit Dining Chamber & Ocean View */}
-                            <div className="relative aspect-4/5 sm:aspect-3/4 w-full rounded-2xl overflow-hidden bg-[#eeeae2] shadow-sm">
+                            <div className="relative aspect-4/5 sm:aspect-3/4 w-full rounded-lg overflow-hidden bg-[#eeeae2] shadow-sm">
                                 <Image
                                     src={'/suite-402.png'}
                                     alt={`Ristorante Il Belvedere floor-to-ceiling panoramic ocean lounge`}
@@ -457,7 +454,7 @@ export function HomePage() {
                             return (
                                 <div
                                     key={idx}
-                                    className="bg-white border border-[#e8e4dc] rounded-2xl p-7 sm:p-8 flex flex-col justify-between shadow-[0_4px_24px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_32px_rgba(31,30,29,0.05)] transition-all duration-300"
+                                    className="bg-white border border-[#e8e4dc] rounded-lg p-7 sm:p-8 flex flex-col justify-between shadow-[0_4px_24px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_32px_rgba(31,30,29,0.05)] transition-all duration-300"
                                 >
                                     <div>
                                         {/* 5-Star Rating Row */}

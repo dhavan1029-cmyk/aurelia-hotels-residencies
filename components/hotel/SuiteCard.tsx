@@ -68,7 +68,7 @@ export function SuiteCard({
     if (variant === 'master-featured') {
         return (
             <article
-                className={`w-full bg-white border border-[#e8e4dc] rounded-2xl overflow-hidden shadow-[0_4px_30px_rgba(0,0,0,0.03)] grid grid-cols-1 lg:grid-cols-12 ${className}`}
+                className={`w-full bg-white border border-[#e8e4dc] rounded-lg overflow-hidden shadow-[0_4px_30px_rgba(0,0,0,0.03)] grid grid-cols-1 lg:grid-cols-12 ${className}`}
             >
                 {/* Left 7 Columns: Media Container with Badges, Valet Banner & Photo Counter */}
                 <div className="lg:col-span-7 relative min-h-95 sm:min-h-115 lg:min-h-125 bg-[#eeeae2] overflow-hidden">
@@ -179,7 +179,7 @@ export function SuiteCard({
                     {/* Dual Action Buttons */}
                     <div className="mt-8 pt-5 border-t border-[#f2ede4] flex flex-col sm:flex-row items-stretch justify-around sm:items-center gap-3">
                         <Link
-                            href={`/checkout?suite=${slug}`}
+                            href={`/checkout?suite=${id}`}
                             onClick={onPrimaryAction}
                             className="inline-flex items-center justify-center px-6 py-3.5 bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-[11px] font-semibold uppercase tracking-[0.2em] rounded-lg transition-all duration-200 shadow-sm text-center"
                         >
@@ -187,7 +187,7 @@ export function SuiteCard({
                             <span className="ml-1.5">→</span>
                         </Link>
                         <Link
-                            href={`/suites/${slug}`}
+                            href={`/accommodations/${id}`}
                             onClick={onSecondaryAction}
                             className="inline-flex items-center justify-center px-6 py-3.5 bg-[#f6f3ee] hover:bg-[#eeeae2] text-[#2c2a26] border border-[#ded9ce] font-sans text-[11px] font-medium uppercase tracking-[0.18em] rounded-lg transition-all duration-200 text-center"
                         >
@@ -204,7 +204,7 @@ export function SuiteCard({
     // -------------------------------------------------------------------------
     return (
         <article
-            className={`w-full bg-white border border-[#e8e4dc] rounded-2xl overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.03)] flex flex-col justify-between ${className}`}
+            className={`w-full bg-white border border-[#e8e4dc] rounded-lg overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.03)] flex flex-col justify-between ${className}`}
         >
             <div>
                 {/* Media Image with Badges, Feature Overlay & Embedded Price Tag */}
@@ -287,7 +287,7 @@ export function SuiteCard({
             {/* Bottom Actions Row */}
             <div className="px-6 pb-6 pt-2 flex items-center justify-between gap-3 border-t border-[#f2ede4] mt-2">
                 <Link
-                    href={`/checkout?suite=${slug}`}
+                    href={`/checkout?suite=${id}`}
                     onClick={onPrimaryAction}
                     className="flex-1 inline-flex items-center justify-center px-4 py-3 bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-[10px] font-semibold uppercase tracking-[0.2em] rounded-lg transition-all duration-200 shadow-sm text-center"
                 >
@@ -296,7 +296,7 @@ export function SuiteCard({
                 </Link>
 
                 <Link
-                    href={`/suites/${slug}`}
+                    href={`/accommodations/${id}`}
                     onClick={onSecondaryAction}
                     className="inline-flex items-center justify-center px-4 py-3 bg-[#f6f3ee] hover:bg-[#eeeae2] text-[#2c2a26] border border-[#ded9ce] font-sans text-[10px] font-medium uppercase tracking-[0.18em] rounded-lg transition-all duration-200 text-center"
                 >

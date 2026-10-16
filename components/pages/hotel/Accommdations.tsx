@@ -1,7 +1,6 @@
-import { FilterBar } from "@/components/hotel/AccommodationFilterBar"
+import { FilterBar } from "@/components/hotel/accommodations/AccommodationFilterBar"
 import { SuiteCard, SuiteCardProps } from "@/components/hotel/SuiteCard";
 import { Footer } from "@/components/layout/Footer";
-import Link from "next/link";
 
 export default function Accommodations(){
 
@@ -189,7 +188,7 @@ export default function Accommodations(){
                 </div>
 
                 {/* 3. Dark Bespoke Multi-Week Stays Callout Banner */}
-                <div className="bg-[#1f1e1d] text-[#fcf9f4] border border-[#383530] rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 shadow-xl">
+                <div className="bg-[#1f1e1d] text-[#fcf9f4] border border-[#383530] rounded-lg p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 shadow-xl">
                     <div>
                         <span className="text-[10px] font-sans font-semibold uppercase tracking-[0.25em] text-[#bfa76f] block mb-1">
                             EXCLUSIVE RESIDENTIAL ENCLAVES

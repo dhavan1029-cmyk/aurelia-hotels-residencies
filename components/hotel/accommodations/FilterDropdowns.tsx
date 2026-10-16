@@ -104,7 +104,7 @@ export function DateRangeDropdown({
 
     return (
         <div 
-            className={`absolute left-0 top-full mt-1 z-40 w-85 sm:w-95 bg-white border border-[#ded9ce] rounded-2xl shadow-[0_16px_40px_rgba(31,30,29,0.12)] p-5 text-[#1f1e1d] animate-in fade-in zoom-in-95 duration-200 ${className}`}
+            className={`absolute left-0 top-full mt-1 z-40 w-85 sm:w-95 bg-white border border-[#ded9ce] rounded-lg shadow-[0_16px_40px_rgba(31,30,29,0.12)] p-5 text-[#1f1e1d] animate-in fade-in zoom-in-95 duration-200 ${className}`}
             onClick={e => {
                 e.stopPropagation()
             }}
@@ -270,7 +270,7 @@ export function PartyCompositionDropdown({
 
     return (
         <div 
-            className={`absolute left-0 sm:left-auto sm:right-0 lg:left-0 top-full mt-1 z-40 w-[320px] sm:w-87.5 bg-white border border-[#ded9ce] rounded-2xl shadow-[0_16px_40px_rgba(31,30,29,0.12)] p-5 text-[#1f1e1d] animate-in fade-in zoom-in-95 duration-200 ${className}`}
+            className={`absolute left-0 sm:left-auto sm:right-0 lg:left-0 top-full mt-1 z-40 w-[320px] sm:w-87.5 bg-white border border-[#ded9ce] rounded-lg shadow-[0_16px_40px_rgba(31,30,29,0.12)] p-5 text-[#1f1e1d] animate-in fade-in zoom-in-95 duration-200 ${className}`}
             onClick={e => {
                 e.stopPropagation()
             }}

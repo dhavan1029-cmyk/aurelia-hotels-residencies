@@ -32,7 +32,7 @@ export function BookingBar({ className = '' }: BookingBarProps) {
 
     return (
         <div
-            className={`w-full max-w-7xl mx-auto bg-white/95 backdrop-blur-md border border-[#e8e4dc] rounded-2xl shadow-[0_12px_40px_rgba(0,0,0,0.1)] p-4 md:p-6 transition-all ${className}`}
+            className={`w-full max-w-7xl mx-auto bg-white/95 backdrop-blur-md border border-[#e8e4dc] rounded-lg shadow-[0_12px_40px_rgba(0,0,0,0.1)] p-4 md:p-6 transition-all ${className}`}
         >
             <form onSubmit={handleSearch}>
                 {/* Main Filter Rail */}
