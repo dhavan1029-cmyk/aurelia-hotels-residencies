@@ -119,41 +119,6 @@ export function CheckoutHeader({
                     </div>
                 </div>
 
-                {/* Center: 3-Step Interactive Residential Stepper */}
-                <nav aria-label="Checkout Progress" className="hidden md:flex items-center gap-2">
-                    {steps.map(function (step) {
-                        const isCurrent = (activeStepId || 'guest-details') === step.id;
-
-                        return (
-                            <button
-                                key={step.id}
-                                type="button"
-                                onClick={function () {
-                                    if (onStepClick) {
-                                        onStepClick(step.id);
-                                    }
-                                }}
-                                className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[10px] font-sans font-semibold uppercase tracking-[0.18em] transition-all duration-300 ${
-                                    isCurrent
-                                        ? 'bg-[#1f1e1d] text-white shadow-xs'
-                                        : 'bg-transparent text-[#7a7770] hover:text-[#1f1e1d] hover:bg-black/5'
-                                }`}
-                            >
-                                <span
-                                    className={`w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-sans ${
-                                        isCurrent
-                                            ? 'bg-white/20 text-white font-bold'
-                                            : 'bg-[#ede9df] text-[#7a7770]'
-                                    }`}
-                                >
-                                    {step.stepNumber}
-                                </span>
-                                <span>{step.label}</span>
-                            </button>
-                        );
-                    })}
-                </nav>
-
                 {/* Right: Currency Selector, Private Concierge Trigger & Patron Avatar */}
                 <div className="flex items-center gap-3 sm:gap-5">
                     {/* Currency Selector Pill */}

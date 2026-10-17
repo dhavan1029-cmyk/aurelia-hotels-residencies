@@ -279,7 +279,7 @@ export function ArrivalSensoryCalibrationSection({
     };
 
     return (
-        <section className={`w-full max-w-280 mx-auto space-y-8 ${className}`}>
+        <section className={`w-full max-w-360 mx-auto space-y-8 ${className}`}>
             {/* Section Monograph Header */}
             <div className="text-center max-w-2xl mx-auto">
                 <span className="block text-[10px] font-sans font-semibold uppercase tracking-[0.26em] text-[#8e763b] mb-2">
@@ -304,7 +304,7 @@ export function ArrivalSensoryCalibrationSection({
             {/* 3 Step Cards Grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-stretch">
                 {/* STEP 01: Chilled Welcome Reserve */}
-                <div className="bg-[#fcf9f4] border border-[#e8e4dc] rounded-2xl p-6 sm:p-7 shadow-[0_4px_24px_rgba(31,30,29,0.02)] flex flex-col justify-between">
+                <div className="bg-white border border-[#e8e4dc] rounded-2xl p-6 sm:p-7 shadow-[0_4px_24px_rgba(31,30,29,0.02)] flex flex-col justify-between">
                     <div>
                         <div className="flex items-center justify-between pb-3 border-b border-[#eeeae2] mb-4">
                             <span className="text-[10px] font-sans font-semibold uppercase tracking-[0.2em] text-[#8e763b]">
@@ -333,7 +333,7 @@ export function ArrivalSensoryCalibrationSection({
                                         onClick={function () {
                                             handleBeverageSelect(opt.id);
                                         }}
-                                        className={`p-3.5 rounded-xl border transition-all duration-200 cursor-pointer flex items-start gap-3 ${
+                                        className={`p-3.5 rounded-sm border transition-all duration-200 cursor-pointer flex items-start gap-3 ${
                                             isSelected
                                                 ? 'bg-[#f7f2e7] border-[#8e763b] shadow-2xs'
                                                 : 'bg-white border-[#ded9ce] hover:border-[#8e763b]/50'
@@ -377,7 +377,7 @@ export function ArrivalSensoryCalibrationSection({
                 </div>
 
                 {/* STEP 02: Suite Olfactory Ambiance */}
-                <div className="bg-[#fcf9f4] border border-[#e8e4dc] rounded-2xl p-6 sm:p-7 shadow-[0_4px_24px_rgba(31,30,29,0.02)] flex flex-col justify-between">
+                <div className="bg-white border border-[#e8e4dc] rounded-2xl p-6 sm:p-7 shadow-[0_4px_24px_rgba(31,30,29,0.02)] flex flex-col justify-between">
                     <div>
                         <div className="flex items-center justify-between pb-3 border-b border-[#eeeae2] mb-4">
                             <span className="text-[10px] font-sans font-semibold uppercase tracking-[0.2em] text-[#8e763b]">
@@ -406,7 +406,7 @@ export function ArrivalSensoryCalibrationSection({
                                         onClick={function () {
                                             handleOlfactorySelect(opt.id);
                                         }}
-                                        className={`p-3.5 rounded-xl border transition-all duration-200 cursor-pointer flex items-start gap-3 ${
+                                        className={`p-3.5 rounded-sm border transition-all duration-200 cursor-pointer flex items-start gap-3 ${
                                             isSelected
                                                 ? 'bg-[#f7f2e7] border-[#8e763b] shadow-2xs'
                                                 : 'bg-white border-[#ded9ce] hover:border-[#8e763b]/50'
@@ -448,7 +448,7 @@ export function ArrivalSensoryCalibrationSection({
                 </div>
 
                 {/* STEP 03: Riva Tender Rendezvous */}
-                <div className="bg-[#fcf9f4] border border-[#e8e4dc] rounded-2xl p-6 sm:p-7 shadow-[0_4px_24px_rgba(31,30,29,0.02)] flex flex-col justify-between">
+                <div className="bg-white border border-[#e8e4dc] rounded-2xl p-6 sm:p-7 shadow-[0_4px_24px_rgba(31,30,29,0.02)] flex flex-col justify-between">
                     <div>
                         <div className="flex items-center justify-between pb-3 border-b border-[#eeeae2] mb-4">
                             <span className="text-[10px] font-sans font-semibold uppercase tracking-[0.2em] text-[#8e763b]">
@@ -475,7 +475,7 @@ export function ArrivalSensoryCalibrationSection({
                                 <select
                                     value={selectedHarborId}
                                     onChange={handleHarborChange}
-                                    className="w-full px-3 py-2.5 rounded-xl bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] transition-colors shadow-2xs"
+                                    className="w-full px-3 py-2.5 rounded-sm bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] transition-colors shadow-2xs"
                                 >
                                     {harbors.map(function (harbor) {
                                         return (
@@ -497,7 +497,7 @@ export function ArrivalSensoryCalibrationSection({
                                 <select
                                     value={selectedTimeSlotId}
                                     onChange={handleTimeSlotChange}
-                                    className="w-full px-3 py-2.5 rounded-xl bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] transition-colors shadow-2xs"
+                                    className="w-full px-3 py-2.5 rounded-sm bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] transition-colors shadow-2xs"
                                 >
                                     {timeSlots.map(function (slot) {
                                         return (
@@ -510,7 +510,7 @@ export function ArrivalSensoryCalibrationSection({
                             </div>
 
                             {/* Live Harbor Radar Pill */}
-                            <div className="p-3 rounded-xl bg-white border border-[#ded9ce] shadow-2xs flex items-center justify-between">
+                            <div className="p-3 rounded-sm bg-white border border-[#ded9ce] shadow-2xs flex items-center justify-between">
                                 <div className="flex items-center gap-2">
                                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                                     <span className="text-[11px] font-sans font-medium text-[#1f1e1d]">
@@ -528,7 +528,7 @@ export function ArrivalSensoryCalibrationSection({
                         <button
                             type="button"
                             onClick={handleConfirmTransferClick}
-                            className="w-full py-3 rounded-xl bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-[11px] font-semibold uppercase tracking-[0.18em] transition-all shadow-sm active:translate-y-0.5 text-center"
+                            className="w-full py-3 rounded-sm bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-[11px] font-semibold uppercase tracking-[0.18em] transition-all shadow-sm active:translate-y-0.5 text-center"
                         >
                             Confirm Maritime Slipway
                         </button>

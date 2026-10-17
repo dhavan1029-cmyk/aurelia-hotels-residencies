@@ -255,7 +255,7 @@ export function ComfortAndAddOnsSection({
     return (
         <form onSubmit={handleSubmit} className={`space-y-8 ${className}`}>
             {/* SECTION 3: Sanctuary Comfort & Pillow Architecture */}
-            <article className="bg-[#fcf9f4] border border-[#e8e4dc] rounded-lg p-6 sm:p-8 lg:p-9 shadow-[0_4px_24px_rgba(0,0,0,0.02)]">
+            <article className="bg-white border border-[#e8e4dc] rounded-lg p-6 sm:p-8 lg:p-9 shadow-[0_4px_24px_rgba(0,0,0,0.02)]">
                 {/* Form Card Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#eeeae2] pb-5 mb-6">
                     <div className="flex items-center gap-3">
@@ -282,7 +282,7 @@ export function ComfortAndAddOnsSection({
                             <div
                                 key={pillow.id}
                                 onClick={() => handlePillowSelect(pillow.id)}
-                                className={`p-4 rounded-xl border transition-all duration-300 cursor-pointer flex flex-col justify-between ${
+                                className={`p-4 rounded-sm border transition-all duration-300 cursor-pointer flex flex-col justify-between ${
                                     isSelected
                                         ? 'bg-[#f7f2e7] border-[#8e763b] shadow-xs'
                                         : 'bg-white border-[#ded9ce] hover:border-[#8e763b]/60'
@@ -323,7 +323,7 @@ export function ComfortAndAddOnsSection({
                 </div>
 
                 {/* Suite Staging Ambient Climate Bar */}
-                <div className="pt-5 border-t border-[#eeeae2] flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl bg-[#f6f2ea]/70 border">
+                <div className="pt-5 border-t border-[#eeeae2] flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-sm bg-[#f6f2ea]/70 border">
                     <div className="flex items-start sm:items-center gap-3">
                         <div className="p-2 rounded-lg bg-white border border-[#ded9ce] shadow-2xs text-[#8e763b] shrink-0">
                             <svg
@@ -349,7 +349,7 @@ export function ComfortAndAddOnsSection({
                     </div>
 
                     {/* Interactive Temperature Stepper Widget */}
-                    <div className="flex items-center gap-2 self-start sm:self-auto bg-white border border-[#ded9ce] rounded-xl px-2.5 py-1.5 shadow-2xs">
+                    <div className="flex items-center gap-2 self-start sm:self-auto bg-white border border-[#ded9ce] rounded-sm px-2.5 py-1.5 shadow-2xs">
                         <button
                             type="button"
                             onClick={handleTemperatureDecrease}
@@ -376,7 +376,7 @@ export function ComfortAndAddOnsSection({
             </article>
 
             {/* SECTION 4: Curated Sanctuary Add-Ons */}
-            <article className="bg-[#fcf9f4] border border-[#e8e4dc] rounded-lg p-6 sm:p-8 lg:p-9 shadow-[0_4px_24px_rgba(0,0,0,0.02)]">
+            <article className="bg-white border border-[#e8e4dc] rounded-lg p-6 sm:p-8 lg:p-9 shadow-[0_4px_24px_rgba(0,0,0,0.02)]">
                 {/* Form Card Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#eeeae2] pb-5 mb-6">
                     <div className="flex items-center gap-3">
@@ -407,7 +407,7 @@ export function ComfortAndAddOnsSection({
                             <div
                                 key={addOn.id}
                                 onClick={() => handleAddOnToggle(addOn.id)}
-                                className={`p-4 sm:p-5 rounded-xl border transition-all duration-300 cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
+                                className={`p-4 sm:p-5 rounded-sm border transition-all duration-300 cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
                                     isChecked
                                         ? 'bg-[#f7f2e7]/80 border-[#8e763b] shadow-xs'
                                         : 'bg-white border-[#ded9ce] hover:border-[#8e763b]/50'
@@ -471,7 +471,7 @@ export function ComfortAndAddOnsSection({
             {/* Sovereign Privilege Verified Banner */}
             <div className="bg-[#1f1e1d] text-[#fcf9f4] border border-[#383530] rounded-lg p-5 sm:p-6 shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="flex items-start gap-3.5">
-                    <div className="p-2.5 rounded-xl bg-[#2a2826] border border-[#44403a] text-[#bfa76f] shrink-0">
+                    <div className="p-2.5 rounded-sm bg-[#2a2826] border border-[#44403a] text-[#bfa76f] shrink-0">
                         <svg
                             className="w-4 h-4"
                             viewBox="0 0 24 24"
@@ -523,7 +523,7 @@ export function ComfortAndAddOnsSection({
 
                 <button
                     type="submit"
-                    className="group inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-xl bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-xs font-semibold uppercase tracking-[0.22em] transition-all duration-300 shadow-md active:translate-y-0.5"
+                    className="group inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-sm bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-xs font-semibold uppercase tracking-[0.22em] transition-all duration-300 shadow-md active:translate-y-0.5"
                 >
                     <span>{submitLabel}</span>
                     <span className="text-sm font-normal transform transition-transform duration-300 group-hover:translate-x-1">

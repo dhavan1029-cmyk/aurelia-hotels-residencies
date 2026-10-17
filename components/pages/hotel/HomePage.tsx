@@ -518,7 +518,7 @@ export function HomePage() {
                             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 sm:gap-4 shrink-0">
                                 {/* Primary Gold Button */}
                                 <Link
-                                    href={'/suites'}
+                                    href={'/accommodations'}
                                     // onClick={onCheckAvailability}
                                     className="inline-flex items-center justify-center px-10 py-4 bg-[#b28c51] hover:bg-[#9e7a42] text-white font-sans text-[11px] font-semibold uppercase tracking-[0.22em] rounded-sm transition-all duration-300 shadow-sm active:translate-y-0.5 text-center whitespace-nowrap"
                                 >

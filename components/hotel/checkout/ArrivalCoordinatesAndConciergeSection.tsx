@@ -138,7 +138,7 @@ export function ArrivalCoordinatesAndConciergeSection({
 	} = data;
 
 	return (
-		<section className={`w-full max-w-280 mx-auto space-y-8 ${className}`}>
+		<section className={`w-full max-w-360 mx-auto space-y-8 ${className}`}>
 			{/* Section Monograph Header */}
 			<div className="text-center max-w-2xl mx-auto">
 				<span className="block text-[10px] font-sans font-semibold uppercase tracking-[0.26em] text-[#8e763b] mb-2">
@@ -157,7 +157,7 @@ export function ArrivalCoordinatesAndConciergeSection({
 				{/* LEFT 7 COLUMNS: Enclave Coordinates & Transit Grid */}
 				<div className="lg:col-span-7 space-y-6">
 					{/* Architectural Coordinates Card */}
-					<article className="bg-[#fcf9f4] border border-[#e8e4dc] rounded-2xl p-6 sm:p-7 shadow-[0_4px_24px_rgba(31,30,29,0.02)] space-y-5">
+					<article className="bg-white border border-[#e8e4dc] rounded-2xl p-6 sm:p-7 shadow-[0_4px_24px_rgba(31,30,29,0.02)] space-y-5">
 						<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[#eeeae2]">
 							<div>
 								<span className="block text-[9px] font-sans font-semibold uppercase tracking-[0.2em] text-[#8e763b] mb-1">
@@ -185,7 +185,7 @@ export function ArrivalCoordinatesAndConciergeSection({
 
 						{/* Geo Telemetry Monograph Grid */}
 						<div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-sans">
-							<div className="p-3 rounded-xl bg-white border border-[#ded9ce] shadow-2xs">
+							<div className="p-3 rounded-sm bg-white border border-[#ded9ce] shadow-2xs">
 								<span className="text-[9px] uppercase tracking-wider text-[#8e8a82] block">
 									LATITUDE
 								</span>
@@ -193,7 +193,7 @@ export function ArrivalCoordinatesAndConciergeSection({
 									{coordinates.latitude}
 								</span>
 							</div>
-							<div className="p-3 rounded-xl bg-white border border-[#ded9ce] shadow-2xs">
+							<div className="p-3 rounded-sm bg-white border border-[#ded9ce] shadow-2xs">
 								<span className="text-[9px] uppercase tracking-wider text-[#8e8a82] block">
 									LONGITUDE
 								</span>
@@ -201,7 +201,7 @@ export function ArrivalCoordinatesAndConciergeSection({
 									{coordinates.longitude}
 								</span>
 							</div>
-							<div className="p-3 rounded-xl bg-white border border-[#ded9ce] shadow-2xs">
+							<div className="p-3 rounded-sm bg-white border border-[#ded9ce] shadow-2xs">
 								<span className="text-[9px] uppercase tracking-wider text-[#8e8a82] block">
 									ELEVATION
 								</span>
@@ -209,7 +209,7 @@ export function ArrivalCoordinatesAndConciergeSection({
 									185m AMSL
 								</span>
 							</div>
-							<div className="p-3 rounded-xl bg-white border border-[#ded9ce] shadow-2xs">
+							<div className="p-3 rounded-sm bg-white border border-[#ded9ce] shadow-2xs">
 								<span className="text-[9px] uppercase tracking-wider text-[#8e8a82] block">
 									WATER GATE
 								</span>
@@ -228,7 +228,7 @@ export function ArrivalCoordinatesAndConciergeSection({
 								return (
 									<div
 										key={method.id}
-										className="p-4 rounded-xl bg-white border border-[#ded9ce] shadow-2xs flex items-start gap-3.5 transition-all hover:border-[#8e763b]/50"
+										className="p-4 rounded-sm bg-white border border-[#ded9ce] shadow-2xs flex items-start gap-3.5 transition-all hover:border-[#8e763b]/50"
 									>
 										<div className="p-2 rounded-lg bg-[#f6f2ea] border border-[#e8e4dc] text-[#8e763b] shrink-0 mt-0.5">
 											{method.iconType === 'marine' && (
@@ -343,7 +343,7 @@ export function ArrivalCoordinatesAndConciergeSection({
 								<a
 									href={`tel:${conciergeDesk.directHotlineTel}`}
 									onClick={onCallConcierge}
-									className="w-full inline-flex items-center justify-between px-5 py-3.5 rounded-xl bg-[#bfa76f] hover:bg-[#aa935e] text-white font-sans text-xs font-semibold uppercase tracking-[0.2em] transition-all shadow-md active:translate-y-0.5"
+									className="w-full inline-flex items-center justify-between px-5 py-3.5 rounded-sm bg-[#bfa76f] hover:bg-[#aa935e] text-white font-sans text-xs font-semibold uppercase tracking-[0.2em] transition-all shadow-md active:translate-y-0.5"
 								>
 									<div className="flex items-center gap-2.5">
 										<svg
@@ -365,7 +365,7 @@ export function ArrivalCoordinatesAndConciergeSection({
 								<a
 									href={`mailto:${conciergeDesk.secureEmail}`}
 									onClick={onEmailConcierge}
-									className="w-full inline-flex items-center justify-between px-5 py-3.5 rounded-xl bg-[#2a2826] hover:bg-[#383530] border border-[#44403a] text-white font-sans text-xs font-medium uppercase tracking-[0.18em] transition-all"
+									className="w-full inline-flex items-center justify-between px-5 py-3.5 rounded-sm bg-[#2a2826] hover:bg-[#383530] border border-[#44403a] text-white font-sans text-xs font-medium uppercase tracking-[0.18em] transition-all"
 								>
 									<div className="flex items-center gap-2.5">
 										<svg

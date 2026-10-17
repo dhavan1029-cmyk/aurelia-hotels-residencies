@@ -149,7 +149,7 @@ export function PatronAndLogisticsSection({
             </div>
 
             {/* SECTION 1: Primary Patron Details Form Card */}
-            <article className="bg-[#fcf9f4] border border-[#e8e4dc] rounded-lg p-6 sm:p-8 lg:p-9 shadow-[0_4px_24px_rgba(0,0,0,0.02)]">
+            <article className="bg-white border border-[#e8e4dc] rounded-lg p-6 sm:p-8 lg:p-9 shadow-[0_4px_24px_rgba(0,0,0,0.02)]">
                 {/* Form Card Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#eeeae2] pb-5 mb-6">
                     <div className="flex items-center gap-3">
@@ -181,7 +181,7 @@ export function PatronAndLogisticsSection({
                         <select
                             value={formValues.title}
                             onChange={(e) => handleFieldChange('title', e.target.value)}
-                            className="w-full px-3.5 py-3 rounded-xl bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] transition-colors shadow-2xs"
+                            className="w-full px-3.5 py-3 rounded-sm bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] transition-colors shadow-2xs"
                         >
                             {honorificOptions.map((opt) => (
                                 <option key={opt.value} value={opt.value}>
@@ -202,7 +202,7 @@ export function PatronAndLogisticsSection({
                             value={formValues.firstName}
                             onChange={(e) => handleFieldChange('firstName', e.target.value)}
                             placeholder="e.g. Julian"
-                            className="w-full px-3.5 py-3 rounded-xl bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] transition-colors shadow-2xs placeholder-[#a4a098]"
+                            className="w-full px-3.5 py-3 rounded-sm bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] transition-colors shadow-2xs placeholder-[#a4a098]"
                         />
                     </div>
 
@@ -217,7 +217,7 @@ export function PatronAndLogisticsSection({
                             value={formValues.lastName}
                             onChange={(e) => handleFieldChange('lastName', e.target.value)}
                             placeholder="e.g. Vane-Tempest"
-                            className="w-full px-3.5 py-3 rounded-xl bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] transition-colors shadow-2xs placeholder-[#a4a098]"
+                            className="w-full px-3.5 py-3 rounded-sm bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] transition-colors shadow-2xs placeholder-[#a4a098]"
                         />
                     </div>
 
@@ -233,7 +233,7 @@ export function PatronAndLogisticsSection({
                                 value={formValues.email}
                                 onChange={(e) => handleFieldChange('email', e.target.value)}
                                 placeholder="patron@sovereign-holdings.co.uk"
-                                className="w-full pl-10 pr-3.5 py-3 rounded-xl bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] transition-colors shadow-2xs placeholder-[#a4a098]"
+                                className="w-full pl-10 pr-3.5 py-3 rounded-sm bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] transition-colors shadow-2xs placeholder-[#a4a098]"
                             />
                             <svg
                                 className="w-4 h-4 text-[#8e763b] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
@@ -262,7 +262,7 @@ export function PatronAndLogisticsSection({
                             <select
                                 value={formValues.phoneCountryCode}
                                 onChange={(e) => handleFieldChange('phoneCountryCode', e.target.value)}
-                                className="px-3 py-3 rounded-xl bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] transition-colors shadow-2xs shrink-0"
+                                className="px-3 py-3 rounded-sm bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] transition-colors shadow-2xs shrink-0"
                             >
                                 <option value="+44">+44 (UK)</option>
                                 <option value="+41">+41 (CH)</option>
@@ -278,7 +278,7 @@ export function PatronAndLogisticsSection({
                                 value={formValues.phoneNumber}
                                 onChange={(e) => handleFieldChange('phoneNumber', e.target.value)}
                                 placeholder="7911 123456"
-                                className="w-full px-3.5 py-3 rounded-xl bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] transition-colors shadow-2xs placeholder-[#a4a098]"
+                                className="w-full px-3.5 py-3 rounded-sm bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] transition-colors shadow-2xs placeholder-[#a4a098]"
                             />
                         </div>
                         <span className="block text-[10px] font-sans text-[#8e8a82] mt-1.5 leading-snug">
@@ -294,7 +294,7 @@ export function PatronAndLogisticsSection({
                         <select
                             value={formValues.countryOfResidence}
                             onChange={(e) => handleFieldChange('countryOfResidence', e.target.value)}
-                            className="w-full px-3.5 py-3 rounded-xl bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] transition-colors shadow-2xs"
+                            className="w-full px-3.5 py-3 rounded-sm bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] transition-colors shadow-2xs"
                         >
                             {countryOptions.map((country) => (
                                 <option key={country.value} value={country.value}>
@@ -314,7 +314,7 @@ export function PatronAndLogisticsSection({
                             value={formValues.accompanyingGuestName}
                             onChange={(e) => handleFieldChange('accompanyingGuestName', e.target.value)}
                             placeholder="e.g. Lady Evelyn Vane-Tempest"
-                            className="w-full px-3.5 py-3 rounded-xl bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] transition-colors shadow-2xs placeholder-[#a4a098]"
+                            className="w-full px-3.5 py-3 rounded-sm bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] transition-colors shadow-2xs placeholder-[#a4a098]"
                         />
                         <span className="block text-[10px] font-sans text-[#8e8a82] mt-1.5 leading-snug">
                             For personalized sanctuary pass & dining reservations.
@@ -324,7 +324,7 @@ export function PatronAndLogisticsSection({
             </article>
 
             {/* SECTION 2: Arrival Logistics & Host Orchestration */}
-            <article className="bg-[#fcf9f4] border border-[#e8e4dc] rounded-lg p-6 sm:p-8 lg:p-9 shadow-[0_4px_24px_rgba(0,0,0,0.02)]">
+            <article className="bg-white border border-[#e8e4dc] rounded-lg p-6 sm:p-8 lg:p-9 shadow-[0_4px_24px_rgba(0,0,0,0.02)]">
                 {/* Form Card Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#eeeae2] pb-5 mb-6">
                     <div className="flex items-center gap-3">
@@ -351,7 +351,7 @@ export function PatronAndLogisticsSection({
                             <div
                                 key={window.id}
                                 onClick={() => handleFieldChange('selectedArrivalWindowId', window.id)}
-                                className={`p-4 rounded-xl border transition-all duration-300 cursor-pointer flex flex-col justify-between ${
+                                className={`p-4 rounded-sm border transition-all duration-300 cursor-pointer flex flex-col justify-between ${
                                     isSelected
                                         ? 'bg-[#f7f2e7] border-[#8e763b] shadow-xs'
                                         : 'bg-white border-[#ded9ce] hover:border-[#8e763b]/60'
@@ -399,7 +399,7 @@ export function PatronAndLogisticsSection({
                             value={formValues.transportDesignation}
                             onChange={(e) => handleFieldChange('transportDesignation', e.target.value)}
                             placeholder="e.g. NetJets Citation Latitude — NJE849 into Naples"
-                            className="w-full px-3.5 py-3 rounded-xl bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] transition-colors shadow-2xs placeholder-[#a4a098]"
+                            className="w-full px-3.5 py-3 rounded-sm bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] transition-colors shadow-2xs placeholder-[#a4a098]"
                         />
                         <span className="block text-[10px] font-sans text-[#8e8a82] mt-1.5 leading-snug">
                             Coordinated with private heliport or Positano harbor master.
@@ -416,7 +416,7 @@ export function PatronAndLogisticsSection({
                             value={formValues.dietaryAndCellarNuances}
                             onChange={(e) => handleFieldChange('dietaryAndCellarNuances', e.target.value)}
                             placeholder="e.g. Preference for Campania whites & biodynamic pressings"
-                            className="w-full px-3.5 py-3 rounded-xl bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] transition-colors shadow-2xs placeholder-[#a4a098]"
+                            className="w-full px-3.5 py-3 rounded-sm bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] transition-colors shadow-2xs placeholder-[#a4a098]"
                         />
                         <span className="block text-[10px] font-sans text-[#8e8a82] mt-1.5 leading-snug">
                             Shared directly with Executive Sommelier Matteo Moretti.

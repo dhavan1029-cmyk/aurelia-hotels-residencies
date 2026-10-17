@@ -114,9 +114,9 @@ export default function Accommodations(){
     ];
 
 
-    return <section className="relative w-full h-fit bg-[#fcf9f4] pt-10 text-[#1f1e1d]">
+    return <section className="relative w-full h-fit bg-[#fcf9f4] pt-5 lg:pt-10 text-[#1f1e1d]">
         {/* Header: Editorial Monograph & Sanctuary Geo Coordinates */}
-        <div className="max-w-340 mx-auto">
+        <div className="max-w-340 mx-auto px-6">
             <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-6 pb-8 sm:pb-10">
                 {/* Left: Master Heading Block */}
                 <div className="max-w-3xl">
@@ -126,13 +126,13 @@ export default function Accommodations(){
                     <h1 className="font-serif text-3xl sm:text-5xl lg:text-[56px] font-normal text-[#1f1e1d] tracking-tight leading-[1.08]">
                         {'Curated Suites & Private Sanctuaries'}
                     </h1>
-                    <p className="mt-3.5 sm:mt-4 text-[#636058] font-sans leading-relaxed max-w-2xl">
+                    <p className="hidden md:block mt-3.5 sm:mt-4 text-[#636058] font-sans leading-relaxed max-w-2xl">
                         {'18 oceanfront sanctuaries carved into Positano cliffside limestone, crafted for unhurried living.'}
                     </p>
                 </div>
                 
                 {/* Right: Coordinates & Live Reservation Pulse */}
-                <div className="flex flex-col lg:items-end lg:text-right shrink-0 pt-1 lg:pt-2">
+                <div className="hidden md:flex flex-col lg:items-end lg:text-right shrink-0 pt-1 lg:pt-2">
                     <span className="block text-[10px] sm:text-[11px] font-sans font-semibold uppercase tracking-[0.25em] text-[#8e8a82]">
                         SANCTUARY COORDINATES
                     </span>

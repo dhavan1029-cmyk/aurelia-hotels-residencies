@@ -111,7 +111,7 @@ export function ConfirmationHeaderAndHero({
             </p>
 
             {/* Cinematic Panoramic Enclave Card */}
-            <div className="mt-8 sm:mt-10 max-w-280 mx-auto relative aspect-21/9 sm:aspect-16/7 w-full rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_16px_48px_rgba(31,30,29,0.08)] bg-[#eeeae2] border border-[#e8e4dc]">
+            <div className="mt-8 sm:mt-10 max-w-340 mx-auto relative aspect-21/9 sm:aspect-16/7 w-full rounded-sm overflow-hidden shadow-[0_16px_48px_rgba(31,30,29,0.08)] bg-[#eeeae2] border border-[#e8e4dc]">
                 <Image
                     src={panorama.heroImageUrl}
                     alt={panorama.heroImageAlt}
@@ -154,7 +154,7 @@ export function ConfirmationHeaderAndHero({
                 <button
                     type="button"
                     onClick={onAddToWallet}
-                    className="group inline-flex items-center gap-2.5 px-5 py-3 rounded-xl bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-[11px] font-semibold uppercase tracking-[0.18em] transition-all shadow-sm active:translate-y-0.5"
+                    className="group inline-flex items-center gap-2.5 px-5 py-3 rounded-sm bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-[11px] font-semibold uppercase tracking-[0.18em] transition-all shadow-sm active:translate-y-0.5"
                 >
                     <svg
                         className="w-4 h-4 text-white"
@@ -170,7 +170,7 @@ export function ConfirmationHeaderAndHero({
                 <button
                     type="button"
                     onClick={onDownloadPdf}
-                    className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white hover:bg-[#f6f2ea] border border-[#ded9ce] text-[#1f1e1d] font-sans text-[11px] font-medium uppercase tracking-[0.18em] transition-all shadow-2xs active:translate-y-0.5"
+                    className="inline-flex items-center gap-2 px-5 py-3 rounded-sm bg-white hover:bg-[#f6f2ea] border border-[#ded9ce] text-[#1f1e1d] font-sans text-[11px] font-medium uppercase tracking-[0.18em] transition-all shadow-2xs active:translate-y-0.5"
                 >
                     <svg
                         className="w-4 h-4 text-[#8e763b]"
@@ -192,7 +192,7 @@ export function ConfirmationHeaderAndHero({
                 <button
                     type="button"
                     onClick={onSyncCalendar}
-                    className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white hover:bg-[#f6f2ea] border border-[#ded9ce] text-[#1f1e1d] font-sans text-[11px] font-medium uppercase tracking-[0.18em] transition-all shadow-2xs active:translate-y-0.5"
+                    className="inline-flex items-center gap-2 px-5 py-3 rounded-sm bg-white hover:bg-[#f6f2ea] border border-[#ded9ce] text-[#1f1e1d] font-sans text-[11px] font-medium uppercase tracking-[0.18em] transition-all shadow-2xs active:translate-y-0.5"
                 >
                     <svg
                         className="w-4 h-4 text-[#8e763b]"
@@ -215,7 +215,7 @@ export function ConfirmationHeaderAndHero({
                 <button
                     type="button"
                     onClick={onPrintFolio}
-                    className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white hover:bg-[#f6f2ea] border border-[#ded9ce] text-[#1f1e1d] font-sans text-[11px] font-medium uppercase tracking-[0.18em] transition-all shadow-2xs active:translate-y-0.5"
+                    className="inline-flex items-center gap-2 px-5 py-3 rounded-sm bg-white hover:bg-[#f6f2ea] border border-[#ded9ce] text-[#1f1e1d] font-sans text-[11px] font-medium uppercase tracking-[0.18em] transition-all shadow-2xs active:translate-y-0.5"
                 >
                     <svg
                         className="w-4 h-4 text-[#8e763b]"

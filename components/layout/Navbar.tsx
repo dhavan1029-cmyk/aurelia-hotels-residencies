@@ -51,8 +51,8 @@ export function Navbar() {
             {/* Mobile Drawer */}
             {mobileMenuOpen && (
                 <div className="md:hidden bg-[#fcf9f4] border-b border-[#e8e4dc] px-6 py-8 flex flex-col gap-6 text-sm uppercase tracking-widest font-sans">
-                    <Link href="/suites" onClick={() => setMobileMenuOpen(false)}>
-                        Curated Suites
+                    <Link href="/accommodations" onClick={() => setMobileMenuOpen(false)}>
+                        Accommodations
                     </Link>
                     <Link href="/experiences" onClick={() => setMobileMenuOpen(false)}>
                         Gastronomy & Spa

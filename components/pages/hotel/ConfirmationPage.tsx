@@ -136,7 +136,7 @@ export function ConfirmationPage({
 
 
 			{/* Master Content Workspace */}
-			<main className="max-w-310 mx-auto px-4 sm:px-8 lg:px-12 py-10 sm:py-14 space-y-16 sm:space-y-20 w-full flex-1">
+			<main className="max-w-360 mx-auto px-4 sm:px-8 lg:px-12 py-10 sm:py-14 space-y-16 sm:space-y-20 w-full flex-1">
 				{/* Phase 1: Header, Verified Eyebrow, Panoramic Sanctuary & Action Strip */}
 				<ConfirmationHeaderAndHero
 					data={heroData}
@@ -159,7 +159,7 @@ export function ConfirmationPage({
 					onConfirmTransfer={handleConfirmTransfer}
 				/>
 
-				Phase 4: Geographic Coordinates, Transit Guide & Dedicated Concierge Desk
+				{/* Phase 4: Geographic Coordinates, Transit Guide & Dedicated Concierge Desk */}
 				<ArrivalCoordinatesAndConciergeSection
 					data={coordinatesData}
 					onCallConcierge={handleCallConcierge}

@@ -138,7 +138,7 @@ export function SovereignVoucherCard({
 
     return (
         <article
-            className={`w-full max-w-280 mx-auto bg-[#fcf9f4] border border-[#e8e4dc] rounded-2xl sm:rounded-3xl shadow-[0_8px_32px_rgba(31,30,29,0.04)] overflow-hidden ${className}`}
+            className={`w-full max-w-360 mx-auto bg-white border border-[#e8e4dc] rounded-2xl sm:rounded-3xl shadow-[0_8px_32px_rgba(31,30,29,0.04)] overflow-hidden ${className}`}
         >
             {/* Top Folio Header Bar */}
             <div className="px-6 sm:px-10 py-5 bg-[#f6f2ea] border-b border-[#ded9ce] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -195,7 +195,7 @@ export function SovereignVoucherCard({
                             STAY HORIZON
                         </span>
 
-                        <div className="p-3.5 rounded-xl bg-white border border-[#ded9ce] shadow-2xs space-y-1">
+                        <div className="p-3.5 rounded-sm bg-white border border-[#ded9ce] shadow-2xs space-y-1">
                             <span className="text-[9px] font-sans uppercase tracking-wider text-[#8e8a82] block">
                                 ARRIVAL CHECK-IN
                             </span>
@@ -207,7 +207,7 @@ export function SovereignVoucherCard({
                             </span>
                         </div>
 
-                        <div className="p-3.5 rounded-xl bg-white border border-[#ded9ce] shadow-2xs space-y-1">
+                        <div className="p-3.5 rounded-sm bg-white border border-[#ded9ce] shadow-2xs space-y-1">
                             <span className="text-[9px] font-sans uppercase tracking-wider text-[#8e8a82] block">
                                 DEPARTURE CHECK-OUT
                             </span>
@@ -267,7 +267,7 @@ export function SovereignVoucherCard({
                     </div>
 
                     {/* Assigned Majordomo Liaison Badge */}
-                    <div className="pt-4 border-t border-[#eeeae2] flex items-center gap-3 p-3.5 rounded-xl bg-white border shadow-2xs">
+                    <div className="pt-4 border-t border-[#eeeae2] flex items-center gap-3 p-3.5 rounded-sm bg-white border shadow-2xs">
                         <div className="relative w-10 h-10 rounded-full overflow-hidden bg-[#eeeae2] border border-[#dcdad5] shrink-0">
                             {assignedHost.avatarUrl ? (
                                 <Image

@@ -142,7 +142,7 @@ export function CheckoutFolioRail({
     return (
         <aside className={`w-full space-y-6 ${className}`}>
             {/* 1. Main Sticky Folio Card */}
-            <article className="bg-[#fcf9f4] border border-[#e8e4dc] rounded-lg overflow-hidden shadow-[0_8px_32px_rgba(31,30,29,0.04)]">
+            <article className="bg-white border border-[#e8e4dc] rounded-lg overflow-hidden shadow-[0_8px_32px_rgba(31,30,29,0.04)]">
                 {/* Suite Photographic Preview Header */}
                 <div className="relative aspect-16/10 w-full overflow-hidden bg-[#eeeae2]">
                     <Image
@@ -182,7 +182,7 @@ export function CheckoutFolioRail({
                     </div>
 
                     <div className="grid grid-cols-2 gap-3 text-xs font-sans">
-                        <div className="p-3 rounded-xl bg-white border border-[#ded9ce] shadow-2xs">
+                        <div className="p-3 rounded-sm bg-white border border-[#ded9ce] shadow-2xs">
                             <span className="text-[9px] uppercase tracking-wider text-[#8e8a82] block">
                                 CHECK-IN
                             </span>
@@ -194,7 +194,7 @@ export function CheckoutFolioRail({
                             </span>
                         </div>
 
-                        <div className="p-3 rounded-xl bg-white border border-[#ded9ce] shadow-2xs">
+                        <div className="p-3 rounded-sm bg-white border border-[#ded9ce] shadow-2xs">
                             <span className="text-[9px] uppercase tracking-wider text-[#8e8a82] block">
                                 CHECK-OUT
                             </span>
@@ -401,7 +401,7 @@ export function CheckoutFolioRail({
                     <a
                         href={`tel:${host.directPhone}`}
                         onClick={onCallHost}
-                        className="p-2.5 rounded-xl bg-[#2a2826] hover:bg-[#383530] border border-[#44403a] text-[#bfa76f] transition-colors"
+                        className="p-2.5 rounded-sm bg-[#2a2826] hover:bg-[#383530] border border-[#44403a] text-[#bfa76f] transition-colors"
                         aria-label="Call Host on Duty"
                     >
                         <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
@@ -412,7 +412,7 @@ export function CheckoutFolioRail({
                     <a
                         href={`mailto:${host.directEmail}`}
                         onClick={onMessageHost}
-                        className="p-2.5 rounded-xl bg-[#2a2826] hover:bg-[#383530] border border-[#44403a] text-[#bfa76f] transition-colors"
+                        className="p-2.5 rounded-sm bg-[#2a2826] hover:bg-[#383530] border border-[#44403a] text-[#bfa76f] transition-colors"
                         aria-label="Email Host on Duty"
                     >
                         <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
