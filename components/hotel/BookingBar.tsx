@@ -1,230 +1,725 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button } from '../ui/Button';
 
-export interface BookingBarProps {
-    className?: string;
+export interface SanctuaryOption {
+	id: string;
+	name: string;
+	locationSub: string;
+	badge: string;
+	coordinates: string;
 }
 
-export function BookingBar({ className = '' }: BookingBarProps) {
-    const router = useRouter();
+export interface PatronPartyConfig {
+	guestsCount: number;
+	suitesCount: number;
+	suiteTypeLabel: string;
+}
 
-    const [sanctuary, setSanctuary] = useState('amalfi-positano');
-    const [checkIn, setCheckIn] = useState('2025-10-14');
-    const [checkOut, setCheckOut] = useState('2025-10-19');
-    const [guests, setGuests] = useState('2 Guests');
-    const [suiteType, setSuiteType] = useState('1 Suite • King');
-    const [memberCode, setMemberCode] = useState('AURELIA-PRIVILEGE');
+export interface BookingBarData {
+	defaultSanctuaryId: string;
+	sanctuaries: SanctuaryOption[];
+	defaultCheckIn: string;
+	defaultCheckOut: string;
+	defaultGuests: number;
+	defaultSuites: number;
+	defaultPromoCode: string;
+	residentDiscountLabel: string;
+	guaranteeNotice: string;
+	privilegePills: string[];
+}
 
-    function handleSearch(e: React.FormEvent<HTMLFormElement>) {
-        e.preventDefault();
+export const bookingBarDefaultData: BookingBarData = {
+	defaultSanctuaryId: 'amalfi-positano',
+	sanctuaries: [
+		{
+			id: 'amalfi-positano',
+			name: 'Aurelia Sanctuary Positano',
+			locationSub: 'Amalfi Coast • Tyrrhenian Sea • Italy',
+			badge: 'FLAGSHIP MONOLITH',
+			coordinates: "40°37'40.2\"N • 14°29'05.4\"E",
+		},
+		{
+			id: 'cap-d-antibes',
+			name: "Aurelia Cap d'Antibes",
+			locationSub: "Côte d'Azur • French Riviera • France",
+			badge: 'COASTAL RESIDENCE',
+			coordinates: "43°33'02.1\"N • 07°07'45.8\"E",
+		},
+		{
+			id: 'st-moritz',
+			name: 'Aurelia Engadin Alpine',
+			locationSub: 'Upper Engadin Valley • St. Moritz • Switzerland',
+			badge: 'ALPINE REFUGE',
+			coordinates: "46°29'50.3\"N • 09°50'18.7\"E",
+		},
+		{
+			id: 'kyoto-higashiyama',
+			name: 'Aurelia Higashiyama Pavilions',
+			locationSub: 'Historic Higashiyama • Kyoto • Japan',
+			badge: 'CEDAR ONSEN',
+			coordinates: "34°59'52.1\"N • 135°46'44.8\"E",
+		},
+	],
+	defaultCheckIn: '2025-10-14',
+	defaultCheckOut: '2025-10-19',
+	defaultGuests: 2,
+	defaultSuites: 1,
+	defaultPromoCode: 'AURELIA-PRIVILEGE',
+	residentDiscountLabel: '15% Sovereign Courtesy Applied',
+	guaranteeNotice:
+		'Direct Reservation Protocol: Guaranteed Sovereign Rate & Private Riva Slip Berth',
+	privilegePills: [
+		'Subterranean Roman Caldarium Access',
+		'Centennial Citrus Orchard Breakfast Daily',
+		'Dedicated 24/7 Majordomo Reception',
+	],
+};
 
-        router.push(
-            `/suites?sanctuary=${encodeURIComponent(sanctuary)}&checkIn=${encodeURIComponent(
-                checkIn
-            )}&checkOut=${encodeURIComponent(checkOut)}&guests=${encodeURIComponent(
-                guests
-            )}&code=${encodeURIComponent(memberCode)}`
-        );
-    }
+export interface BookingBarProps {
+	data?: BookingBarData;
+	className?: string;
+	onSearchSubmit?: (query: {
+		sanctuary: string;
+		checkIn: string;
+		checkOut: string;
+		guests: number;
+		suites: number;
+		memberCode: string;
+	}) => void;
+}
 
-    return (
-        <div
-            className={`w-full max-w-7xl mx-auto bg-white/95 backdrop-blur-md border border-[#e8e4dc] rounded-lg shadow-[0_12px_40px_rgba(0,0,0,0.1)] p-4 md:p-6 transition-all ${className}`}
-        >
-            <form onSubmit={handleSearch}>
-                {/* Main Filter Rail */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1.5fr_1.6fr_1fr_1.1fr_190px] gap-3.5 items-stretch">
-                    {/* 1. Sanctuary Destination */}
-                    <div className="relative group bg-[#faf8f4] hover:bg-[#f6f3ec] border border-[#e8e4dc] rounded-xl p-3.5 flex flex-col justify-between transition-colors">
-                        <div className="flex items-center gap-1.5 text-[10px] tracking-[0.2em] uppercase font-semibold text-[#8e763b]">
-                            <svg
-                                className="w-3.5 h-3.5 text-[#8e763b]"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                                />
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                                />
-                            </svg>
-                            <span>Sanctuary Destination</span>
-                        </div>
+export function BookingBar({
+	data = bookingBarDefaultData,
+	className = '',
+	onSearchSubmit,
+}: BookingBarProps) {
+	const router = useRouter();
 
-                        <div className="mt-1">
-                            <select
-                                value={sanctuary}
-                                onChange={function (e) {
-                                    setSanctuary(e.target.value);
-                                }}
-                                className="w-full bg-transparent font-serif text-[15px] font-semibold text-[#1f1e1d] outline-none cursor-pointer tracking-tight truncate"
-                            >
-                                <option value="amalfi-positano">Aurelia Positano Cliffside</option>
-                                <option value="cap-d-antibes">Aurelia Cap d'Antibes Coastal</option>
-                                <option value="st-moritz">Aurelia St. Moritz Alpine</option>
-                                <option value="kyoto-higashiyama">Aurelia Higashiyama Kyoto</option>
-                            </select>
-                            <span className="block text-[11px] text-[#78756d] font-sans mt-0.5">
-                                Campania Ridge, Italy
-                            </span>
-                        </div>
-                    </div>
+	// 1. Core Booking State
+	const [selectedSanctuaryId, setSelectedSanctuaryId] = useState<string>(
+		data.defaultSanctuaryId
+	);
+	const [checkInDate, setCheckInDate] = useState<string>(
+		data.defaultCheckIn
+	);
+	const [checkOutDate, setCheckOutDate] = useState<string>(
+		data.defaultCheckOut
+	);
+	const [adultsCount, setAdultsCount] = useState<number>(
+		data.defaultGuests
+	);
+	const [suitesCount, setSuitesCount] = useState<number>(
+		data.defaultSuites
+	);
+	const [memberCode, setMemberCode] = useState<string>(
+		data.defaultPromoCode
+	);
 
-                    {/* 2. Dates of Stay */}
-                    <div className="relative group bg-[#faf8f4] hover:bg-[#f6f3ec] border border-[#e8e4dc] rounded-xl p-3.5 flex flex-col justify-between transition-colors">
-                        <div className="flex items-center gap-1.5 text-[10px] tracking-[0.2em] uppercase font-semibold text-[#8e763b]">
-                            <svg
-                                className="w-3.5 h-3.5 text-[#8e763b]"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                />
-                            </svg>
-                            <span>Dates of Stay</span>
-                        </div>
+	// 2. Interactive Dropdown Visibility State
+	const [activeDropdown, setActiveDropdown] = useState<
+		'sanctuary' | 'stay-dates' | 'party' | 'privilege' | null
+	>(null);
 
-                        <div className="mt-1">
-                            <div className="flex items-baseline gap-1 font-serif text-[14px] font-semibold text-[#1f1e1d] tracking-tight">
-                                <input
-                                    type="date"
-                                    value={checkIn}
-                                    onChange={function (e) {
-                                        setCheckIn(e.target.value);
-                                    }}
-                                    className="bg-transparent font-serif text-[13px] text-[#1f1e1d] outline-none cursor-pointer w-26.5"
-                                />
-                                <span className="text-[#a4a098]">—</span>
-                                <input
-                                    type="date"
-                                    value={checkOut}
-                                    onChange={function (e) {
-                                        setCheckOut(e.target.value);
-                                    }}
-                                    className="bg-transparent font-serif text-[13px] text-[#1f1e1d] outline-none cursor-pointer w-26.5"
-                                />
-                            </div>
-                            <span className="block text-[11px] text-[#78756d] font-sans mt-0.5">
-                                5 Nights • Autumn Equinox
-                            </span>
-                        </div>
-                    </div>
+	const containerRef = useRef<HTMLDivElement>(null);
 
-                    {/* 3. Accommodations / Guests */}
-                    <div className="relative group bg-[#faf8f4] hover:bg-[#f6f3ec] border border-[#e8e4dc] rounded-xl p-3.5 flex flex-col justify-between transition-colors">
-                        <div className="flex items-center gap-1.5 text-[10px] tracking-[0.2em] uppercase font-semibold text-[#8e763b]">
-                            <svg
-                                className="w-3.5 h-3.5 text-[#8e763b]"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-                                />
-                            </svg>
-                            <span>Accommodations</span>
-                        </div>
+	// Close dropdowns on outside click
+	useEffect(() => {
+		function handleOutsideClick(event: MouseEvent) {
+			if (
+				containerRef.current &&
+				!containerRef.current.contains(event.target as Node)
+			) {
+				setActiveDropdown(null);
+			}
+		}
 
-                        <div className="mt-1">
-                            <select
-                                value={guests}
-                                onChange={function (e) {
-                                    setGuests(e.target.value);
-                                }}
-                                className="w-full bg-transparent font-serif text-[15px] font-semibold text-[#1f1e1d] outline-none cursor-pointer tracking-tight"
-                            >
-                                <option value="1 Guest">1 Guest</option>
-                                <option value="2 Guests">2 Guests</option>
-                                <option value="3 Guests">3 Guests</option>
-                                <option value="4+ Guests">4+ Patrons (Villa)</option>
-                            </select>
-                            <span className="block text-[11px] text-[#78756d] font-sans mt-0.5">
-                                {suiteType}
-                            </span>
-                        </div>
-                    </div>
+		document.addEventListener('mousedown', handleOutsideClick);
 
-                    {/* 4. Sovereign Member Code */}
-                    <div className="relative group bg-[#faf8f4] hover:bg-[#f6f3ec] border border-[#e8e4dc] rounded-xl p-3.5 flex flex-col justify-between transition-colors">
-                        <div className="flex items-center justify-between text-[10px] tracking-[0.2em] uppercase font-semibold text-[#8e763b]">
-                            <span>Member Code</span>
-                            <span className="text-[#bfa76f]">✦</span>
-                        </div>
+		return () => {
+			document.removeEventListener('mousedown', handleOutsideClick);
+		};
+	}, []);
 
-                        <div className="mt-1">
-                            <input
-                                type="text"
-                                value={memberCode}
-                                onChange={function (e) {
-                                    setMemberCode(e.target.value);
-                                }}
-                                placeholder="Code (e.g. AURELIA-VIP)"
-                                className="w-full bg-transparent font-serif text-[14px] font-semibold text-[#1f1e1d] uppercase outline-none placeholder-[#a39f97] tracking-wider"
-                            />
-                            <span className="block text-[11px] text-[#8e763b] font-sans font-medium mt-0.5">
-                                15% Resident Courtesy
-                            </span>
-                        </div>
-                    </div>
+	// Derived active sanctuary data
+	const activeSanctuary =
+		data.sanctuaries.find((s) => s.id === selectedSanctuaryId) ||
+		data.sanctuaries[0];
 
-                    {/* 5. CTA Trigger Button */}
-                    <div className="flex items-center sm:col-span-2 lg:col-span-1">
-                        <Button
-                            type="submit"
-                            variant="primary"
-                            fullWidth
-                            size="lg"
-                            className="h-full min-h-14.5 rounded-xl text-[12px] tracking-[0.2em] flex items-center justify-center gap-2 shadow-md hover:shadow-lg hover:gap-3 transition-all"
-                        >
-                            <span>Check Rates</span>
-                            <span className="text-sm">→</span>
-                        </Button>
-                    </div>
+	// Compute nights count
+	function calculateNights(startStr: string, endStr: string): number {
+		try {
+			const start = new Date(startStr);
+			const end = new Date(endStr);
+			const diffTime = end.getTime() - start.getTime();
+			const diffDays = Math.ceil(
+				diffTime / (1000 * 60 * 60 * 24)
+			);
 
-                </div>
+			return diffDays > 0 ? diffDays : 1;
+		} catch {
+			return 5;
+		}
+	}
 
-                {/* Direct Reservation Privilege Perks Banner */}
-                <div className="mt-4 pt-3.5 border-t border-[#f0ece3] flex flex-wrap items-center justify-between gap-y-2 text-[11px] font-sans text-[#78756d]">
-                    <div className="flex items-center gap-2 text-[#5c5952]">
-                        <span className="text-[#bfa76f]">🛡</span>
-                        <span className="font-medium text-[#1f1e1d]">
-                            Direct Reservation Privilege:
-                        </span>
-                        <span>Guaranteed Best Rate & Dedicated Chauffeur Transfer</span>
-                    </div>
+	const nightsCount = calculateNights(checkInDate, checkOutDate);
 
-                    <div className="flex items-center gap-4 text-[#8a867e]">
-                        <span className="flex items-center gap-1.5">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#bfa76f]" />
-                            Thermal Spa Hydrotherapy Access
-                        </span>
-                        <span className="flex items-center gap-1.5">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#bfa76f]" />
-                            Organic Artisanal Breakfast Daily
-                        </span>
-                    </div>
-                </div>
-            </form>
-        </div>
-    );
+	// Format human-readable date display
+	function formatDateDisplay(dateStr: string): string {
+		try {
+			const [year, month, day] = dateStr.split('-');
+			const months = [
+				'Jan',
+				'Feb',
+				'Mar',
+				'Apr',
+				'May',
+				'Jun',
+				'Jul',
+				'Aug',
+				'Sep',
+				'Oct',
+				'Nov',
+				'Dec',
+			];
+
+			return `${months[parseInt(month, 10) - 1]} ${parseInt(day, 10)}, ${year}`;
+		} catch {
+			return dateStr;
+		}
+	}
+
+	// Form submission handler
+	function handleSearch(e: React.FormEvent<HTMLFormElement>) {
+		e.preventDefault();
+
+		if (onSearchSubmit) {
+			onSearchSubmit({
+				sanctuary: selectedSanctuaryId,
+				checkIn: checkInDate,
+				checkOut: checkOutDate,
+				guests: adultsCount,
+				suites: suitesCount,
+				memberCode,
+			});
+		}
+
+		router.push(
+			`/accommodations?sanctuary=${encodeURIComponent(
+				selectedSanctuaryId
+			)}&checkIn=${encodeURIComponent(
+				checkInDate
+			)}&checkOut=${encodeURIComponent(
+				checkOutDate
+			)}&guests=${encodeURIComponent(
+				adultsCount
+			)}&suites=${encodeURIComponent(
+				suitesCount
+			)}&code=${encodeURIComponent(memberCode)}`
+		);
+	}
+
+	return (
+		<div
+			ref={containerRef}
+			className={`w-full max-w-340 mx-auto bg-white/95 backdrop-blur-xl border border-[#ded9ce] rounded-3xl shadow-[0_16px_48px_rgba(31,30,29,0.12)] p-4 sm:p-5 lg:p-6 transition-all duration-300 ${className}`}
+		>
+			<form onSubmit={handleSearch} className="space-y-4">
+				{/* Master 5-Column Responsive Grid */}
+				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 sm:gap-3.5 items-stretch">
+					{/* 1. SANCTUARY DESTINATION (4 cols on Desktop) */}
+					<div className="relative lg:col-span-3">
+						<button
+							type="button"
+							onClick={() =>
+								setActiveDropdown(
+									activeDropdown === 'sanctuary'
+										? null
+										: 'sanctuary'
+								)
+							}
+							className={`w-full h-full text-left p-4 rounded-2xl border transition-all duration-200 flex flex-col justify-between group ${
+								activeDropdown === 'sanctuary'
+									? 'bg-[#f7f2e7] border-[#8e763b] shadow-xs'
+									: 'bg-[#fcfaf7] hover:bg-[#f6f2ea] border-[#e8e4dc]'
+							}`}
+						>
+							<div className="flex items-center justify-between w-full mb-1">
+								<div className="flex items-center gap-2">
+									<span className="w-1.5 h-1.5 rounded-full bg-[#8e763b]" />
+									<span className="text-[10px] font-sans font-semibold uppercase tracking-[0.22em] text-[#8e763b]">
+										SANCTUARY ENCLAVE
+									</span>
+								</div>
+
+								<span className="px-2 py-0.5 rounded-sm bg-white border border-[#ded9ce] text-[9px] font-mono uppercase tracking-wider text-[#78756d]">
+									{activeSanctuary.badge}
+								</span>
+							</div>
+
+							<div>
+								<span className="font-serif text-lg sm:text-[19px] font-normal text-[#1f1e1d] block tracking-tight leading-snug truncate">
+									{activeSanctuary.name}
+								</span>
+								<span className="block text-[11px] font-sans text-[#78756d] font-light mt-0.5 truncate">
+									{activeSanctuary.locationSub}
+								</span>
+							</div>
+						</button>
+
+						{/* Dropdown Overlay: Sanctuary Select */}
+						{activeDropdown === 'sanctuary' && (
+							<div className="absolute top-[calc(100%+8px)] left-0 w-full sm:w-95 bg-white border border-[#ded9ce] rounded-2xl shadow-2xl p-2 z-50 animate-in fade-in zoom-in-95 duration-150">
+								<div className="px-3.5 py-2 border-b border-[#f0ece3] flex items-center justify-between">
+									<span className="text-[9px] font-sans font-semibold uppercase tracking-[0.2em] text-[#8e763b]">
+										SELECT MONOLITHIC ENCLAVE
+									</span>
+									<span className="text-[9px] font-mono text-[#a4a098]">
+										4 SANCTUARIES
+									</span>
+								</div>
+
+								<div className="space-y-1 mt-1 max-h-75 overflow-y-auto">
+									{data.sanctuaries.map((sanc) => {
+										const isSelected =
+											sanc.id === selectedSanctuaryId;
+
+										return (
+											<div
+												key={sanc.id}
+												onClick={() => {
+													setSelectedSanctuaryId(
+														sanc.id
+													);
+													setActiveDropdown(null);
+												}}
+												className={`p-3 rounded-xl cursor-pointer transition-colors flex items-center justify-between ${
+													isSelected
+														? 'bg-[#f7f2e7] text-[#1f1e1d]'
+														: 'hover:bg-[#fcfaf7] text-[#4a4742]'
+												}`}
+											>
+												<div>
+													<div className="flex items-center gap-2">
+														<span className="font-serif text-sm font-medium text-[#1f1e1d]">
+															{sanc.name}
+														</span>
+
+														{isSelected && (
+															<span className="text-[#8e763b] text-xs">
+																✓
+															</span>
+														)}
+													</div>
+
+													<span className="block text-[10px] font-sans text-[#78756d] mt-0.5">
+														{sanc.locationSub}
+													</span>
+												</div>
+
+												<span className="text-[9px] font-mono text-[#8e763b] shrink-0">
+													{sanc.badge}
+												</span>
+											</div>
+										);
+									})}
+								</div>
+							</div>
+						)}
+					</div>
+
+					{/* 2. STAY HORIZON / DATES (3 cols on Desktop) */}
+					<div className="relative lg:col-span-3">
+						<button
+							type="button"
+							onClick={() =>
+								setActiveDropdown(
+									activeDropdown === 'stay-dates'
+										? null
+										: 'stay-dates'
+								)
+							}
+							className={`w-full h-full text-left p-4 rounded-2xl border transition-all duration-200 flex flex-col justify-between group ${
+								activeDropdown === 'stay-dates'
+									? 'bg-[#f7f2e7] border-[#8e763b] shadow-xs'
+									: 'bg-[#fcfaf7] hover:bg-[#f6f2ea] border-[#e8e4dc]'
+							}`}
+						>
+							<div className="flex items-center justify-between w-full mb-1">
+								<div className="flex items-center gap-2">
+									<svg
+										className="w-3.5 h-3.5 text-[#8e763b]"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="currentColor"
+										strokeWidth="1.8"
+									>
+										<rect
+											x="3"
+											y="4"
+											width="18"
+											height="18"
+											rx="2"
+										/>
+										<line
+											x1="16"
+											y1="2"
+											x2="16"
+											y2="6"
+										/>
+										<line
+											x1="8"
+											y1="2"
+											x2="8"
+											y2="6"
+										/>
+										<line
+											x1="3"
+											y1="10"
+											x2="21"
+											y2="10"
+										/>
+									</svg>
+
+									<span className="text-[10px] font-sans font-semibold uppercase tracking-[0.22em] text-[#8e763b]">
+										STAY HORIZON
+									</span>
+								</div>
+
+								<span className="px-2 py-0.5 rounded-sm bg-white border border-[#ded9ce] text-[9px] font-mono text-[#8e763b]">
+									{nightsCount}{' '}
+									{nightsCount === 1 ? 'NIGHT' : 'NIGHTS'}
+								</span>
+							</div>
+
+							<div>
+								<span className="font-serif text-base sm:text-[17px] font-normal text-[#1f1e1d] block tracking-tight truncate">
+									{formatDateDisplay(checkInDate)} —{' '}
+									{formatDateDisplay(checkOutDate)}
+								</span>
+								<span className="block text-[11px] font-sans text-[#78756d] font-light mt-0.5 truncate">
+									Autumn Equinox • Direct Availability
+								</span>
+							</div>
+						</button>
+
+						{/* Dropdown Overlay: Date Selectors */}
+						{activeDropdown === 'stay-dates' && (
+							<div className="absolute top-[calc(100%+8px)] left-0 w-full sm:w-85 bg-white border border-[#ded9ce] rounded-2xl shadow-2xl p-4 z-50 animate-in fade-in zoom-in-95 duration-150 space-y-4">
+								<div className="border-b border-[#f0ece3] pb-2 flex items-center justify-between">
+									<span className="text-[9px] font-sans font-semibold uppercase tracking-[0.2em] text-[#8e763b]">
+										CALIBRATE ARRIVAL & DEPARTURE
+									</span>
+									<span className="text-[10px] font-mono text-[#1f1e1d] font-medium">
+										{nightsCount} Nights Selected
+									</span>
+								</div>
+
+								<div className="space-y-3">
+									<div>
+										<label className="block text-[9px] font-sans font-semibold uppercase tracking-[0.18em] text-[#6d6961] mb-1">
+											SANCTUARY CHECK-IN
+										</label>
+										<input
+											type="date"
+											value={checkInDate}
+											onChange={(e) =>
+												setCheckInDate(e.target.value)
+											}
+											className="w-full px-3 py-2.5 rounded-xl bg-[#fcfaf7] border border-[#ded9ce] text-xs font-serif text-[#1f1e1d] outline-none focus:border-[#8e763b]"
+										/>
+									</div>
+
+									<div>
+										<label className="block text-[9px] font-sans font-semibold uppercase tracking-[0.18em] text-[#6d6961] mb-1">
+											SANCTUARY CHECK-OUT
+										</label>
+										<input
+											type="date"
+											value={checkOutDate}
+											onChange={(e) =>
+												setCheckOutDate(e.target.value)
+											}
+											className="w-full px-3 py-2.5 rounded-xl bg-[#fcfaf7] border border-[#ded9ce] text-xs font-serif text-[#1f1e1d] outline-none focus:border-[#8e763b]"
+										/>
+									</div>
+								</div>
+
+								<div className="pt-2 border-t border-[#f0ece3] flex justify-end">
+									<button
+										type="button"
+										onClick={() => {
+                                            setActiveDropdown(null)
+                                        }}
+										className="px-4 py-2 rounded-xl bg-[#1f1e1d] text-white text-[10px] font-sans font-semibold uppercase tracking-[0.2em] hover:bg-[#343230]"
+									>
+										Apply Horizon
+									</button>
+								</div>
+							</div>
+						)}
+					</div>
+
+					{/* 3. PATRONS & SUITE COMPOSITION (2.5 cols on Desktop) */}
+					<div className="relative lg:col-span-2">
+						<button
+							type="button"
+							onClick={() =>
+								setActiveDropdown(
+									activeDropdown === 'party' ? null : 'party'
+								)
+							}
+							className={`w-full h-full text-left p-4 rounded-2xl border transition-all duration-200 flex flex-col justify-between group ${
+								activeDropdown === 'party'
+									? 'bg-[#f7f2e7] border-[#8e763b] shadow-xs'
+									: 'bg-[#fcfaf7] hover:bg-[#f6f2ea] border-[#e8e4dc]'
+							}`}
+						>
+							<div className="flex items-center justify-between w-full mb-1">
+								<div className="flex items-center gap-1.5">
+									<svg
+										className="w-3.5 h-3.5 text-[#8e763b]"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="currentColor"
+										strokeWidth="1.8"
+									>
+										<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+										<circle cx="9" cy="7" r="4" />
+									</svg>
+
+									<span className="text-[10px] font-sans font-semibold uppercase tracking-[0.22em] text-[#8e763b]">
+										PATRONS
+									</span>
+								</div>
+							</div>
+
+							<div>
+								<span className="font-serif text-base sm:text-[17px] font-normal text-[#1f1e1d] block tracking-tight truncate">
+									{adultsCount}{' '}
+									{adultsCount === 1 ? 'Guest' : 'Guests'}
+								</span>
+								<span className="block text-[11px] font-sans text-[#78756d] font-light mt-0.5 truncate">
+									{suitesCount}{' '}
+									{suitesCount === 1 ? 'Suite' : 'Suites'} •
+									Master King
+								</span>
+							</div>
+						</button>
+
+						{/* Dropdown Overlay: Steppers */}
+						{activeDropdown === 'party' && (
+							<div className="absolute top-[calc(100%+8px)] left-0 w-full sm:w-70 bg-white border border-[#ded9ce] rounded-2xl shadow-2xl p-4 z-50 animate-in fade-in zoom-in-95 duration-150 space-y-4">
+								<div className="border-b border-[#f0ece3] pb-2">
+									<span className="text-[9px] font-sans font-semibold uppercase tracking-[0.2em] text-[#8e763b]">
+										PATRON PARTY COMPOSITION
+									</span>
+								</div>
+
+								<div className="space-y-3">
+									{/* Adults Stepper */}
+									<div className="flex items-center justify-between">
+										<div>
+											<span className="font-serif text-sm text-[#1f1e1d] block">
+												Adult Patrons
+											</span>
+											<span className="text-[10px] text-[#8e8a82]">
+												Ages 16 and above
+											</span>
+										</div>
+
+										<div className="flex items-center gap-2 bg-[#fcfaf7] border border-[#ded9ce] rounded-lg px-2 py-1">
+											<button
+												type="button"
+												onClick={() =>
+													setAdultsCount(
+														Math.max(
+															1,
+															adultsCount - 1
+														)
+													)
+												}
+												className="w-6 h-6 rounded flex items-center justify-center text-sm font-semibold hover:bg-[#eeeae2]"
+											>
+												−
+											</button>
+
+											<span className="font-mono text-sm w-5 text-center">
+												{adultsCount}
+											</span>
+
+											<button
+												type="button"
+												onClick={() =>
+													setAdultsCount(
+														Math.min(
+															8,
+															adultsCount + 1
+														)
+													)
+												}
+												className="w-6 h-6 rounded flex items-center justify-center text-sm font-semibold hover:bg-[#eeeae2]"
+											>
+												+
+											</button>
+										</div>
+									</div>
+
+									{/* Suites Count Stepper */}
+									<div className="flex items-center justify-between">
+										<div>
+											<span className="font-serif text-sm text-[#1f1e1d] block">
+												Chambers / Suites
+											</span>
+											<span className="text-[10px] text-[#8e8a82]">
+												Allocated footprint
+											</span>
+										</div>
+
+										<div className="flex items-center gap-2 bg-[#fcfaf7] border border-[#ded9ce] rounded-lg px-2 py-1">
+											<button
+												type="button"
+												onClick={() =>
+													setSuitesCount(
+														Math.max(
+															1,
+															suitesCount - 1
+														)
+													)
+												}
+												className="w-6 h-6 rounded flex items-center justify-center text-sm font-semibold hover:bg-[#eeeae2]"
+											>
+												−
+											</button>
+
+											<span className="font-mono text-sm w-5 text-center">
+												{suitesCount}
+											</span>
+
+											<button
+												type="button"
+												onClick={() =>
+													setSuitesCount(
+														Math.min(
+															4,
+															suitesCount + 1
+														)
+													)
+												}
+												className="w-6 h-6 rounded flex items-center justify-center text-sm font-semibold hover:bg-[#eeeae2]"
+											>
+												+
+											</button>
+										</div>
+									</div>
+								</div>
+
+								<div className="pt-2 border-t border-[#f0ece3] flex justify-end">
+									<button
+										type="button"
+										onClick={() => setActiveDropdown(null)}
+										className="px-4 py-2 rounded-xl bg-[#1f1e1d] text-white text-[10px] font-sans font-semibold uppercase tracking-[0.2em] hover:bg-[#343230]"
+									>
+										Confirm Party
+									</button>
+								</div>
+							</div>
+						)}
+					</div>
+
+					{/* 4. SOVEREIGN PRIVILEGE CODE (1.5 cols on Desktop) */}
+					<div className="relative lg:col-span-2">
+						<div className="h-full p-4 rounded-2xl bg-[#fcfaf7] border border-[#e8e4dc] flex flex-col justify-between">
+							<div className="flex items-center justify-between mb-1">
+								<span className="text-[10px] font-sans font-semibold uppercase tracking-[0.22em] text-[#8e763b]">
+									SOVEREIGN CODE
+								</span>
+								<span className="text-[#8e763b] text-xs">
+									✦
+								</span>
+							</div>
+
+							<div>
+								<input
+									type="text"
+									value={memberCode}
+									onChange={(e) =>
+										setMemberCode(
+											e.target.value.toUpperCase()
+										)
+									}
+									placeholder="CODE"
+									className="w-full bg-transparent font-mono text-xs sm:text-[13px] font-semibold text-[#1f1e1d] outline-none uppercase tracking-wider"
+								/>
+
+								<span className="block text-[10px] font-sans text-[#8e763b] font-medium mt-0.5 truncate">
+									-15% Verified
+								</span>
+							</div>
+						</div>
+					</div>
+
+					{/* 5. PRIMARY CTA BUTTON (1.5 cols on Desktop) */}
+					<div className="sm:col-span-2 flex items-stretch">
+						<button
+							type="submit"
+							className="w-full min-h-14.5 sm:min-h-16 rounded-2xl bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-[11px] font-semibold uppercase tracking-[0.22em] transition-all shadow-md hover:shadow-lg active:translate-y-0.5 flex flex-col items-center justify-center gap-1 group text-center"
+						>
+							<span className="flex items-center gap-2">
+								<span>Check Rates</span>
+								<span className="transform transition-transform duration-300 group-hover:translate-x-1">
+									→
+								</span>
+							</span>
+
+							<span className="text-[9px] font-sans font-light tracking-widest text-[#dcdad5]/80 lowercase">
+								direct guarantee
+							</span>
+						</button>
+					</div>
+				</div>
+
+				{/* Sub-strip: Direct Reservation Privilege Protocol */}
+				<div className="pt-3 border-t border-[#f0ece3] flex flex-col md:flex-row md:items-center justify-between gap-2.5 text-xs font-sans text-[#6e6b64]">
+					<div className="flex items-center gap-2">
+						<span className="p-1 rounded-full bg-[#f6f2ea] text-[#8e763b] shrink-0">
+							<svg
+								className="w-3.5 h-3.5"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								strokeWidth="2"
+								strokeLinecap="round"
+								strokeLinejoin="round"
+							>
+								<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+								<polyline points="9 12 11 14 15 10" />
+							</svg>
+						</span>
+
+						<span className="font-semibold text-[#1f1e1d]">
+							Direct Sovereign Rate Protocol:
+						</span>
+
+						<span className="font-light">
+							{data.residentDiscountLabel} • Guaranteed Direct
+						</span>
+					</div>
+
+					<div className="flex flex-wrap items-center gap-3 sm:gap-4 text-[10px] font-sans uppercase tracking-wider text-[#8e8a82]">
+						{data.privilegePills.map((pill, idx) => (
+							<div
+								key={idx}
+								className="flex items-center gap-1.5"
+							>
+								<span className="w-1.5 h-1.5 rounded-full bg-[#8e763b]" />
+								<span>{pill}</span>
+							</div>
+						))}
+					</div>
+				</div>
+			</form>
+		</div>
+	);
 }

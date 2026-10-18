@@ -10,11 +10,11 @@ export function Navbar() {
     const pathname = usePathname()
 
     return (
-        <header className="sticky top-0 z-40 w-full bg-[#fcf9f4]/90 backdrop-blur-md border-b border-[#e8e4dc]">
+        <header className={`${(new Set(['/login', '/register'])).has(pathname) ? 'hidden' : 'sticky'} top-0 z-40 w-full bg-[#fcf9f4]/90 backdrop-blur-md border-b border-[#e8e4dc]`}>
             <div className="max-w-7xl mx-auto h-20 flex items-center justify-between">
                {/* Brand Monogram & Wordmark */}
                 <Link href="/" className="flex flex-col items-center group text-center">
-                    <Image src='/aurelia-logo.png' alt='aurelia logo' width={240} height={90}></Image>
+                    <Image src='/aurelia-logo-light.png' alt='aurelia logo' width={240} height={90}></Image>
                 </Link>
 
                 {/* Desktop Navigation */}
