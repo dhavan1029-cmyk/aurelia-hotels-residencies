@@ -10,7 +10,7 @@ export function Navbar() {
     const pathname = usePathname()
 
     return (
-        <header className={`${(new Set(['/login', '/register'])).has(pathname) ? 'hidden' : 'sticky'} top-0 z-40 w-full bg-[#fcf9f4]/90 backdrop-blur-md border-b border-[#e8e4dc]`}>
+        <header className={`${(new Set(['/login', '/register', '/profile'])).has(pathname) ? 'hidden' : 'sticky'} top-0 z-40 w-full bg-[#fcf9f4]/90 backdrop-blur-md border-b border-[#e8e4dc]`}>
             <div className="max-w-7xl mx-auto h-20 flex items-center justify-between">
                {/* Brand Monogram & Wordmark */}
                 <Link href="/" className="flex flex-col items-center group text-center">
@@ -32,7 +32,7 @@ export function Navbar() {
                         Sovereign Portal
                     </Link>
                     <Link
-                        href="/accomodations"
+                        href="/accommodations"
                         className="px-5 py-2.5 bg-[#1f1e1d] text-[#fcf9f4] hover:bg-[#393735] transition-all text-[11px] tracking-[0.2em]"
                     >
                         Reserve

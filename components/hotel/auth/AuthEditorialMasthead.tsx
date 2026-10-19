@@ -162,7 +162,7 @@ export function AuthEditorialMasthead({
 
     return (
         <aside
-            className={`relative w-full min-h-160 lg:min-h-screen flex flex-col justify-between overflow-hidden bg-[#181716] text-[#fcf9f4] p-6 sm:p-10 lg:p-14 ${className}`}
+            className={`relative w-full h-fit lg:min-h-screen flex flex-col justify-between overflow-hidden bg-[#181716] text-[#fcf9f4] p-6 sm:p-10 lg:p-14 ${className}`}
         >
             {/* 1. PHOTOGRAPHIC BACKGROUND WITH DEEP EDITORIAL VIGNETTES */}
             <div className="absolute inset-0 z-0">
@@ -191,7 +191,7 @@ export function AuthEditorialMasthead({
             />
 
             {/* 2. TOP MASTHEAD: BRAND WORDMARK & GLOBAL ENCLAVES PILL */}
-            <div className="w-screen relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="w-screen relative z-10 flex flex-row items-center justify-between gap-4">
                 <Link
                     href="/"
                     onClick={onExploreBrand}
@@ -204,14 +204,14 @@ export function AuthEditorialMasthead({
                     />                
                 </Link>
 
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/40 backdrop-blur-md border border-white/10 text-[9px] font-mono uppercase tracking-[0.18em] text-[#dcdad5]">
+                <div className="w-fit inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/40 backdrop-blur-md border border-white/10 text-[9px] font-mono uppercase tracking-[0.18em] text-[#dcdad5]">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#bfa76f] animate-pulse" />
                     <span>{enclavesPillText}</span>
                 </div>
             </div>
 
             {/* 3. CENTER MONOGRAPH: ACCENT BAR, MANIFESTO QUOTE & NARRATIVE */}
-            <div className="relative z-10 my-auto sm:py-6 md:py-10 lg:py-14 max-w-xl space-y-2">
+            <div className="relative z-10 lg:py-14 max-w-xl space-y-2 my-4">
                 <div className="flex items-center gap-2.5">
                     <span className="h-px w-8 bg-[#bfa76f]" />
                     <span className="text-[10px] font-sans font-semibold uppercase tracking-[0.28em] text-[#bfa76f]">
@@ -229,7 +229,7 @@ export function AuthEditorialMasthead({
             </div>
 
             {/* 4. BOTTOM FLOATING PRIVILEGES CARD & ENCRYPTION PROTOCOL STRIP */}
-            <div className="lg:block md:hidden relative z-10 w-full space-y-3.5">
+            <div className="lg:block hidden relative z-10 w-full space-y-3.5">
                 <div className="bg-black/50 backdrop-blur-xl border border-white/15 rounded-2xl p-4 sm:p-5 shadow-2xl">
                     <div className="flex items-center justify-between pb-3 border-b border-white/10 mb-3.5">
                         <div className="flex items-center gap-2">

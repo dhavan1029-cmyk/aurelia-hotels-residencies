@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { RegisterDossierRail } from '@/components/hotel/auth/RegisterDossierRail';
@@ -14,7 +13,7 @@ import {
     RegisterFormInitialValues,
     registerFormDefaultData,
 } from '@/components/hotel/auth/RegisterEnrollmentForm';
-import { Footer } from '@/components/layout/Footer';
+import Image from 'next/image';
 
 export interface RegisterPageProps {
     dossierData?: RegisterDossierData;
@@ -67,12 +66,7 @@ export function RegisterPage({
                 <div className="max-w-360 mx-auto px-4 sm:px-8 lg:px-12 h-20 flex items-center justify-between gap-4">
                     {/* Brand Monogram Lockup */}
                     <Link href="/" className="flex flex-col group">
-                        <span className="font-serif text-2xl sm:text-[26px] font-normal tracking-[0.24em] text-[#1f1e1d] leading-none uppercase group-hover:text-[#8e763b] transition-colors">
-                            Aurelia
-                        </span>
-                        <span className="text-[8px] sm:text-[9px] font-sans font-semibold tracking-[0.32em] text-[#8e763b] mt-1 leading-none uppercase">
-                            HOTELS &amp; RESIDENCES
-                        </span>
+                        <Image src='/aurelia-logo-light.png' alt='aurelia logo' width={240} height={90}></Image>
                     </Link>
 
                     {/* Center Protocol Badge (Hidden on Mobile) */}
@@ -109,7 +103,7 @@ export function RegisterPage({
                 </div>
 
                 {/* PHASE 2: Right Split Sovereign Patron Registration Form (62% width) */}
-                <div className="w-full lg:w-[62%] py-8 sm:py-12 lg:py-16 px-4 sm:px-8 lg:px-14">
+                <div className="w-full lg:w-[62%] py-8 sm:py-12 px-4 sm:px-8">
                     <RegisterEnrollmentForm
                         data={formData}
                         onSubmitApplication={handleSubmitApplication}
@@ -118,11 +112,6 @@ export function RegisterPage({
                     />
                 </div>
             </div>
-
-            {/* ----------------------------------------------------------------- */}
-            {/* 3. BOTTOM SOVEREIGN FOOTER PROTOCOL STRIP                        */}
-            {/* ----------------------------------------------------------------- */}
-            <Footer></Footer>
         </main>
     );
 }

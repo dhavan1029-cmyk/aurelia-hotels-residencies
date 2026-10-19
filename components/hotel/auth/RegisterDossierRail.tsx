@@ -159,8 +159,8 @@ export function RegisterDossierRail({
             className={`w-full h-full max-h-dvh flex flex-col align-center justify-between text-[#1f1e1d] overflow-hidden ${className}`}
         >
             {/* 1. SANCTUARY PHOTOGRAPHIC DOSSIER CARD */}
-            <article className="relative w-full rounded-2xl overflow-hidden bg-[#191817] shadow-lg shrink-0 group">
-                <div className="relative h-37.5 sm:h-41.25 lg:h-43.75 w-full overflow-hidden">
+            <article className="relative w-full overflow-hidden bg-[#191817] shadow-lg shrink-0 group">
+                <div className="relative h-55 w-full overflow-hidden">
                     <Image
                         src={heroImageUrl}
                         alt={heroImageAlt}
@@ -175,7 +175,7 @@ export function RegisterDossierRail({
                     <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/40 to-black/20 pointer-events-none" />
 
                     {/* Top Monograph & Coordinates Badges */}
-                    <div className="absolute top-2.5 left-3 right-3 z-10 flex items-center justify-between gap-2">
+                    <div className="hidden lg:flex absolute top-2.5 left-3 right-3 z-10 items-center justify-between gap-2">
                         <span className="px-2 py-0.5 rounded-xs bg-black/60 backdrop-blur-md text-white font-sans text-[8px] font-semibold uppercase tracking-[0.2em] shadow-xs">
                             {dossierBadge}
                         </span>
@@ -191,7 +191,7 @@ export function RegisterDossierRail({
                             {enclaveLocation}
                         </span>
 
-                        <blockquote className="font-serif italic text-xs sm:text-[13px] font-light text-white/95 leading-snug tracking-tight line-clamp-2">
+                        <blockquote className="font-serif italic font-light text-white/95 leading-snug tracking-tight line-clamp-2">
                             {manifestoQuote}
                         </blockquote>
                     </div>
@@ -199,7 +199,7 @@ export function RegisterDossierRail({
             </article>
 
             {/* 2. THE SOVEREIGN FOLIO PRIVILEGES CARD */}
-            <article className="bg-[#fcf9f4] rounded-2xl p-3.5 sm:p-4 space-y-2.5 shrink-0">
+            <article className="bg-[#fcf9f4] rounded-2xl p-3.5 sm:p-4 space-y-2.5 shrink-0 hidden lg:block">
                 <div className="pb-2">
                     <div className="flex items-center gap-1.5 mb-0.5">
                         <span className="w-1.5 h-1.5 rounded-full bg-[#8e763b]" />
@@ -239,7 +239,7 @@ export function RegisterDossierRail({
             </article>
 
             {/* 3. PATRON ENDORSEMENT QUOTE PILL CARD */}
-            <article className="p-3 space-y-2 shrink-0">
+            <article className="p-3 space-y-2 shrink-0 hidden lg:block">
                 <div className="flex items-center gap-1 text-[#8e763b]">
                     {Array.from({ length: 5 }).map(function (_, starIdx) {
                         return (
@@ -258,7 +258,7 @@ export function RegisterDossierRail({
                     {endorsement.quote}
                 </blockquote>
 
-                <div className="pt-2 border-t border-[#ded9ce] flex items-center gap-2.5">
+                <div className="hidden lg:flex pt-2 border-t border-[#ded9ce] items-center gap-2.5">
                     <div className="relative w-7 h-7 rounded-full overflow-hidden border border-[#bfa76f] bg-[#eeeae2] shrink-0">
                         <Image
                             src={endorsement.avatarUrl}
@@ -281,7 +281,7 @@ export function RegisterDossierRail({
             </article>
 
             {/* 4. MICRO PROTOCOL NOTIFICATION STRIP */}
-            <div className="px-1 pt-1 flex items-center justify-between text-[8px] font-mono uppercase tracking-widest text-[#8e8a82] shrink-0 leading-none">
+            <div className="hidden lg:flex px-1 pt-1 items-center justify-between text-[8px] font-mono uppercase tracking-widest text-[#8e8a82] shrink-0 leading-none">
                 <span className="truncate pr-2">{protocolNotice}</span>
                 <span className="text-[#8e763b] shrink-0">✦ SEALED</span>
             </div>

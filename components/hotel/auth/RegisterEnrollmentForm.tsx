@@ -286,7 +286,7 @@ export function RegisterEnrollmentForm({
 
     return (
         <section
-            className={`w-full max-w-3xl mx-auto flex flex-col justify-between p-6 sm:p-10 lg:p-12 text-[#1f1e1d] ${className}`}
+            className={`w-full max-w-3xl mx-auto flex flex-col justify-between text-[#1f1e1d] ${className}`}
         >
             <div className="space-y-10">
                 {/* 1. TOP HEADER STRIP & NAVIGATION TO SIGN IN */}
