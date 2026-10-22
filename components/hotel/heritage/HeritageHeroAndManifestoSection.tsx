@@ -86,15 +86,11 @@ export const heritageHeroDefaultData: HeritageHeroAndManifestoData = {
 
 export interface HeritageHeroAndManifestoSectionProps {
     data?: HeritageHeroAndManifestoData;
-    onExploreCraft?: () => void;
-    onDownloadCharter?: () => void;
     className?: string;
 }
 
 export function HeritageHeroAndManifestoSection({
     data = heritageHeroDefaultData,
-    onExploreCraft,
-    onDownloadCharter,
     className = '',
 }: HeritageHeroAndManifestoSectionProps) {
     const {
@@ -115,6 +111,18 @@ export function HeritageHeroAndManifestoSection({
         columnTwoParagraphs,
         architecturalSpecs,
     } = data;
+
+    const handleExploreCraft = () => {
+		const target = document.getElementById('craftsmanship-pillars');
+
+		if (target) {
+			target.scrollIntoView({ behavior: 'smooth' });
+		}
+	};
+
+    const handleDownloadCharter = () => {
+		console.log('Downloading Aurelia Monolithic Architectural Charter (PDF)');
+	};
 
     return (
         <section className={`w-full bg-[#fcf9f4] text-[#1f1e1d] ${className}`}>
@@ -178,7 +186,7 @@ export function HeritageHeroAndManifestoSection({
                                         <Link
                                             key={idx}
                                             href={action.href}
-                                            onClick={onExploreCraft}
+                                            onClick={handleExploreCraft}
                                             className="inline-flex items-center gap-2 px-7 py-4 rounded-xl bg-[#bfa76f] hover:bg-[#aa935e] text-[#191817] font-sans text-[11px] font-semibold uppercase tracking-[0.2em] transition-all shadow-lg active:translate-y-0.5 text-center group"
                                         >
                                             <span>{action.label}</span>
@@ -193,7 +201,7 @@ export function HeritageHeroAndManifestoSection({
                                     <Link
                                         key={idx}
                                         href={action.href}
-                                        onClick={onDownloadCharter}
+                                        onClick={handleDownloadCharter}
                                         className="inline-flex items-center gap-2 px-6 py-4 rounded-xl bg-white/10 hover:bg-white/15 border border-white/20 text-white font-sans text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.18em] transition-all backdrop-blur-md active:translate-y-0.5 text-center"
                                     >
                                         <span>{action.label}</span>

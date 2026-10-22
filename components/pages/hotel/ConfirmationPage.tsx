@@ -1,16 +1,11 @@
-'use client';
-
-import React, { useState } from 'react';
 import Link from 'next/link';
 
-import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 
 // Phase 1: Header, Sanctuary Panorama & Digital Wallet Actions
 import { ConfirmationHeaderAndHero } from '@/components/hotel/checkout/ConfirmationHeaderAndHero';
 import {
 	ConfirmationHeroData,
-	confirmationHeroDefaultData,
 } from '@/components/hotel/checkout/ConfirmationHeaderAndHero';
 
 // Phase 2: Official Sovereign Residence Voucher Card
@@ -23,11 +18,9 @@ import {
 // Phase 3: Tailor Your Arrival Experience (Sensory & Transfer Calibration)
 import {
 	ArrivalSensoryCalibrationSection,
-	ArrivalCalibrationValues,
 } from '@/components/hotel/checkout/ArrivalSensoryCalibrationSection';
 import {
 	ArrivalCalibrationData,
-	arrivalCalibrationDefaultData,
 } from '@/components/hotel/checkout/ArrivalSensoryCalibrationSection';
 
 // Phase 4: Geographic Coordinates, Transit Guide & Dedicated Concierge Desk
@@ -46,88 +39,14 @@ export interface ConfirmationPageProps {
 }
 
 export function ConfirmationPage({
-	heroData = confirmationHeroDefaultData,
 	voucherData = sovereignVoucherDefaultData,
-	calibrationData = arrivalCalibrationDefaultData,
 	coordinatesData = arrivalCoordinatesDefaultData,
 	className = '',
 }: ConfirmationPageProps) {
-	// 1. Sensory & Arrival Preferences State (Phase 3)
-	const [arrivalPreferences, setArrivalPreferences] =
-		useState<ArrivalCalibrationValues>({
-			beverageId: calibrationData.defaultBeverageId,
-			olfactoryId: calibrationData.defaultOlfactoryId,
-			harborId: calibrationData.defaultHarborId,
-			timeSlotId: calibrationData.defaultTimeSlotId,
-		});
+	
+	
 
-	// 2. Interactive Handlers for Phase 1 (Digital Wallet & Documents)
-	const handleAddToWallet = () => {
-		console.log(
-			'Downloading Apple Wallet cryptographic pass (.pkpass)...',
-			heroData.appleWalletPassUrl,
-		);
-		window.open(heroData.appleWalletPassUrl, '_blank');
-	};
-
-	const handleDownloadItineraryPdf = () => {
-		console.log(
-			'Generating high-resolution official itinerary PDF...',
-			heroData.itineraryPdfUrl,
-		);
-		window.open(heroData.itineraryPdfUrl, '_blank');
-	};
-
-	const handleSyncCalendar = () => {
-		console.log(
-			'Dispatching iCalendar (.ics) stay horizon file...',
-			heroData.calendarIcsUrl,
-		);
-		window.open(heroData.calendarIcsUrl, '_blank');
-	};
-
-	const handlePrintFolio = () => {
-		window.print();
-	};
-
-	// 3. Interactive Handlers for Phase 2 (Voucher & VAT Invoice)
-	const handleViewInvoice = () => {
-		console.log(
-			'Opening official VAT invoice modal dialog:',
-			voucherData.accounting.vatInvoiceNumber,
-		);
-		alert(
-			`Accessing Official VAT Folio: ${voucherData.accounting.vatInvoiceNumber}`,
-		);
-	};
-
-	// 4. Interactive Handlers for Phase 3 (Arrival Calibration Updates)
-	const handleCalibrationChange = (updated: ArrivalCalibrationValues) => {
-		setArrivalPreferences(updated);
-		console.log(
-			'Synchronized arrival sensory calibrations with guest profile:',
-			updated,
-		);
-	};
-
-	const handleConfirmTransfer = (finalValues: ArrivalCalibrationValues) => {
-		console.log(
-			'Confirmed maritime tender booking with Positano slipway master:',
-			finalValues,
-		);
-		alert(
-			`Maritime tender rendezvous confirmed at ${finalValues.timeSlotId.toUpperCase()} from harbor slip.`,
-		);
-	};
-
-	// 5. Interactive Handlers for Phase 4 (Concierge Telephony & Transit)
-	const handleCallConcierge = () => {
-		console.log('Connecting hotline to Head Majordomo Matteo de Luca');
-	};
-
-	const handleEmailConcierge = () => {
-		console.log('Dispatching encrypted email to concierge desk');
-	};
+	
 
 	return (
 		<div
@@ -138,45 +57,16 @@ export function ConfirmationPage({
 			{/* Master Content Workspace */}
 			<main className="max-w-360 mx-auto px-4 sm:px-8 lg:px-12 py-10 sm:py-14 space-y-16 sm:space-y-20 w-full flex-1">
 				{/* Phase 1: Header, Verified Eyebrow, Panoramic Sanctuary & Action Strip */}
-				<ConfirmationHeaderAndHero
-					data={heroData}
-					onAddToWallet={handleAddToWallet}
-					onDownloadPdf={handleDownloadItineraryPdf}
-					onSyncCalendar={handleSyncCalendar}
-					onPrintFolio={handlePrintFolio}
-				/>
+				<ConfirmationHeaderAndHero />
 
 				{/* Phase 2: The Sovereign Residence Voucher Card */}
-				<SovereignVoucherCard
-					data={voucherData}
-					onViewInvoice={handleViewInvoice}
-				/>
+				<SovereignVoucherCard />
 
 				{/* Phase 3: Tailor Your Arrival Experience (Sensory Calibrations & Riva Transfer) */}
-				<ArrivalSensoryCalibrationSection
-					data={calibrationData}
-					onChange={handleCalibrationChange}
-					onConfirmTransfer={handleConfirmTransfer}
-				/>
+				<ArrivalSensoryCalibrationSection />
 
 				{/* Phase 4: Geographic Coordinates, Transit Guide & Dedicated Concierge Desk */}
-				<ArrivalCoordinatesAndConciergeSection
-					data={coordinatesData}
-					onCallConcierge={handleCallConcierge}
-					onEmailConcierge={handleEmailConcierge}
-					onDownloadDirections={() =>
-						window.open(
-							coordinatesData.downloadDirectionsPdfUrl,
-							'_blank',
-						)
-					}
-					onOpenGoogleMaps={() =>
-						window.open(
-							coordinatesData.googleMapsDirectionsUrl,
-							'_blank',
-						)
-					}
-				/>
+				<ArrivalCoordinatesAndConciergeSection />
 
 				{/* Return Navigation & Support Footer Callout */}
 				<div className="pt-8 border-t border-[#eeeae2] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-sans text-[#78756d]">

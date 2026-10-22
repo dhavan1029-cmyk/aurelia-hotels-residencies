@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import DateRangeCalendar from './DateRangeCalendar';
 
 export interface SanctuaryOption {
 	id: string;
@@ -20,8 +21,6 @@ export interface PatronPartyConfig {
 export interface BookingBarData {
 	defaultSanctuaryId: string;
 	sanctuaries: SanctuaryOption[];
-	defaultCheckIn: string;
-	defaultCheckOut: string;
 	defaultGuests: number;
 	defaultSuites: number;
 	defaultPromoCode: string;
@@ -62,8 +61,6 @@ export const bookingBarDefaultData: BookingBarData = {
 			coordinates: "34°59'52.1\"N • 135°46'44.8\"E",
 		},
 	],
-	defaultCheckIn: '2025-10-14',
-	defaultCheckOut: '2025-10-19',
 	defaultGuests: 2,
 	defaultSuites: 1,
 	defaultPromoCode: 'AURELIA-PRIVILEGE',
@@ -102,10 +99,10 @@ export function BookingBar({
 		data.defaultSanctuaryId
 	);
 	const [checkInDate, setCheckInDate] = useState<string>(
-		data.defaultCheckIn
+		'Check In'
 	);
 	const [checkOutDate, setCheckOutDate] = useState<string>(
-		data.defaultCheckOut
+		'Check Out'
 	);
 	const [adultsCount, setAdultsCount] = useState<number>(
 		data.defaultGuests
@@ -121,6 +118,8 @@ export function BookingBar({
 	const [activeDropdown, setActiveDropdown] = useState<
 		'sanctuary' | 'stay-dates' | 'party' | 'privilege' | null
 	>(null);
+
+	const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
 	const containerRef = useRef<HTMLDivElement>(null);
 
@@ -168,6 +167,9 @@ export function BookingBar({
 	// Format human-readable date display
 	function formatDateDisplay(dateStr: string): string {
 		try {
+
+			if(dateStr === 'Check In' || dateStr === 'Check Out') return dateStr
+
 			const [year, month, day] = dateStr.split('-');
 			const months = [
 				'Jan',
@@ -193,6 +195,8 @@ export function BookingBar({
 	// Form submission handler
 	function handleSearch(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
+
+		if(checkInDate === 'Check In' || checkOutDate === 'Check Out') return
 
 		if (onSearchSubmit) {
 			onSearchSubmit({
@@ -331,135 +335,45 @@ export function BookingBar({
 
 					{/* 2. STAY HORIZON / DATES (3 cols on Desktop) */}
 					<div className="relative lg:col-span-3">
-						<button
-							type="button"
-							onClick={() =>
-								setActiveDropdown(
-									activeDropdown === 'stay-dates'
-										? null
-										: 'stay-dates'
-								)
-							}
-							className={`w-full h-full text-left p-4 rounded-2xl border transition-all duration-200 flex flex-col justify-between group ${
-								activeDropdown === 'stay-dates'
-									? 'bg-[#f7f2e7] border-[#8e763b] shadow-xs'
-									: 'bg-[#fcfaf7] hover:bg-[#f6f2ea] border-[#e8e4dc]'
-							}`}
-						>
-							<div className="flex items-center justify-between w-full mb-1">
-								<div className="flex items-center gap-2">
-									<svg
-										className="w-3.5 h-3.5 text-[#8e763b]"
-										viewBox="0 0 24 24"
-										fill="none"
-										stroke="currentColor"
-										strokeWidth="1.8"
-									>
-										<rect
-											x="3"
-											y="4"
-											width="18"
-											height="18"
-											rx="2"
-										/>
-										<line
-											x1="16"
-											y1="2"
-											x2="16"
-											y2="6"
-										/>
-										<line
-											x1="8"
-											y1="2"
-											x2="8"
-											y2="6"
-										/>
-										<line
-											x1="3"
-											y1="10"
-											x2="21"
-											y2="10"
-										/>
-									</svg>
+					    <button
+					        type="button"
+					        onClick={() => setIsCalendarOpen(prev => !prev)}
+					        className="w-full h-full text-left p-4 rounded-2xl border bg-[#fcfaf7] hover:bg-[#f6f2ea] border-[#e8e4dc]"
+					    >
+					        <div className="flex items-center justify-between w-full mb-1">
+					            <span className="text-[10px] font-sans font-semibold uppercase tracking-[0.22em] text-[#8e763b]">
+					                STAY HORIZON
+					            </span>
+					            <span className="px-2 py-0.5 rounded-sm bg-white border border-[#ded9ce] text-[9px] font-mono text-[#8e763b]">
+					                {nightsCount} NIGHTS
+					            </span>
+					        </div>
+					        <span className="font-serif text-base sm:text-[17px] font-normal text-[#1f1e1d] block tracking-tight truncate">
+					            {formatDateDisplay(checkInDate)} — {formatDateDisplay(checkOutDate)}
+					        </span>
+					    </button>
 
-									<span className="text-[10px] font-sans font-semibold uppercase tracking-[0.22em] text-[#8e763b]">
-										STAY HORIZON
-									</span>
-								</div>
-
-								<span className="px-2 py-0.5 rounded-sm bg-white border border-[#ded9ce] text-[9px] font-mono text-[#8e763b]">
-									{nightsCount}{' '}
-									{nightsCount === 1 ? 'NIGHT' : 'NIGHTS'}
-								</span>
-							</div>
-
-							<div>
-								<span className="font-serif text-base sm:text-[17px] font-normal text-[#1f1e1d] block tracking-tight truncate">
-									{formatDateDisplay(checkInDate)} —{' '}
-									{formatDateDisplay(checkOutDate)}
-								</span>
-								<span className="block text-[11px] font-sans text-[#78756d] font-light mt-0.5 truncate">
-									Autumn Equinox • Direct Availability
-								</span>
-							</div>
-						</button>
-
-						{/* Dropdown Overlay: Date Selectors */}
-						{activeDropdown === 'stay-dates' && (
-							<div className="absolute top-[calc(100%+8px)] left-0 w-full sm:w-85 bg-white border border-[#ded9ce] rounded-2xl shadow-2xl p-4 z-50 animate-in fade-in zoom-in-95 duration-150 space-y-4">
-								<div className="border-b border-[#f0ece3] pb-2 flex items-center justify-between">
-									<span className="text-[9px] font-sans font-semibold uppercase tracking-[0.2em] text-[#8e763b]">
-										CALIBRATE ARRIVAL & DEPARTURE
-									</span>
-									<span className="text-[10px] font-mono text-[#1f1e1d] font-medium">
-										{nightsCount} Nights Selected
-									</span>
-								</div>
-
-								<div className="space-y-3">
-									<div>
-										<label className="block text-[9px] font-sans font-semibold uppercase tracking-[0.18em] text-[#6d6961] mb-1">
-											SANCTUARY CHECK-IN
-										</label>
-										<input
-											type="date"
-											value={checkInDate}
-											onChange={(e) =>
-												setCheckInDate(e.target.value)
-											}
-											className="w-full px-3 py-2.5 rounded-xl bg-[#fcfaf7] border border-[#ded9ce] text-xs font-serif text-[#1f1e1d] outline-none focus:border-[#8e763b]"
-										/>
-									</div>
-
-									<div>
-										<label className="block text-[9px] font-sans font-semibold uppercase tracking-[0.18em] text-[#6d6961] mb-1">
-											SANCTUARY CHECK-OUT
-										</label>
-										<input
-											type="date"
-											value={checkOutDate}
-											onChange={(e) =>
-												setCheckOutDate(e.target.value)
-											}
-											className="w-full px-3 py-2.5 rounded-xl bg-[#fcfaf7] border border-[#ded9ce] text-xs font-serif text-[#1f1e1d] outline-none focus:border-[#8e763b]"
-										/>
-									</div>
-								</div>
-
-								<div className="pt-2 border-t border-[#f0ece3] flex justify-end">
-									<button
-										type="button"
-										onClick={() => {
-                                            setActiveDropdown(null)
-                                        }}
-										className="px-4 py-2 rounded-xl bg-[#1f1e1d] text-white text-[10px] font-sans font-semibold uppercase tracking-[0.2em] hover:bg-[#343230]"
-									>
-										Apply Horizon
-									</button>
-								</div>
-							</div>
-						)}
+					    {/* Calendar Popover */}
+					    {isCalendarOpen && (
+					        <div className="absolute top-[calc(100%+8px)] left-0 lg:left-0 sm:-left-75 md:-left-100 z-50">
+					            <DateRangeCalendar
+					                isOpen={isCalendarOpen}
+					                onClose={() => setIsCalendarOpen(false)}
+					                checkIn={checkInDate}
+					                checkOut={checkOutDate}
+					                onApplyDates={(range) => {
+					                    setCheckInDate(range.checkIn);
+					                    setCheckOutDate(range.checkOut);
+					                }}
+					                onClearDates={() => {
+					                    setCheckInDate('');
+					                    setCheckOutDate('');
+					                }}
+					            />
+					        </div>
+					    )}
 					</div>
+
 
 					{/* 3. PATRONS & SUITE COMPOSITION (2.5 cols on Desktop) */}
 					<div className="relative lg:col-span-2">

@@ -42,11 +42,7 @@ export function ProfilePage({
 }: ProfilePageProps) {
 
 	// setting year
-	const [year, setYear] = useState<number | null>(null)
-	
-		useEffect(() => {
-			setYear(new Date().getFullYear())
-		})
+	const year = new Date().getFullYear();
 
 	// 1. Interactive Navigation Tab State
 	const [activeTab, setActiveTab] = useState<ProfileNavTabId>(
@@ -135,7 +131,7 @@ export function ProfilePage({
 			avatarAlt: `Portrait of companion ${newCompanionName}`,
 		};
 
-		setCompanionList([...companionList, newEntry]);
+		setCompanionList((current) => [...current, newEntry]);		
 		setNewCompanionName('');
 		setShowAddCompanionModal(false);
 	}

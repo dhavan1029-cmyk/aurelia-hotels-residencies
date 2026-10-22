@@ -1,16 +1,11 @@
-'use client';
-
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { RegisterDossierRail } from '@/components/hotel/auth/RegisterDossierRail';
 import { RegisterEnrollmentForm } from '@/components/hotel/auth/RegisterEnrollmentForm';
 import {
     RegisterDossierData,
-    registerDossierDefaultData,
 } from '@/components/hotel/auth/RegisterDossierRail';
 import {
     RegisterFormData,
-    RegisterFormInitialValues,
     registerFormDefaultData,
 } from '@/components/hotel/auth/RegisterEnrollmentForm';
 import Image from 'next/image';
@@ -22,39 +17,9 @@ export interface RegisterPageProps {
 }
 
 export function RegisterPage({
-    dossierData = registerDossierDefaultData,
     formData = registerFormDefaultData,
     className = '',
 }: RegisterPageProps) {
-    const router = useRouter();
-
-    function handleSubmitApplication(values: RegisterFormInitialValues) {
-        console.log('Submitting Sovereign Patron Registration Application:', {
-            honorific: values.honorific,
-            name: `${values.firstName} ${values.lastName}`,
-            email: values.email,
-            phone: `${values.phoneCountryCode} ${values.phoneNumber}`,
-            sanctuaries: values.selectedSanctuaryIds,
-            aroma: values.selectedAromaId,
-            cellar: values.selectedCellarId,
-            token: values.invitationToken,
-        });
-
-        // Simulate secure database inscription & redirect to Sovereign Profile
-        setTimeout(function () {
-            router.push('/profile?registered=true');
-        }, 800);
-    }
-
-    function handleAppleSovereignSync() {
-        console.log('Synchronizing Apple Sovereign ID biometric credentials');
-        router.push('/profile?registered=true&sync=apple');
-    }
-
-    function handleConciergePassSync() {
-        console.log('Opening Concierge Direct Passcode verification modal');
-    }
-
     return (
         <main
             className={`min-h-screen w-full bg-[#fcf9f4] text-[#1f1e1d] flex flex-col font-sans selection:bg-[#8e763b]/20 selection:text-[#1f1e1d] ${className}`}
@@ -99,16 +64,13 @@ export function RegisterPage({
             <div className="max-w-360 mx-auto w-full flex-1 flex flex-col lg:flex-row items-start">
                 {/* PHASE 1: Left Split Architectural Dossier & Privileges Rail (38% width) */}
                 <div className="w-full lg:w-[38%] lg:sticky lg:top-28 lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto border-b lg:border-b-0 lg:border-r border-[#e8e4dc]">
-                    <RegisterDossierRail data={dossierData} />
+                    <RegisterDossierRail />
                 </div>
 
                 {/* PHASE 2: Right Split Sovereign Patron Registration Form (62% width) */}
                 <div className="w-full lg:w-[62%] py-8 sm:py-12 px-4 sm:px-8">
                     <RegisterEnrollmentForm
                         data={formData}
-                        onSubmitApplication={handleSubmitApplication}
-                        onAppleSovereignSync={handleAppleSovereignSync}
-                        onConciergePassSync={handleConciergePassSync}
                     />
                 </div>
             </div>

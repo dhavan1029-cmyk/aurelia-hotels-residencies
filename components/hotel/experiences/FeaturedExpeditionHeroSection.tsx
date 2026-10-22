@@ -1,8 +1,5 @@
-'use client';
-
 import Image from 'next/image';
 import Link from 'next/link';
-
 
 export interface ExpeditionSpecMetric {
     label: string;
@@ -88,10 +85,9 @@ export interface FeaturedExpeditionHeroSectionProps {
 
 export function FeaturedExpeditionHeroSection({
     data = experiencesFeaturedDefaultData,
-    onReserveCharter,
-    onViewDossier,
     className = '',
 }: FeaturedExpeditionHeroSectionProps) {
+
     const {
         experienceId,
         slug,
@@ -263,29 +259,12 @@ export function FeaturedExpeditionHeroSection({
                         <div className="pt-6 border-t border-[#eeeae2] flex flex-col sm:flex-row items-center gap-3">
                             <Link
                                 href={`/checkout?experience=${slug}`}
-                                onClick={function () {
-                                    if (onReserveCharter) {
-                                        onReserveCharter(experienceId);
-                                    }
-                                }}
                                 className="w-full sm:flex-1 inline-flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-[11px] font-semibold uppercase tracking-[0.2em] transition-all shadow-md active:translate-y-0.5 text-center group"
                             >
                                 <span>{primaryCtaLabel}</span>
                                 <span className="transform transition-transform duration-300 group-hover:translate-x-1">
                                     →
                                 </span>
-                            </Link>
-
-                            <Link
-                                href={`/experiences/${slug}`}
-                                onClick={function () {
-                                    if (onViewDossier) {
-                                        onViewDossier(slug);
-                                    }
-                                }}
-                                className="w-full sm:w-auto inline-flex items-center justify-center px-5 py-4 rounded-xl bg-white hover:bg-[#f6f2ea] border border-[#ded9ce] text-[#1f1e1d] font-sans text-[11px] font-semibold uppercase tracking-[0.18em] transition-all text-center shadow-2xs"
-                            >
-                                <span>{secondaryCtaLabel}</span>
                             </Link>
                         </div>
                     </div>

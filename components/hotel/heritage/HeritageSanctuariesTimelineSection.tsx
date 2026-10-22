@@ -164,10 +164,13 @@ export function HeritageSanctuariesTimelineSection({
 
     const handleSanctuaryClick = (sanctuaryId: string) => {
         setActiveSanctuaryId(sanctuaryId);
-        if (onSelectSanctuary) {
-            onSelectSanctuary(sanctuaryId);
-        }
+        handleSelectSanctuary(sanctuaryId)
     };
+
+    // Sanctuary Timeline Selection Handler
+	const handleSelectSanctuary = (sanctuaryId: string) => {
+		console.log(`Viewing chronology monograph for sanctuary: ${sanctuaryId}`);
+	};
 
     const activeMilestone =
         milestones.find((m) => m.id === activeSanctuaryId) || milestones[0];

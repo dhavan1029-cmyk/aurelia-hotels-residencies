@@ -69,13 +69,11 @@ export const heritageVipDefaultData: HeritageVipSectionData = {
 
 export interface HeritageCharterLedgerStripProps {
 	data?: HeritageCharterLedgerData;
-	onDownloadCharter?: () => void;
 	className?: string;
 }
 
 export function HeritageCharterLedgerStrip({
 	data = heritageVipDefaultData.ledger,
-	onDownloadCharter,
 	className = '',
 }: HeritageCharterLedgerStripProps) {
 	const {
@@ -87,6 +85,10 @@ export function HeritageCharterLedgerStrip({
 		downloadLabel,
 		downloadHref,
 	} = data;
+
+	const handleDownloadCharter = () => {
+		console.log('Downloading Aurelia Monolithic Architectural Charter (PDF)');
+	};
 
 	return (
 		<section
@@ -124,7 +126,7 @@ export function HeritageCharterLedgerStrip({
 				<div className="shrink-0 self-start lg:self-center">
 					<Link
 						href={downloadHref}
-						onClick={onDownloadCharter}
+						onClick={handleDownloadCharter}
 						className="inline-flex items-center gap-2.5 px-6 py-4 rounded-xl bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.2em] transition-all shadow-md active:translate-y-0.5 whitespace-nowrap group"
 					>
 						<svg

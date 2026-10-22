@@ -1,14 +1,8 @@
-'use client';
-
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 
 // Phase 1: Gazette Monograph Header & Segmented Filter Bar
-import { ExperiencesHeaderAndFilterSection } from '@/components/hotel/experiences/Header';
+import { ExperiencesHeaderSection } from '@/components/hotel/experiences/Header';
 import {
-    ExperienceCategoryFilterId,
     experiencesHeaderDefaultData,
 } from '@/components/hotel/experiences/Header';
 
@@ -34,90 +28,42 @@ export interface ExperiencesPageProps {
 }
 
 export function ExperiencesPage({ className = '' }: ExperiencesPageProps) {
-    const router = useRouter();
-
-    // 1. Dynamic Category Filter State
-    const [activeFilterId, setActiveFilterId] = useState<ExperienceCategoryFilterId>('all');
-
-    // Filter Change Handler
-    const handleCategoryChange = (categoryId: ExperienceCategoryFilterId) => {
-        setActiveFilterId(categoryId);
-    };
-
-    // Experience Reservation Router -> Routes to Checkout with Selected Experience ID
-    const handleReserveExperience = (experienceId: string) => {
-        router.push(`/checkout?experience=${experienceId}`);
-    };
-
-    // Dossier Modal or Routing Handler
-    const handleViewDossier = (slug: string) => {
-        router.push(`/experiences/${slug}`);
-    };
-
-    // Private Concierge Hotline Call
-    const handleInquireCurator = () => {
-        window.location.href = 'tel:+39089875000';
-    };
 
     return (
         <div className={`min-h-screen bg-[#fcf9f4] text-[#1f1e1d] flex flex-col font-sans selection:bg-[#8e763b]/20 selection:text-[#1f1e1d] ${className}`}>
 
             {/* PHASE 1: Gazette Monograph Header & Segmented Category Filter Bar */}
-            <ExperiencesHeaderAndFilterSection
+            <ExperiencesHeaderSection
                 data={experiencesHeaderDefaultData}
-                activeCategory={activeFilterId}
-                onCategoryChange={handleCategoryChange}
-                onInquireCurator={handleInquireCurator}
             />
 
             {/* Main Curated Showcase Workspace */}
             <main className="w-full flex-1 space-y-4 sm:space-y-6">
                 {/* PHASE 2: Hero Asymmetric Riva Aquarama Faraglioni Bento Showcase */}
-                {(activeFilterId === 'all' || activeFilterId === 'marine-charters') && (
-                    <FeaturedExpeditionHeroSection
-                        data={experiencesFeaturedDefaultData}
-                        onReserveCharter={handleReserveExperience}
-                        onViewDossier={handleViewDossier}
-                    />
-                )}
+                <FeaturedExpeditionHeroSection
+                    data={experiencesFeaturedDefaultData}
+                />
 
                 {/* PHASE 3: Dual Medium Bento Cards (Roman Grotto & Michelin 3-Star Il Belvedere) */}
-                {(activeFilterId === 'all' ||
-                    activeFilterId === 'subterranean-wellness' ||
-                    activeFilterId === 'gastronomy-enology') && (
-                    <SignatureRhythmsDualBentoSection
-                        data={experiencesRhythmsDefaultData}
-                        onReserveExperience={handleReserveExperience}
-                        onViewDossier={handleViewDossier}
-                    />
-                )}
+                <SignatureRhythmsDualBentoSection
+                    data={experiencesRhythmsDefaultData}
+                />
 
                 {/* PHASE 4: Dual Compact Bento Cards (Barolo Vault & Cliffside Olive Grove EVOO) */}
-                {(activeFilterId === 'all' || activeFilterId === 'gastronomy-enology') && (
-                    <EnologyAndTerroirMasterclassesSection
-                        data={experiencesEnologyDefaultData}
-                        onReserveMasterclass={handleReserveExperience}
-                        onViewDossier={handleViewDossier}
-                    />
-                )}
-
-                {/* PHASE 5A: Dark Monolithic VIP Private Charter Concierge Inquiries Card */}
-                <BespokeConciergeInquiryBanner
-                    data={experiencesVipDefaultData.inquiryBanner}
-                    onInitiateConsultation={handleInquireCurator}
-                    onDownloadDossier={function () {
-                        console.log('Dispatching Aurelia Charter PDF Folio download');
-                    }}
-                />
-
-                {/* PHASE 5B: Seasonal Gazette Newsletter Dispatch Strip */}
-                <SeasonalGazetteNewsletterStrip
-                    data={experiencesVipDefaultData.newsletter}
-                    onSubscribe={function (email) {
-                        console.log('Subscribing patron email to Seasonal Gazette:', email);
-                    }}
+                <EnologyAndTerroirMasterclassesSection
+                    data={experiencesEnologyDefaultData}
                 />
             </main>
+
+            {/* PHASE 5A: Dark Monolithic VIP Private Charter Concierge Inquiries Card */}
+            <BespokeConciergeInquiryBanner
+                data={experiencesVipDefaultData.inquiryBanner}
+            />
+
+            {/* PHASE 5B: Seasonal Gazette Newsletter Dispatch Strip */}
+            <SeasonalGazetteNewsletterStrip
+                data={experiencesVipDefaultData.newsletter}
+            />
 
             {/* Global Sanctuary Footer */}
             <Footer />

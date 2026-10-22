@@ -1,6 +1,8 @@
 import { FilterBar } from "@/components/hotel/accommodations/AccommodationFilterBar"
 import { SuiteCard, SuiteCardProps } from "@/components/hotel/SuiteCard";
 import { Footer } from "@/components/layout/Footer";
+import { Suspense } from "react";
+
 
 export default function Accommodations(){
 
@@ -153,7 +155,9 @@ export default function Accommodations(){
         </div>
 
         {/* Stone-Toned Filter & Sort Control Strip Box */}
-        <FilterBar></FilterBar>
+        <Suspense>
+            <FilterBar></FilterBar>
+        </Suspense>
 
         <section
             className={`w-full bg-[#fcf9f4] py-20 sm:py-10 lg:py-10 px-4 sm:px-8 lg:px-12 border-b border-[#e8e4dc]`}

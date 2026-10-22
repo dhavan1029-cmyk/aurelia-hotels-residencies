@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import Link from 'next/link';
 
 export type CheckoutStepId = 'guest-details' | 'bespoke-addons' | 'payment-guarantee';
 
@@ -84,8 +83,6 @@ export interface CheckoutHeaderProps {
 
 export function CheckoutHeader({
     data = checkoutHeaderDefaultData,
-    activeStepId = 'guest-details',
-    onStepClick,
     onConciergeCall,
     onCurrencyChange,
     className = '',

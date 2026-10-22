@@ -1,4 +1,5 @@
 'use client';
+import { useRouter } from 'next/navigation';
 import {
 	HeritageSovereignInquiryData,
 	heritageVipDefaultData,
@@ -6,15 +7,11 @@ import {
 
 export interface HeritageSovereignInquiryBannerProps {
 	data?: HeritageSovereignInquiryData;
-	onRequestMonograph?: () => void;
-	onConsultConcierge?: () => void;
 	className?: string;
 }
 
 export function HeritageSovereignInquiryBanner({
 	data = heritageVipDefaultData.inquiry,
-	onRequestMonograph,
-	onConsultConcierge,
 	className = '',
 }: HeritageSovereignInquiryBannerProps) {
 	const {
@@ -30,6 +27,17 @@ export function HeritageSovereignInquiryBanner({
 		secondaryCtaLabel,
 		privatizationProtocols,
 	} = data;
+
+	const router = useRouter();
+	
+	// Sovereign Concierge Inquiries
+	const handleRequestMonograph = () => {
+		router.push('/checkout?inquiry=estate-monograph');
+	};
+
+	const handleConsultConcierge = () => {
+		window.location.href = 'tel:+39089875000';
+	};
 
 	return (
 		<section
@@ -114,7 +122,7 @@ export function HeritageSovereignInquiryBanner({
 						<div className="space-y-3 pt-4 border-t border-white/10">
 							<button
 								type="button"
-								onClick={onRequestMonograph}
+								onClick={handleRequestMonograph}
 								className="w-full inline-flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-[#bfa76f] hover:bg-[#aa935e] text-[#191817] font-sans text-[11px] font-semibold uppercase tracking-[0.2em] transition-all shadow-md active:translate-y-0.5 text-center group"
 							>
 								<span>{primaryCtaLabel}</span>
@@ -126,7 +134,7 @@ export function HeritageSovereignInquiryBanner({
 
 							<button
 								type="button"
-								onClick={onConsultConcierge}
+								onClick={handleConsultConcierge}
 								className="w-full inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-transparent hover:bg-white/5 border border-white/20 text-white font-sans text-[10px] font-semibold uppercase tracking-[0.18em] transition-all text-center"
 							>
 								<span>{secondaryCtaLabel}</span>

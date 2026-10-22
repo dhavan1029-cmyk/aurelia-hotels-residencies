@@ -1,7 +1,3 @@
-'use client';
-
-import { useRouter } from 'next/navigation';
-
 import { Footer } from '@/components/layout/Footer';
 
 // Phase 1: Cinematic Hero & Architectural Manifesto
@@ -30,44 +26,6 @@ export interface HeritagePageProps {
 }
 
 export function HeritagePage({ className = '' }: HeritagePageProps) {
-	const router = useRouter();
-
-	// 1. Navigation Anchor Handlers
-	const handleExploreCraft = () => {
-		const target = document.getElementById('craftsmanship-pillars');
-
-		if (target) {
-			target.scrollIntoView({ behavior: 'smooth' });
-		}
-	};
-
-	const handleDownloadCharter = () => {
-		console.log('Downloading Aurelia Monolithic Architectural Charter (PDF)');
-	};
-
-	// 2. Pillar Action Handler -> Routes to inquiry or details
-	const handleSelectPillarAction = (pillarNumber: string) => {
-		console.log(`Inspecting craftsmanship pillar: ${pillarNumber}`);
-	};
-
-	// 3. Figure Inspection Modal/Viewer
-	const handleFigureClick = (figIndex: number) => {
-		console.log(`Inspecting architectural excerpt plate: ${figIndex + 1}`);
-	};
-
-	// 4. Sanctuary Timeline Selection Handler
-	const handleSelectSanctuary = (sanctuaryId: string) => {
-		console.log(`Viewing chronology monograph for sanctuary: ${sanctuaryId}`);
-	};
-
-	// 5. Sovereign Concierge Inquiries
-	const handleRequestMonograph = () => {
-		router.push('/checkout?inquiry=estate-monograph');
-	};
-
-	const handleConsultConcierge = () => {
-		window.location.href = 'tel:+39089875000';
-	};
 
 	return (
 		<div
@@ -77,8 +35,6 @@ export function HeritagePage({ className = '' }: HeritagePageProps) {
 			{/* PHASE 1: Full-Bleed Cinematic Hero Monograph & Architectural Manifesto */}
 			<HeritageHeroAndManifestoSection
 				data={heritageHeroDefaultData}
-				onExploreCraft={handleExploreCraft}
-				onDownloadCharter={handleDownloadCharter}
 			/>
 
 			{/* Main Architectural Dossier Workspace */}
@@ -86,32 +42,26 @@ export function HeritagePage({ className = '' }: HeritagePageProps) {
 				{/* PHASE 2: Three Pillars of Aurelia Craftsmanship Bento Rail */}
 				<HeritageCraftsmanshipPillarsSection
 					data={heritagePillarsDefaultData}
-					onSelectPillarAction={handleSelectPillarAction}
 				/>
 
 				{/* PHASE 3: Precision in Stone & Sunlight & Environmental Stewardship */}
 				<HeritageArchitecturalExcerptsSection
 					data={heritageExcerptsDefaultData}
-					onFigureClick={handleFigureClick}
 				/>
 
 				{/* PHASE 4: The Aurelia Sanctuaries Chronological Timeline & Cartography Grid */}
 				<HeritageSanctuariesTimelineSection
 					data={heritageTimelineDefaultData}
-					onSelectSanctuary={handleSelectSanctuary}
 				/>
 
 				{/* PHASE 5A: Dark Monolithic Sovereign Solitude Buyout & Architectural Inquiry Card */}
 				<HeritageSovereignInquiryBanner
 					data={heritageVipDefaultData.inquiry}
-					onRequestMonograph={handleRequestMonograph}
-					onConsultConcierge={handleConsultConcierge}
 				/>
 
 				{/* PHASE 5B: Monolithic Charter Ratification & Archive Ledger Strip */}
 				<HeritageCharterLedgerStrip
 					data={heritageVipDefaultData.ledger}
-					onDownloadCharter={handleDownloadCharter}
 				/>
 			</main>
 

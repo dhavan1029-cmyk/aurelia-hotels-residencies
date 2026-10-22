@@ -187,12 +187,10 @@ export interface ArrivalSensoryCalibrationProps {
     className?: string;
 }
 
-export function ArrivalSensoryCalibrationSection({
-    data = arrivalCalibrationDefaultData,
-    onChange,
-    onConfirmTransfer,
-    className = '',
-}: ArrivalSensoryCalibrationProps) {
+export function ArrivalSensoryCalibrationSection() {
+
+    const data = arrivalCalibrationDefaultData
+
     const {
         sectionEyebrow,
         heading,
@@ -218,6 +216,32 @@ export function ArrivalSensoryCalibrationSection({
         confirmationNotice,
     } = data;
 
+    const [arrivalPreferences, setArrivalPreferences] =
+		useState<ArrivalCalibrationValues>({
+			beverageId: data.defaultBeverageId,
+			olfactoryId: data.defaultOlfactoryId,
+			harborId: data.defaultHarborId,
+			timeSlotId: data.defaultTimeSlotId,
+		});
+
+    const handleCalibrationChange = (updated: ArrivalCalibrationValues) => {
+		setArrivalPreferences(updated);
+		console.log(
+			'Synchronized arrival sensory calibrations with guest profile:',
+			updated,
+		);
+	};
+
+	const handleConfirmTransfer = (finalValues: ArrivalCalibrationValues) => {
+		console.log(
+			'Confirmed maritime tender booking with Positano slipway master:',
+			finalValues,
+		);
+		alert(
+			`Maritime tender rendezvous confirmed at ${finalValues.timeSlotId.toUpperCase()} from harbor slip.`,
+		);
+	};
+
     // Component Local State
     const [selectedBeverageId, setSelectedBeverageId] = useState<string>(defaultBeverageId);
     const [selectedOlfactoryId, setSelectedOlfactoryId] = useState<string>(defaultOlfactoryId);
@@ -234,9 +258,7 @@ export function ArrivalSensoryCalibrationSection({
             ...updated,
         };
 
-        if (onChange) {
-            onChange(nextValues);
-        }
+        handleCalibrationChange(nextValues)
 
         // Brief subtle auto-save confirmation
         setIsSavedFeedback(true);
@@ -268,18 +290,18 @@ export function ArrivalSensoryCalibrationSection({
     };
 
     const handleConfirmTransferClick = () => {
-        if (onConfirmTransfer) {
-            onConfirmTransfer({
+        handleConfirmTransfer({
                 beverageId: selectedBeverageId,
                 olfactoryId: selectedOlfactoryId,
                 harborId: selectedHarborId,
                 timeSlotId: selectedTimeSlotId,
-            });
-        }
+        });
     };
 
+    
+
     return (
-        <section className={`w-full max-w-360 mx-auto space-y-8 ${className}`}>
+        <section className={`w-full max-w-360 mx-auto space-y-8`}>
             {/* Section Monograph Header */}
             <div className="text-center max-w-2xl mx-auto">
                 <span className="block text-[10px] font-sans font-semibold uppercase tracking-[0.26em] text-[#8e763b] mb-2">

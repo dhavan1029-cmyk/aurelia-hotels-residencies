@@ -1,4 +1,3 @@
-'use client';
 
 import Image from 'next/image';
 import Link from 'next/link';
@@ -75,7 +74,6 @@ export interface AuthEditorialMastheadProps {
 export function AuthEditorialMasthead({
     data = authMastheadDefaultData,
     className = '',
-    onExploreBrand,
 }: AuthEditorialMastheadProps) {
     const {
         brandName,
@@ -194,7 +192,6 @@ export function AuthEditorialMasthead({
             <div className="w-screen relative z-10 flex flex-row items-center justify-between gap-4">
                 <Link
                     href="/"
-                    onClick={onExploreBrand}
                     className="flex flex-col group self-start"
                 >
                     <Image

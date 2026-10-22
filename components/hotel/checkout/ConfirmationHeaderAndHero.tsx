@@ -1,3 +1,5 @@
+'use client'
+
 import Image from 'next/image';
 
 export interface SanctuaryPanoramaLocation {
@@ -40,23 +42,10 @@ export const confirmationHeroDefaultData: ConfirmationHeroData = {
     printFolioUrl: '/folio/print?ref=AUR-89240-POS',
 };
 
-export interface ConfirmationHeaderAndHeroProps {
-    data?: ConfirmationHeroData;
-    onAddToWallet?: () => void;
-    onDownloadPdf?: () => void;
-    onSyncCalendar?: () => void;
-    onPrintFolio?: () => void;
-    className?: string;
-}
+export function ConfirmationHeaderAndHero() {
 
-export function ConfirmationHeaderAndHero({
-    data = confirmationHeroDefaultData,
-    onAddToWallet,
-    onDownloadPdf,
-    onSyncCalendar,
-    onPrintFolio,
-    className = '',
-}: ConfirmationHeaderAndHeroProps) {
+    const data = confirmationHeroDefaultData
+
     const {
         statusBadgeText,
         headline,
@@ -65,8 +54,36 @@ export function ConfirmationHeaderAndHero({
         panorama,
     } = data;
 
+    const handleAddToWallet = () => {
+        console.log(
+            'Downloading Apple Wallet cryptographic pass (.pkpass)...',
+            data.appleWalletPassUrl,
+        );
+        window.open(data.appleWalletPassUrl, '_blank');
+    };
+
+    const handleDownloadItineraryPdf = () => {
+        console.log(
+            'Generating high-resolution official itinerary PDF...',
+            data.itineraryPdfUrl,
+        );
+        window.open(data.itineraryPdfUrl, '_blank');
+    };
+
+    const handleSyncCalendar = () => {
+        console.log(
+            'Dispatching iCalendar (.ics) stay horizon file...',
+            data.calendarIcsUrl,
+        );
+        window.open(data.calendarIcsUrl, '_blank');
+    };
+
+    const handlePrintFolio = () => {
+        window.print();
+    };
+
     return (
-        <section className={`w-full text-center ${className}`}>
+        <section className={`w-full text-center`}>
             {/* Top Monogram Seal Insignia Pill */}
             <div className="flex justify-center mb-6">
                 <div className="w-12 h-12 rounded-2xl bg-[#f6f2ea] border border-[#ded9ce] flex items-center justify-center text-[#8e763b] shadow-xs">
@@ -153,7 +170,7 @@ export function ConfirmationHeaderAndHero({
                 {/* Add to Apple Wallet */}
                 <button
                     type="button"
-                    onClick={onAddToWallet}
+                    onClick={handleAddToWallet}
                     className="group inline-flex items-center gap-2.5 px-5 py-3 rounded-sm bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-[11px] font-semibold uppercase tracking-[0.18em] transition-all shadow-sm active:translate-y-0.5"
                 >
                     <svg
@@ -169,7 +186,7 @@ export function ConfirmationHeaderAndHero({
                 {/* Download Itinerary PDF */}
                 <button
                     type="button"
-                    onClick={onDownloadPdf}
+                    onClick={handleDownloadItineraryPdf}
                     className="inline-flex items-center gap-2 px-5 py-3 rounded-sm bg-white hover:bg-[#f6f2ea] border border-[#ded9ce] text-[#1f1e1d] font-sans text-[11px] font-medium uppercase tracking-[0.18em] transition-all shadow-2xs active:translate-y-0.5"
                 >
                     <svg
@@ -191,7 +208,7 @@ export function ConfirmationHeaderAndHero({
                 {/* Sync to Calendar */}
                 <button
                     type="button"
-                    onClick={onSyncCalendar}
+                    onClick={handleSyncCalendar}
                     className="inline-flex items-center gap-2 px-5 py-3 rounded-sm bg-white hover:bg-[#f6f2ea] border border-[#ded9ce] text-[#1f1e1d] font-sans text-[11px] font-medium uppercase tracking-[0.18em] transition-all shadow-2xs active:translate-y-0.5"
                 >
                     <svg
@@ -214,7 +231,7 @@ export function ConfirmationHeaderAndHero({
                 {/* Print Guest Folio */}
                 <button
                     type="button"
-                    onClick={onPrintFolio}
+                    onClick={handlePrintFolio}
                     className="inline-flex items-center gap-2 px-5 py-3 rounded-sm bg-white hover:bg-[#f6f2ea] border border-[#ded9ce] text-[#1f1e1d] font-sans text-[11px] font-medium uppercase tracking-[0.18em] transition-all shadow-2xs active:translate-y-0.5"
                 >
                     <svg

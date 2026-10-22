@@ -1,4 +1,5 @@
-import React from 'react';
+'use client'
+
 import Image from 'next/image';
 
 export interface TransitAccessMethod {
@@ -120,8 +121,6 @@ export interface ArrivalCoordinatesAndConciergeProps {
 
 export function ArrivalCoordinatesAndConciergeSection({
 	data = arrivalCoordinatesDefaultData,
-	onCallConcierge,
-	onEmailConcierge,
 	onDownloadDirections,
 	onOpenGoogleMaps,
 	className = '',
@@ -136,6 +135,15 @@ export function ArrivalCoordinatesAndConciergeSection({
 		downloadDirectionsPdfUrl,
 		googleMapsDirectionsUrl,
 	} = data;
+
+	// Interactive Handlers for Phase 4 (Concierge Telephony & Transit)
+	const handleCallConcierge = () => {
+		console.log('Connecting hotline to Head Majordomo Matteo de Luca');
+	};
+
+	const handleEmailConcierge = () => {
+		console.log('Dispatching encrypted email to concierge desk');
+	};
 
 	return (
 		<section className={`w-full max-w-360 mx-auto space-y-8 ${className}`}>
@@ -175,7 +183,12 @@ export function ArrivalCoordinatesAndConciergeSection({
 									href={googleMapsDirectionsUrl}
 									target="_blank"
 									rel="noopener noreferrer"
-									onClick={onOpenGoogleMaps}
+									onClick={() =>
+										window.open(
+											googleMapsDirectionsUrl,
+											'_blank',
+										)
+									}
 									className="px-3 py-1.5 rounded-lg bg-white border border-[#ded9ce] text-[10px] font-sans font-semibold uppercase tracking-wider text-[#1f1e1d] hover:bg-[#f6f2ea] transition-colors shadow-2xs"
 								>
 									Google Maps
@@ -342,7 +355,7 @@ export function ArrivalCoordinatesAndConciergeSection({
 							<div className="mt-6 space-y-3">
 								<a
 									href={`tel:${conciergeDesk.directHotlineTel}`}
-									onClick={onCallConcierge}
+									onClick={handleCallConcierge}
 									className="w-full inline-flex items-center justify-between px-5 py-3.5 rounded-sm bg-[#bfa76f] hover:bg-[#aa935e] text-white font-sans text-xs font-semibold uppercase tracking-[0.2em] transition-all shadow-md active:translate-y-0.5"
 								>
 									<div className="flex items-center gap-2.5">
@@ -364,7 +377,7 @@ export function ArrivalCoordinatesAndConciergeSection({
 
 								<a
 									href={`mailto:${conciergeDesk.secureEmail}`}
-									onClick={onEmailConcierge}
+									onClick={handleEmailConcierge}
 									className="w-full inline-flex items-center justify-between px-5 py-3.5 rounded-sm bg-[#2a2826] hover:bg-[#383530] border border-[#44403a] text-white font-sans text-xs font-medium uppercase tracking-[0.18em] transition-all"
 								>
 									<div className="flex items-center gap-2.5">
@@ -394,7 +407,12 @@ export function ArrivalCoordinatesAndConciergeSection({
 							</span>
 							<a
 								href={downloadDirectionsPdfUrl}
-								onClick={onDownloadDirections}
+								onClick={() =>
+									window.open(
+										downloadDirectionsPdfUrl,
+										'_blank',
+									)
+								}
 								className="inline-flex items-center gap-1.5 text-[10px] uppercase font-semibold text-[#bfa76f] hover:text-white transition-colors"
 							>
 								<span>Directions PDF</span>

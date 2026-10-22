@@ -1,4 +1,5 @@
-import React from 'react';
+'use client'
+
 import Image from 'next/image';
 
 export interface VoucherStayDates {
@@ -135,6 +136,17 @@ export function SovereignVoucherCard({
         assignedHost,
         accounting,
     } = data;
+
+    // Interactive Handlers for Phase 2 (Voucher & VAT Invoice)
+	const handleViewInvoice = () => {
+		console.log(
+			'Opening official VAT invoice modal dialog:',
+			data.accounting.vatInvoiceNumber,
+		);
+		alert(
+			`Accessing Official VAT Folio: ${data.accounting.vatInvoiceNumber}`,
+		);
+	};	
 
     return (
         <article

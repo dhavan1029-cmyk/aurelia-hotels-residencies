@@ -180,17 +180,11 @@ export const registerFormDefaultData: RegisterFormData = {
 export interface RegisterEnrollmentFormProps {
     data?: RegisterFormData;
     className?: string;
-    onSubmitApplication?: (values: RegisterFormInitialValues) => void;
-    onAppleSovereignSync?: () => void;
-    onConciergePassSync?: () => void;
 }
 
 export function RegisterEnrollmentForm({
     data = registerFormDefaultData,
     className = '',
-    onSubmitApplication,
-    onAppleSovereignSync,
-    onConciergePassSync,
 }: RegisterEnrollmentFormProps) {
     const router = useRouter();
 
@@ -222,6 +216,33 @@ export function RegisterEnrollmentForm({
         submitCtaLabel,
         encryptionAssuranceText,
     } = data;
+
+    function handleSubmitApplication(values: RegisterFormInitialValues) {
+        console.log('Submitting Sovereign Patron Registration Application:', {
+            honorific: values.honorific,
+            name: `${values.firstName} ${values.lastName}`,
+            email: values.email,
+            phone: `${values.phoneCountryCode} ${values.phoneNumber}`,
+            sanctuaries: values.selectedSanctuaryIds,
+            aroma: values.selectedAromaId,
+            cellar: values.selectedCellarId,
+            token: values.invitationToken,
+        });
+
+        // Simulate secure database inscription & redirect to Sovereign Profile
+        setTimeout(function () {
+            router.push('/profile?registered=true');
+        }, 800);
+    }
+
+    function handleAppleSovereignSync() {
+        console.log('Synchronizing Apple Sovereign ID biometric credentials');
+        router.push('/profile?registered=true&sync=apple');
+    }
+
+    function handleConciergePassSync() {
+        console.log('Opening Concierge Direct Passcode verification modal');
+    }
 
     // Component Form State
     const [values, setValues] = useState<RegisterFormInitialValues>(initialValues);
@@ -273,9 +294,7 @@ export function RegisterEnrollmentForm({
         e.preventDefault();
         setIsSubmitting(true);
 
-        if (onSubmitApplication) {
-            onSubmitApplication(values);
-        }
+        handleSubmitApplication(values)
 
         // Simulate secure inscription and dispatch to Sovereign Profile
         setTimeout(function () {
@@ -328,7 +347,7 @@ export function RegisterEnrollmentForm({
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-sans">
                         <button
                             type="button"
-                            onClick={onAppleSovereignSync}
+                            onClick={handleAppleSovereignSync}
                             className="p-3 rounded-xl bg-white hover:bg-[#faf7f0] border border-[#ded9ce] flex items-center justify-center gap-2 transition-colors shadow-2xs group"
                         >
                             <svg className="w-3.5 h-3.5 fill-current text-[#1f1e1d]" viewBox="0 0 170 170">
@@ -341,7 +360,7 @@ export function RegisterEnrollmentForm({
 
                         <button
                             type="button"
-                            onClick={onConciergePassSync}
+                            onClick={handleConciergePassSync}
                             className="p-3 rounded-xl bg-white hover:bg-[#faf7f0] border border-[#ded9ce] flex items-center justify-center gap-2 transition-colors shadow-2xs group"
                         >
                             <span className="text-[#8e763b] text-sm leading-none">☆</span>

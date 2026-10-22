@@ -96,15 +96,11 @@ export const experiencesRhythmsDefaultData: ExperiencesRhythmsSectionData = {
 
 export interface SignatureRhythmsDualBentoSectionProps {
     data?: ExperiencesRhythmsSectionData;
-    onReserveExperience?: (experienceId: string) => void;
-    onViewDossier?: (slug: string) => void;
     className?: string;
 }
 
 export function SignatureRhythmsDualBentoSection({
     data = experiencesRhythmsDefaultData,
-    onReserveExperience,
-    onViewDossier,
     className = '',
 }: SignatureRhythmsDualBentoSectionProps) {
     const { eyebrow, heading, description, advisoryPill, experiences } = data;
@@ -258,29 +254,12 @@ export function SignatureRhythmsDualBentoSection({
                             <div className="p-6 sm:p-8 pt-0 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-[#f0ece3] mt-2">
                                 <Link
                                     href={`/checkout?experience=${card.slug}`}
-                                    onClick={function () {
-                                        if (onReserveExperience) {
-                                            onReserveExperience(card.id);
-                                        }
-                                    }}
                                     className="w-full sm:flex-1 inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-[11px] font-semibold uppercase tracking-[0.2em] transition-all shadow-md active:translate-y-0.5 text-center group/btn"
                                 >
                                     <span>{card.primaryCtaLabel}</span>
                                     <span className="transform transition-transform duration-300 group-hover/btn:translate-x-1">
                                         →
                                     </span>
-                                </Link>
-
-                                <Link
-                                    href={`/experiences/${card.slug}`}
-                                    onClick={function () {
-                                        if (onViewDossier) {
-                                            onViewDossier(card.slug);
-                                        }
-                                    }}
-                                    className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-3.5 rounded-xl bg-white hover:bg-[#f6f2ea] border border-[#ded9ce] text-[#1f1e1d] font-sans text-[11px] font-semibold uppercase tracking-[0.18em] transition-all text-center shadow-2xs"
-                                >
-                                    <span>{card.secondaryCtaLabel}</span>
                                 </Link>
                             </div>
                         </article>

@@ -67,8 +67,6 @@ export interface BespokeConciergeInquiryBannerProps {
 
 export function BespokeConciergeInquiryBanner({
     data = experiencesVipDefaultData.inquiryBanner,
-    onInitiateConsultation,
-    onDownloadDossier,
     className = '',
 }: BespokeConciergeInquiryBannerProps) {
     const {
@@ -141,12 +139,12 @@ export function BespokeConciergeInquiryBanner({
                             <span className="block text-[9px] font-sans font-semibold uppercase tracking-[0.22em] text-[#bfa76f] mb-1">
                                 {supportNotice}
                             </span>
-                            <a
+                            <Link
                                 href={`tel:${hotlineTel}`}
                                 className="font-serif text-2xl sm:text-3xl font-normal text-white hover:text-[#bfa76f] transition-colors block tracking-tight"
                             >
                                 {hotlineDisplay}
-                            </a>
+                            </Link>
                             <span className="text-[11px] text-[#8e8a82] font-sans mt-1 block">
                                 Direct connection to Head Majordomo Matteo de Luca
                             </span>
@@ -155,7 +153,6 @@ export function BespokeConciergeInquiryBanner({
                         <div className="space-y-3 pt-4 border-t border-white/10">
                             <button
                                 type="button"
-                                onClick={onInitiateConsultation}
                                 className="w-full inline-flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-[#bfa76f] hover:bg-[#aa935e] text-[#191817] font-sans text-[11px] font-semibold uppercase tracking-[0.2em] transition-all shadow-md active:translate-y-0.5 text-center"
                             >
                                 <span>{primaryCtaLabel}</span>
@@ -164,7 +161,6 @@ export function BespokeConciergeInquiryBanner({
 
                             <button
                                 type="button"
-                                onClick={onDownloadDossier}
                                 className="w-full inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-transparent hover:bg-white/5 border border-white/20 text-white font-sans text-[10px] font-semibold uppercase tracking-[0.18em] transition-all text-center"
                             >
                                 <span>{secondaryCtaLabel}</span>
