@@ -24,6 +24,7 @@ model StaffMember {
   role          StaffRole
   email         String      @unique
   phone         String
+  avatarUrl     String?
   isActive      Boolean     @default(true)
   assignedRooms RoomUnit[]
 
