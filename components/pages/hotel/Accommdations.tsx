@@ -1,120 +1,25 @@
 import { FilterBar } from "@/components/hotel/accommodations/AccommodationFilterBar"
-import { SuiteCard, SuiteCardProps } from "@/components/hotel/SuiteCard";
+// import { SuiteCard, SuiteCardProps } from "@/components/hotel/SuiteCard";
 import { Footer } from "@/components/layout/Footer";
 import { Suspense } from "react";
+import {
+    mapAccommodationCategoriesToSuiteCards,
+} from '@/lib/hotel/mappers/accommodationsMapper';
+import AccommodationListings from '@/components/hotel/accommodations/AccommodationListings';
+// import { prisma } from '@/lib/prisma'
+
+export interface SearchParamsValues {
+    sanctuary?: string, checkIn?: string, checkOut?: string, suites?: string, guests?: string, sortBy?: string
+}
+
+interface AccommodationsProps {
+  searchParams: Promise<SearchParamsValues>;
+}
 
 
-export default function Accommodations(){
+export default async function Accommodations({ searchParams } : AccommodationsProps){
 
-    // 1. Top Featured Master Suite Data
-    const masterSuite: SuiteCardProps = {
-        id: 'suite-azure',
-        slug: 'azure-master-ocean-suite',
-        name: 'The Azure Master Ocean Suite',
-        category: 'MASTER SANCTUARY SUITE',
-        badgeLabel: 'SIGNATURE OCEANFRONT',
-        elevationTag: 'LEVEL IV ELEVATION',
-        pricePerNight: 1450,
-        currency: '€',
-        pricePeriodSuffix: '/ night',
-        specsText: '132 m² / 1,420 sq ft • King Panoramic Terrace • Heated Plunge Pool • Max 3 Guests',
-        description:
-            'Unobstructed floor-to-ceiling vistas over the Gulf of Salerno. Handcrafted Tuscan oak millwork, honed Carrara marble soaking tub, and open-air loggia with heated basalt plunge pool.',
-        heroImageUrl: '/suite-402.png',
-        photoCount: 12,
-        privilegeNotice: 'Dedicated Aurelia Valet & Daily Thermal Hydrotherapy Access Included',
-        amenities: [
-            {
-                icon: (
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-                        <path d="M8 22h8M12 11v11M19 3l-7 8-7-8h14z" />
-                    </svg>
-                ),
-                label: 'Private Sommelier Bar',
-            },
-            {
-                icon: (
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-                        <path d="M4 12v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-6" />
-                        <path d="M2 12h20" />
-                    </svg>
-                ),
-                label: 'Freestanding Stone Tub',
-            },
-            {
-                icon: (
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-                        <path d="M17 11V3M7 11V3M12 21V3" />
-                    </svg>
-                ),
-                label: 'Daily Sunset Aperitivo',
-            },
-            {
-                icon: (
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                    </svg>
-                ),
-                label: 'Complimentary Thermal Pass',
-            },
-        ],
-        primaryCtaLabel: 'Reserve Suite',
-        secondaryCtaLabel: 'View Sanctuary Details',
-    };
-
-    // 2. Bottom 2 Coastal Sanctuary Cards
-    const coastalSuites: SuiteCardProps[] = [
-        {
-            id: 'villa-limestone',
-            slug: 'the-limestone-cliff-villa',
-            name: 'The Limestone Cliff Villa',
-            badgeLabel: 'PRIVATE CLIFFTOP ESTATE',
-            pricePerNight: 2850,
-            currency: '€',
-            pricePeriodSuffix: '/ night',
-            minStayNotice: '2-Night Min',
-            featureOverlayText: 'Private 14m Heated Infinity Pool',
-            featureOverlayIcon: (
-                <svg className="w-3.5 h-3.5 text-[#bfa76f]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M2 12h20M2 17h20M2 7h20" />
-                </svg>
-            ),
-            specsText:
-                'Independent Clifftop Wing • Private Estate • 210 m² • 2 King Bedrooms • Infinity Edge Pool • Helipad Access',
-            description:
-                "Carved directly into the sheer cliffside face with total privacy. Includes dedicated estate butler, bespoke chef's demonstration kitchen, private saltwater infinity edge pool, and arrival via sea tender or helipad.",
-            heroImageUrl: '/limestone-villa.png',
-            pillTags: ['DEDICATED ESTATE BUTLER', 'PRIVATE HELIPAD ACCESS', 'ALFRESCO FIRE HEARTH'],
-            primaryCtaLabel: 'Reserve Villa',
-            secondaryCtaLabel: 'View Details',
-        },
-        {
-            id: 'garden-pavilion',
-            slug: 'the-citrus-garden-pavilion',
-            name: 'The Citrus Garden Pavilion',
-            badgeLabel: 'GARDEN SOLARIUM',
-            pricePerNight: 920,
-            currency: '€',
-            pricePeriodSuffix: '/ night',
-            minStayNotice: 'Thermal Spa Pass',
-            featureOverlayText: 'Private Walled Lemon Grove',
-            featureOverlayIcon: (
-                <svg className="w-3.5 h-3.5 text-[#bfa76f]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="12" cy="12" r="9" />
-                    <path d="M12 3v9l4 4" />
-                </svg>
-            ),
-            specsText:
-                'Level I • Lemon Grove Seclusion • 85 m² • King Bed & Solarium • Sunken Marble Tub',
-            description:
-                'Enclosed within 200-year-old Amalfi lemon groves. Features fragrant private herbal terraces, an indoor glass solarium reading pavilion, sunken Carrara marble immersion tub, and gentle ocean breezes filtered through leafy pergolas.',
-            heroImageUrl: '/garden-pavillion.png',
-            pillTags: ['WALLED GARDEN PRIVACY', 'GLASS SOLARIUM LOUNGE', 'BOTANICAL BATH RITUAL'],
-            primaryCtaLabel: 'Reserve Pavilion',
-            secondaryCtaLabel: 'View Details',
-        },
-    ];
-
+    const params = await searchParams
 
     return <section className="relative w-full h-fit bg-[#fcf9f4] pt-5 lg:pt-10 text-[#1f1e1d]">
         {/* Header: Editorial Monograph & Sanctuary Geo Coordinates */}
@@ -155,41 +60,24 @@ export default function Accommodations(){
         </div>
 
         {/* Stone-Toned Filter & Sort Control Strip Box */}
-        <Suspense>
-            <FilterBar></FilterBar>
-        </Suspense>
+        {/* <Suspense> */}
+            <FilterBar initFilters={params}></FilterBar>
+        {/* </Suspense> */}
 
         <section
             className={`w-full bg-[#fcf9f4] py-20 sm:py-10 lg:py-10 px-4 sm:px-8 lg:px-12 border-b border-[#e8e4dc]`}
         >
             <div className="max-w-340 mx-auto space-y-12 sm:space-y-16">
 
-                {/* 1. Featured Master Suite Bento (Variant: master-featured) */}
-                <SuiteCard {...masterSuite} variant="master-featured" />
-
-                {/* 2. Secondary Coastal Sanctuaries Grid (Variant: coastal-grid) */}
-                <div className="space-y-6">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                        <span className="text-[10px] sm:text-[11px] font-sans font-semibold uppercase tracking-[0.22em] text-[#8e763b]">
-                            ADDITIONAL RESONANCES • CLIFFSIDE & GARDEN ESTATES
-                        </span>
-                        <span className="text-[10px] font-sans uppercase tracking-[0.18em] text-[#8e8a82]">
-                            ALL SANCTUARIES INCLUDE PRIVATE BREAKFAST & VALET SERVICE
-                        </span>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
-                        {coastalSuites.map(function (suite) {
-                            return (
-                                <SuiteCard
-                                    key={suite.id}
-                                    {...suite}
-                                    variant="coastal-grid"
-                                />
-                            );
-                        })}
-                    </div>
-                </div>
+                {/* <Suspense
+                    fallback={
+                        <div className="max-w-340 mx-auto py-12 text-center text-sm text-[#78756e]">
+                            Preparing your sanctuaries...
+                        </div>
+                    }
+                > */}
+                    <AccommodationListings />
+                {/* </Suspense> */}
 
                 {/* 3. Dark Bespoke Multi-Week Stays Callout Banner */}
                 <div className="bg-[#1f1e1d] text-[#fcf9f4] border border-[#383530] rounded-lg p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 shadow-xl">

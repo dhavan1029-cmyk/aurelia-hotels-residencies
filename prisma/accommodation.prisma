@@ -30,7 +30,7 @@ model AccommodationCategory {
   narrative       Json
   features        Json
   privileges      Json
-  amenityTags     String[]
+  amenityTags     Json
   sensoryCapabilities Json
 
   roomUnits       RoomUnit[]

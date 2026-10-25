@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import DateRangeCalendar from '../DateRangeCalendar';
 import { calculateNights } from '../DateRangeCalendar';
+import { SearchParamsValues } from '@/components/pages/hotel/Accommdations';
 
 export type SanctuaryCategory = 'all' | 'oceanfront' | 'villas' | 'garden';
 
@@ -17,40 +18,98 @@ export interface FilterBarValues {
 }
 
 export interface FilterBarProps {
+    initFilters?: SearchParamsValues;
     totalAvailableCount?: number;
     className?: string;
 }
 
 export function FilterBar({
+    initFilters = {},
     totalAvailableCount = 3,
     className = '',
 }: FilterBarProps) {
-    const pathname = usePathname()
     const searchParams = useSearchParams()
+    const pathname = usePathname()
     const router = useRouter()
-
-    const initCheckIn = searchParams.get('checkIn') || '';
-    const initCheckOut = searchParams.get('checkOut') || '';
-    const guests = Number(searchParams.get('guests')) || 0;
-    const initSuites = Number(searchParams.get('suites')) || 0;
-    const initSortBy = searchParams.get('sortBy')
+    
     // -------------------------------------------------------------
     // 1. Filter State Management
     // -------------------------------------------------------------
 
-    const [checkIn, setCheckIn] = useState<string>(initCheckIn);
-    const [checkOut, setCheckOut] = useState<string>(initCheckOut);
-    const nights = checkIn && checkOut ? calculateNights(checkIn, checkOut) : 0;    
-    const [adults, setAdults] = useState<number>(guests || 2);
-    const [suites, setSuites] = useState<number>(initSuites || 1);
-    const [category, setCategory] = useState<SanctuaryCategory>('all');
-    const [sortBy, setSortBy] = useState<string>(initSortBy || 'curated');
+    const [checkIn, setCheckIn] = useState<string>(
+        initFilters?.checkIn ?? ''
+    );
+
+    const [checkOut, setCheckOut] = useState<string>(
+        initFilters?.checkOut ?? ''
+    );
+
+    const [adults, setAdults] = useState<number>(
+        Number(initFilters?.guests) || 2
+    );
+
+    const [suites, setSuites] = useState<number>(
+        Number(initFilters?.suites) || 1
+    );
+
+    const [category, setCategory] = useState<SanctuaryCategory>(
+        'all'
+    );
+
+    const [sortBy, setSortBy] = useState<string>(
+        'curated'
+    );
+
     const [isCalendarOpen, setIsCalendarOpen] = useState(false);
     const [isPartyPopoverOpen, setIsPartyPopoverOpen] = useState(false);
     const [isSortPopoverOpen, setIsSortPopoverOpen] = useState(false);
+
     const dateRef = useRef<HTMLDivElement>(null);
     const partyRef = useRef<HTMLDivElement>(null);
     const sortRef = useRef<HTMLDivElement>(null);
+
+    const nights =
+        checkIn && checkOut
+            ? calculateNights(checkIn, checkOut)
+            : 0;
+
+    // -------------------------------------------------------------
+    // 2. Synchronize Filter State with URL and Server Props
+    // -------------------------------------------------------------
+
+    const queryString = searchParams.toString();
+
+    useEffect(() => {
+        const params = new URLSearchParams(queryString);
+
+        setCheckIn(
+            params.get('checkIn') ?? initFilters.checkIn ?? ''
+        );
+
+        setCheckOut(
+            params.get('checkOut') ?? initFilters.checkOut ?? ''
+        );
+
+        setAdults(
+            Number(params.get('guests') ?? initFilters.guests) || 2
+        );
+
+        setSuites(
+            Number(params.get('suites') ?? initFilters.suites) || 1
+        );
+
+        setCategory(
+            (params.get('category') as SanctuaryCategory) || 'all'
+        );
+
+        setSortBy(params.get('sortBy') ?? 'curated');
+    }, [
+        queryString,
+        initFilters.checkIn,
+        initFilters.checkOut,
+        initFilters.guests,
+        initFilters.suites,
+    ]);
 
     // Dismiss popovers when clicking outside
     useEffect(function () {
