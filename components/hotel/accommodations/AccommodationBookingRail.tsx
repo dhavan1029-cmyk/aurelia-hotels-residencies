@@ -3,40 +3,25 @@
 import { useState } from 'react';
 import Link from 'next/link';
 
-export interface AccommodationRateBreakdown {
-    baseRateNightly: number;
-    currency: string;
-    currencySymbol: string;
-    checkInDate: string; // ISO format or display string
-    checkOutDate: string;
-    nightsCount: number;
-    guestsCount: number;
-    maxGuests: number;
-    vatRatePercentage: number;
-    cityTaxPerGuestNight: number;
-    bestRateGuaranteeText: string;
-    complimentaryTransferHeadline: string;
-    complimentaryTransferDetails: string;
+import { AccommodationRateBreakdown } from '../types/accommodations';
+
+function formatDateDisplay(isoString: string | null): string {
+    if (
+        !isoString ||
+        (new Set(['check in', 'check out'])).has(isoString.toLowerCase())
+    ) return 'Add date';
+
+    const [year, month, day] = isoString.split('-').map(Number);
+    const date = new Date(year, month - 1, day);
+    return date.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+    });
 }
 
-export const suite402BookingDefaults: AccommodationRateBreakdown = {
-    baseRateNightly: 980,
-    currency: 'EUR',
-    currencySymbol: '€',
-    checkInDate: '2025-10-14',
-    checkOutDate: '2025-10-19',
-    nightsCount: 5,
-    guestsCount: 2,
-    maxGuests: 3,
-    vatRatePercentage: 10,
-    cityTaxPerGuestNight: 5,
-    bestRateGuaranteeText: 'DIRECT PATRON PRIVILEGE • BEST SOVEREIGN TARIFF',
-    complimentaryTransferHeadline: 'Complimentary Coastal Arrival',
-    complimentaryTransferDetails: 'Includes private Riva yacht transfer or helicopter helipad transit directly to the South Wing portico.',
-};
-
 export interface AccommodationBookingRailProps {
-    data?: AccommodationRateBreakdown;
+    data: AccommodationRateBreakdown;
     onReserveDirect?: (bookingSummary: {
         checkIn: string;
         checkOut: string;
@@ -50,7 +35,7 @@ export interface AccommodationBookingRailProps {
 }
 
 export function AccommodationBookingRail({
-    data = suite402BookingDefaults,
+    data,
     onReserveDirect,
     onDatesClick,
     onPartyClick,
@@ -70,6 +55,7 @@ export function AccommodationBookingRail({
         complimentaryTransferHeadline,
         complimentaryTransferDetails,
     } = data;
+
 
     const [nights, setNights] = useState<number>(initialNights);
     const [guests, setGuests] = useState<number>(initialGuests);
@@ -154,11 +140,11 @@ export function AccommodationBookingRail({
                                 <line x1="8" y1="2" x2="8" y2="6" />
                                 <line x1="3" y1="10" x2="21" y2="10" />
                             </svg>
-                            <span>Oct 14, 2025</span>
+                            <span>{formatDateDisplay(checkInDate)}</span>
                         </div>
                         <span className="text-[#a4a098]">→</span>
                         <div className="flex items-center gap-1.5">
-                            <span>Oct 19, 2025</span>
+                            <span>{formatDateDisplay(checkOutDate)}</span>
                         </div>
                     </div>
                 </div>

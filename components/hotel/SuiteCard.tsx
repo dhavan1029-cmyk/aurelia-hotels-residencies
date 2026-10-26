@@ -15,6 +15,7 @@ import {
     Sparkles,
     type LucideIcon,
 } from 'lucide-react';
+import { AccommodationBookingContext } from '@/lib/hotel/mappers/AccommodationDetailsMapper';
 
 const amenityIcons: Record<string, LucideIcon> = {
     Waves,
@@ -47,6 +48,8 @@ export interface SuitePrivilegeItem {
     title: string;
     description: string;
 }
+
+export type BookingParams = AccommodationBookingContext;
 
 export interface SuiteCardProps {
     id: string;
@@ -94,6 +97,8 @@ export interface SuiteCardProps {
     onPrimaryAction?: () => void;
     onSecondaryAction?: () => void;
 
+    bookingParams: BookingParams
+
     variant?: 'master-featured' | 'coastal-grid' | 'featured' | 'compact-horizontal' | 'standard';
     className?: string;
 }
@@ -131,7 +136,11 @@ export function SuiteCard({
     onSecondaryAction,
     variant = 'coastal-grid',
     className = '',
+    bookingParams
 }: SuiteCardProps) {
+
+    const {checkInDate, checkOutDate, nightsCount, guestsCount} = bookingParams
+
     const symbol = currencySymbol || (currency === 'EUR' ? '€' : currency === 'USD' ? '$' : currency);
     const resolvedBadge = badgeLabel || category;
     const resolvedElevation = elevationTag || highlightTag || (sensoryBadges.length > 0 ? sensoryBadges[0] : undefined);
@@ -304,7 +313,7 @@ export function SuiteCard({
                             <span className="ml-1">→</span>
                         </Link>
                         <Link
-                            href={`/suites/${slug || id}`}
+                            href={`/accommodations/${slug || id}?checkInDate=${checkInDate}&checkOutDate=${checkOutDate}&nightsCount=${nightsCount}&guestsCount=${guestsCount}`}
                             onClick={onSecondaryAction}
                             className="inline-flex items-center justify-center px-6 py-3.5 bg-white hover:bg-[#f6f2ea] text-[#2c2a26] border border-[#ded9ce] font-sans text-[11px] font-medium uppercase tracking-[0.18em] rounded-xl transition-all duration-200 text-center shadow-2xs"
                         >
@@ -444,7 +453,7 @@ export function SuiteCard({
                 </Link>
 
                 <Link
-                    href={`/suites/${slug || id}`}
+                    href={`/accommodations/${slug || id}?checkInDate=${checkInDate}&checkOutDate=${checkOutDate}&nightsCount=${nightsCount}&guestsCount=${guestsCount}`}
                     onClick={onSecondaryAction}
                     className="inline-flex items-center justify-center px-4 py-3 bg-[#f6f3ee] hover:bg-[#eeeae2] text-[#2c2a26] border border-[#ded9ce] font-sans text-[10px] font-medium uppercase tracking-[0.18em] rounded-xl transition-all duration-200 text-center"
                 >

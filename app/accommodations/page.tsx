@@ -1,5 +1,21 @@
-import AccommodationsSection from "@/components/pages/hotel/Accommdations"
+import Accommodations from '@/components/pages/hotel/Accommdations';
 
-export default function Accommodations(){
-    return <AccommodationsSection />
+interface PageProps {
+    searchParams: Promise<{
+        sanctuary?: string;
+        checkIn?: string;
+        checkOut?: string;
+        guests?: string;
+        suites?: string;
+        sortBy?: string;
+        category?: string;
+    }>;
+}
+
+export default function Page({
+    searchParams,
+}: PageProps) {
+    return (
+        <Accommodations searchParams={searchParams} />
+    );
 }

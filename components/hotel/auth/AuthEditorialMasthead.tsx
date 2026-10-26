@@ -1,28 +1,7 @@
-
 import Image from 'next/image';
 import Link from 'next/link';
+import { AuthMastheadData, SovereignPrivilegePill } from '../types/auth';
 
-export interface SovereignPrivilegePill {
-    id: string;
-    label: string;
-    sublabel: string;
-    iconType: 'majordomo' | 'sensory' | 'cellar' | 'hotline';
-}
-
-export interface AuthMastheadData {
-    brandName: string;
-    brandSub: string;
-    enclavesPillText: string;
-    quoteBadgeText: string;
-    editorialQuote: string;
-    editorialNarrative: string;
-    bgImageUrl: string;
-    bgImageAlt: string;
-    patronPrivilegesHeader: string;
-    patronPrivilegesSub: string;
-    privileges: SovereignPrivilegePill[];
-    sovereignKeyRefNotice: string;
-}
 
 export const authMastheadDefaultData: AuthMastheadData = {
     brandName: 'Aurelia',

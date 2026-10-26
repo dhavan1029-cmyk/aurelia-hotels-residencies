@@ -3,71 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-
-export interface SanctuaryChoiceOption {
-    id: string;
-    code: string;
-    label: string;
-    region: string;
-}
-
-export interface OlfactoryChoiceOption {
-    id: string;
-    label: string;
-    notes: string;
-}
-
-export interface CellarChoiceOption {
-    id: string;
-    label: string;
-    provenance: string;
-}
-
-export interface RegisterFormInitialValues {
-    honorific: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    phoneCountryCode: string;
-    phoneNumber: string;
-    passkey: string;
-    conciergePin: string;
-    selectedSanctuaryIds: string[];
-    selectedAromaId: string;
-    selectedCellarId: string;
-    invitationToken: string;
-    agreeSwissPrivacy: boolean;
-    agreeSensorySync: boolean;
-}
-
-export interface RegisterFormData {
-    registryBadge: string;
-    signInPromptText: string;
-    signInLinkText: string;
-    headline: string;
-    subheadline: string;
-    expeditedTitle: string;
-    appleAuthLabel: string;
-    conciergeAuthLabel: string;
-    section1Number: string;
-    section1Title: string;
-    section1Sub: string;
-    section2Number: string;
-    section2Title: string;
-    section2Sub: string;
-    section3Number: string;
-    section3Title: string;
-    section3Sub: string;
-    section4Number: string;
-    section4Title: string;
-    section4Sub: string;
-    sanctuaryOptions: SanctuaryChoiceOption[];
-    aromaOptions: OlfactoryChoiceOption[];
-    cellarOptions: CellarChoiceOption[];
-    initialValues: RegisterFormInitialValues;
-    submitCtaLabel: string;
-    encryptionAssuranceText: string;
-}
+import { RegisterFormData, RegisterFormInitialValues } from '../types/auth';
 
 export const registerFormDefaultData: RegisterFormData = {
     registryBadge: 'AURELIA MEMBERSHIP REGISTRY',

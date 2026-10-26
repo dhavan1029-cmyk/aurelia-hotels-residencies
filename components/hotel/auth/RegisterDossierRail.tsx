@@ -1,33 +1,5 @@
 import Image from 'next/image';
-
-export interface SovereignPrivilegeItem {
-    id: string;
-    label: string;
-    description: string;
-    iconType: 'keyless' | 'cellar' | 'majordomo';
-}
-
-export interface PatronEndorsementData {
-    quote: string;
-    authorName: string;
-    folioCode: string;
-    avatarUrl: string;
-    avatarAlt: string;
-}
-
-export interface RegisterDossierData {
-    dossierBadge: string;
-    enclaveLocation: string;
-    coordinatesDisplay: string;
-    manifestoQuote: string;
-    heroImageUrl: string;
-    heroImageAlt: string;
-    privilegesHeading: string;
-    privilegesSubheading: string;
-    privileges: SovereignPrivilegeItem[];
-    endorsement: PatronEndorsementData;
-    protocolNotice: string;
-}
+import { RegisterDossierData, SovereignPrivilegeItem } from '../types/auth';
 
 export const registerDossierDefaultData: RegisterDossierData = {
     dossierBadge: 'SANCTUARY DOSSIER • VOL. I',

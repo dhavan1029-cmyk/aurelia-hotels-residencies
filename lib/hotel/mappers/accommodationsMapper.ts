@@ -5,13 +5,13 @@ import type {
     SuiteFeatureItem,
     SuitePrivilegeItem,
 } from '@/components/hotel/SuiteCard';
+import { JsonObject } from '../types/accommodations';
 
 export interface AccommodationSuiteCards {
     masterSuite: SuiteCardProps;
     coastalSuites: SuiteCardProps[];
 }
 
-type JsonObject = Record<string, unknown>;
 
 function asObject(value: unknown): JsonObject {
     if (value !== null && typeof value === 'object' && !Array.isArray(value)) {

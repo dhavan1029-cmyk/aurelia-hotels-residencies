@@ -1,75 +1,50 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { SiblingAccommodationItem } from '../types/accommodations';
 
-
-export interface SiblingAccommodationItem {
-    id: string;
-    slug: string;
-    name: string;
-    category: string;
-    badge: string;
-    squareMeters: number;
-    elevationTag: string;
-    tagline: string;
-    basePriceNightly: number;
-    currencySymbol: string;
-    heroImageUrl: string;
-    privilegeText: string;
-    features: string[];
-}
-
-export interface AccommodationSiblingsData {
-    eyebrow: string;
-    heading: string;
-    description: string;
-    viewAllHref: string;
-    siblings: SiblingAccommodationItem[];
-}
-
-export const suite402SiblingsData: AccommodationSiblingsData = {
-    eyebrow: 'ARCHITECTURAL SIBLINGS',
-    heading: 'Alternative Sanctuaries of Equal Distinction',
-    description:
-        'Should Suite 402 be unavailable during your preferred stay horizon, our coastal master estate includes these complementary sanctuaries.',
-    viewAllHref: '/accommodations',
-    siblings: [
-        {
-            id: 'villa-limestone',
-            slug: 'the-limestone-villa',
-            name: 'The Limestone Villa',
-            category: 'CLIFFSIDE VILLA',
-            badge: 'STANDALONE ESTATE',
-            squareMeters: 210,
-            elevationTag: 'LEVEL I • WATERFRONT',
-            tagline:
-                'Multi-level independent cliff residence with heated infinity plunge pool, private Riva yacht tender dock, and dedicated sommelier cellar.',
-            basePriceNightly: 2850,
-            currencySymbol: '€',
-            heroImageUrl: '/limestone-villa.png',
-            privilegeText: 'Dedicated Majordomo & Private Dock',
-            features: ['2 King Chambers', 'Private Mooring', 'Basalt Solarium'],
-        },
-        {
-            id: 'garden-pavilion',
-            slug: 'lemon-grove-garden-pavilion',
-            name: 'Lemon Grove Garden Pavilion',
-            category: 'GARDEN SANCTUARY',
-            badge: 'CENTURY ORCHARD',
-            squareMeters: 175,
-            elevationTag: 'UPPER GROVE TERRACE',
-            tagline:
-                'Nestled among two-century-old Amalfi lemon groves with freestanding carved travertine baths and secluded sun solarium.',
-            basePriceNightly: 1800,
-            currencySymbol: '€',
-            heroImageUrl: '/garden-pavillion.png',
-            privilegeText: 'Artisan Orchard Breakfast Daily',
-            features: ['Emperor Linen King', 'Travertine Bath', 'Citrus Solarium'],
-        },
-    ],
-};
+export const suite402SiblingsData: SiblingAccommodationItem[] = [
+    {
+        id: 'villa-limestone',
+        slug: 'the-limestone-villa',
+        name: 'The Limestone Villa',
+        category: 'CLIFFSIDE VILLA',
+        badge: 'STANDALONE ESTATE',
+        squareMeters: 210,
+        elevationTag: 'LEVEL I • WATERFRONT',
+        tagline:
+            'Multi-level independent cliff residence with heated infinity plunge pool, private Riva yacht tender dock, and dedicated sommelier cellar.',
+        basePriceNightly: 2850,
+        currencySymbol: '€',
+        heroImageUrl: '/limestone-villa.png',
+        privilegeText: 'Dedicated Majordomo & Private Dock',
+        features: ['2 King Chambers', 'Private Mooring', 'Basalt Solarium'],
+    },
+    {
+        id: 'garden-pavilion',
+        slug: 'lemon-grove-garden-pavilion',
+        name: 'Lemon Grove Garden Pavilion',
+        category: 'GARDEN SANCTUARY',
+        badge: 'CENTURY ORCHARD',
+        squareMeters: 175,
+        elevationTag: 'UPPER GROVE TERRACE',
+        tagline:
+            'Nestled among two-century-old Amalfi lemon groves with freestanding carved travertine baths and secluded sun solarium.',
+        basePriceNightly: 1800,
+        currencySymbol: '€',
+        heroImageUrl: '/garden-pavillion.png',
+        privilegeText: 'Artisan Orchard Breakfast Daily',
+        features: ['Emperor Linen King', 'Travertine Bath', 'Citrus Solarium'],
+    },
+]
+    // eyebrow: 'ARCHITECTURAL SIBLINGS',
+    // heading: 'Alternative Sanctuaries of Equal Distinction',
+    // description:
+    //     'Should Suite 402 be unavailable during your preferred stay horizon, our coastal master estate includes these complementary sanctuaries.',
+    // viewAllHref: '/accommodations',
+    
 
 export interface AccommodationArchitecturalSiblingsProps {
-    data?: AccommodationSiblingsData;
+    data?: SiblingAccommodationItem[];
     className?: string;
 }
 
@@ -77,7 +52,6 @@ export function AccommodationArchitecturalSiblingsSection({
     data = suite402SiblingsData,
     className = '',
 }: AccommodationArchitecturalSiblingsProps) {
-    const { eyebrow, heading, description, viewAllHref, siblings } = data;
 
     return (
         <section className={`bg-[#fcf9f4] pt-12 pb-12 px-4 sm:px-8 lg:px-26 border-t border-[#e8e4dc] ${className}`}>
@@ -85,18 +59,18 @@ export function AccommodationArchitecturalSiblingsSection({
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
                 <div>
                     <span className="block text-[10px] sm:text-[11px] font-sans font-semibold uppercase tracking-[0.25em] text-[#8e763b] mb-2">
-                        {eyebrow}
+                        ARCHITECTURAL SIBLINGS
                     </span>
                     <h2 className="font-serif text-2xl sm:text-3xl lg:text-[32px] font-normal text-[#1f1e1d] tracking-tight">
-                        {heading}
+                        Alternative Sanctuaries of Equal Distinction
                     </h2>
                     <p className="mt-2 text-xs sm:text-[13px] text-[#6e6b64] font-sans font-light max-w-2xl">
-                        {description}
+                        Should Suite 402 be unavailable during your preferred stay horizon, our coastal master estate includes these complementary sanctuaries.
                     </p>
                 </div>
 
                 <Link
-                    href={viewAllHref}
+                    href={'/accommodations'}
                     className="group inline-flex items-center gap-2 text-[10px] sm:text-[11px] font-sans font-semibold uppercase tracking-[0.22em] text-[#8e763b] hover:text-[#1f1e1d] transition-colors py-1 shrink-0"
                 >
                     <span>VIEW ALL 18 SANCTUARIES</span>
@@ -108,7 +82,7 @@ export function AccommodationArchitecturalSiblingsSection({
 
             {/* 2-Column Sibling Cards Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-                {siblings.map(function (item) {
+                {data.map(function (item) {
                     return (
                         <article
                             key={item.id}

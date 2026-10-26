@@ -1,46 +1,4 @@
-import React from 'react';
-
-export interface ArchitecturalFeature {
-    icon: React.ReactNode;
-    title: string;
-    description: string;
-}
-
-export interface FloorplanZone {
-    id: string;
-    label: string;
-    sublabel?: string;
-    areaTag?: string;
-    styleClass: string;
-}
-
-export interface SpatialMetric {
-    label: string;
-    sublabel: string;
-    icon: React.ReactNode;
-}
-
-export interface AccommodationNarrativeAndFloorplanData {
-    // 4 Spatial Specifications (maps to specs & sensoryCapabilities in AccommodationCategory)
-    spatialMetrics: SpatialMetric[];
-
-    // Narrative Section
-    sectionEyebrow: string;
-    headline: string;
-    paragraphs: string[];
-    features: ArchitecturalFeature[];
-
-    // Spatial Floorplan Section
-    floorplanEyebrow: string;
-    floorplanTitle: string;
-    grossFootprint: string;
-    deckArea: string;
-    legendItems: Array<{
-        colorClass: string;
-        label: string;
-    }>;
-
-}
+import { AccommodationNarrativeAndFloorplanData } from "../types/accommodations";
 
 const suite402NarrativeData: AccommodationNarrativeAndFloorplanData = {
     sectionEyebrow: 'ATMOSPHERIC RESONANCE & NARRATIVE',

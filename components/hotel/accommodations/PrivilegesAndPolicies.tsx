@@ -1,32 +1,4 @@
-import React from 'react';
-
-export interface PrivilegeItem {
-    id: string;
-    icon: React.ReactNode;
-    title: string;
-    description: string;
-    badge?: string;
-}
-
-export interface SanctuaryPolicyItem {
-    label: string;
-    value: string;
-    details?: string;
-}
-
-export interface PrivilegesAndPoliciesData {
-    // 1. Curated Privileges Section
-    privilegesEyebrow: string;
-    privilegesHeading: string;
-    privilegesDescription: string;
-    privilegesList: PrivilegeItem[];
-
-    // 2. Sanctuary Policies & Courtesy Protocol
-    policiesEyebrow: string;
-    policiesHeading: string;
-    policies: SanctuaryPolicyItem[];
-    conciergeNotice: string;
-}
+import { PrivilegesAndPoliciesData } from '../types/accommodations';
 
 export const suite402PrivilegesData: PrivilegesAndPoliciesData = {
     privilegesEyebrow: 'EXCLUSIVE SANCTUARY INCLUSIONS',

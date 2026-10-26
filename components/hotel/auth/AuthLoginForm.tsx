@@ -3,36 +3,9 @@ import { PasswordInput } from './PasswordInput';
 import { AuthProviderButtons } from './AuthProviderButtons';
 import { InvitationTokenForm } from './InvitationTokenForm';
 import { AuthSubmitButton } from './AuthSubmitButton';
+import { AuthLoginFormData } from '../types/auth';
 
-export interface AuthLoginFormData {
-    eyebrow: string;
-    securityBadge: string;
-    headline: string;
-    subheadline: string;
-    activeTab: 'sign-in' | 'sign-up';
-    signInTabLabel: string;
-    signUpTabLabel: string;
-    identifierLabel: string;
-    identifierPlaceholder: string;
-    identifierHelpText: string;
-    passwordLabel: string;
-    passwordPlaceholder: string;
-    magicLinkText: string;
-    rememberDeviceLabel: string;
-    forgotPasswordText: string;
-    submitButtonLabel: string;
-    dividerText: string;
-    appleAuthLabel: string;
-    conciergeAuthLabel: string;
-    invitationBadge: string;
-    invitationHeadline: string;
-    invitationSubheadline: string;
-    invitationPlaceholder: string;
-    invitationButtonLabel: string;
-    securityFooterNotice: string;
-    conciergeDeskLabel: string;
-    legalSanctuaryLabel: string;
-}
+
 
 export const authLoginFormDefaultData: AuthLoginFormData = {
     eyebrow: 'PATRON PORTAL & SOVEREIGN ACCESS',

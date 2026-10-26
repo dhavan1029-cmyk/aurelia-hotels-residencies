@@ -1,10 +1,6 @@
 import { FilterBar } from "@/components/hotel/accommodations/AccommodationFilterBar"
 // import { SuiteCard, SuiteCardProps } from "@/components/hotel/SuiteCard";
 import { Footer } from "@/components/layout/Footer";
-import { Suspense } from "react";
-import {
-    mapAccommodationCategoriesToSuiteCards,
-} from '@/lib/hotel/mappers/accommodationsMapper';
 import AccommodationListings from '@/components/hotel/accommodations/AccommodationListings';
 // import { prisma } from '@/lib/prisma'
 
@@ -13,7 +9,7 @@ export interface SearchParamsValues {
 }
 
 interface AccommodationsProps {
-  searchParams: Promise<SearchParamsValues>;
+    searchParams: Promise<SearchParamsValues>;
 }
 
 
@@ -76,7 +72,7 @@ export default async function Accommodations({ searchParams } : AccommodationsPr
                         </div>
                     }
                 > */}
-                    <AccommodationListings />
+                    <AccommodationListings searchParams={ params } />
                 {/* </Suspense> */}
 
                 {/* 3. Dark Bespoke Multi-Week Stays Callout Banner */}

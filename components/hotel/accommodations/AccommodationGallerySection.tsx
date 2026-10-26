@@ -1,31 +1,7 @@
 import Image from "next/image";
-
-export interface GalleryMediaItem {
-    url: string;
-    alt: string;
-    title?: string;
-    badge?: string;
-    actionLabel?: string;
-}
-
-export interface AccommodationGalleryData {
-    // Relational breadcrumbs and classification
-    breadcrumbPath: string;
-    sanctuaryEyebrow: string;
-    wingSubtitle: string;
-    suiteTitle: string;
-    ratingScore: number;
-    appraisalsCount: number;
-    patronReserveTier: string;
-
-    // Gallery visual assets (maps to mediaData Json in AccommodationCategory)
-    heroImage: GalleryMediaItem;
-    secondaryTopImage: GalleryMediaItem;
-    secondaryBottomImage: GalleryMediaItem;
-}
+import { AccommodationGalleryData } from "../types/accommodations";
 
 const suite402DetailData: AccommodationGalleryData = {
-    breadcrumbPath: 'All Residences / Private Sanctuary / South Wing - Level 4',
     sanctuaryEyebrow: 'SANCTUARY 402',
     wingSubtitle: 'AURELIA MEDITERRANEAN WING',
     suiteTitle: 'Room 402 — The Azure Master Ocean Suite',
@@ -70,7 +46,6 @@ export function AccommodationGallerySection({
     className = '',
 }: AccommodationGalleryProps) {
     const {
-        breadcrumbPath,
         sanctuaryEyebrow,
         wingSubtitle,
         suiteTitle,
