@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { RegisterFormData, RegisterFormInitialValues } from '../types/auth';
+import { RegisterFormData, RegisterFormInitialValues } from '../../types/auth';
 
 export const registerFormDefaultData: RegisterFormData = {
     registryBadge: 'AURELIA MEMBERSHIP REGISTRY',
@@ -248,7 +248,7 @@ export function RegisterEnrollmentForm({
                 <div className="space-y-3 pb-6 border-b border-[#e8e4dc]">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                         <div className="inline-flex items-center gap-2">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#8e763b]" />
+                            <span className="w-1.5 h-1.5 -full bg-[#8e763b]" />
                             <span className="text-[10px] font-sans font-semibold uppercase tracking-[0.26em] text-[#8e763b]">
                                 {registryBadge}
                             </span>
@@ -275,7 +275,7 @@ export function RegisterEnrollmentForm({
                 </div>
 
                 {/* 2. EXPEDITED CREDENTIALS SHORTCUTS (Apple Sovereign & Concierge Pass) */}
-                <div className="p-4 sm:p-5 rounded-2xl bg-[#f6f2ea] border border-[#ded9ce] space-y-3 shadow-2xs">
+                <div className="p-4 sm:p-5 -2xl bg-[#f6f2ea] border border-[#ded9ce] space-y-3 shadow-2xs">
                     <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#8e8a82] block">
                         {expeditedTitle}
                     </span>
@@ -284,7 +284,7 @@ export function RegisterEnrollmentForm({
                         <button
                             type="button"
                             onClick={handleAppleSovereignSync}
-                            className="p-3 rounded-xl bg-white hover:bg-[#faf7f0] border border-[#ded9ce] flex items-center justify-center gap-2 transition-colors shadow-2xs group"
+                            className="p-3 -xl bg-white hover:bg-[#faf7f0] border border-[#ded9ce] flex items-center justify-center gap-2 transition-colors shadow-2xs group"
                         >
                             <svg className="w-3.5 h-3.5 fill-current text-[#1f1e1d]" viewBox="0 0 170 170">
                                 <path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.35.13-9.16-1.9-14.42-6.08-3.69-3.08-7.7-7.94-12.04-14.58-6.19-9.49-11.03-20.25-14.52-32.27-3.48-12.02-5.23-23.47-5.23-34.34 0-14.15 3.53-26.02 10.59-35.61 7.06-9.59 16.03-14.48 26.92-14.67 4.93 0 10.42 1.34 16.48 4.02 6.06 2.68 10.1 4.09 12.12 4.23 1.83-.14 6.08-1.63 12.74-4.48 6.67-2.85 12.35-4.08 17.06-3.7 12.63.66 22.75 5.06 30.36 13.2-11.01 6.66-16.39 15.75-16.14 27.27.24 8.98 3.73 16.59 10.47 22.83 6.74 6.24 14.88 9.77 24.42 10.59-2.07 6.42-4.55 12.69-7.44 18.8zM119.22 33.15c0-7.23 2.66-14.11 7.98-20.64 5.32-6.53 11.89-10.7 19.71-12.51.55 1.5.83 3.03.83 4.59 0 7.23-2.73 14.22-8.19 20.97-5.46 6.75-12.06 10.87-19.8 12.36-.18-1.57-.27-3.13-.27-4.77z" />
@@ -297,7 +297,7 @@ export function RegisterEnrollmentForm({
                         <button
                             type="button"
                             onClick={handleConciergePassSync}
-                            className="p-3 rounded-xl bg-white hover:bg-[#faf7f0] border border-[#ded9ce] flex items-center justify-center gap-2 transition-colors shadow-2xs group"
+                            className="p-3 -xl bg-white hover:bg-[#faf7f0] border border-[#ded9ce] flex items-center justify-center gap-2 transition-colors shadow-2xs group"
                         >
                             <span className="text-[#8e763b] text-sm leading-none">☆</span>
                             <span className="font-semibold uppercase tracking-wider text-[10px] text-[#2c2a26]">
@@ -314,7 +314,7 @@ export function RegisterEnrollmentForm({
                     {/* ------------------------------------------------------------- */}
                     <div className="space-y-4">
                         <div className="flex items-center gap-2.5 pb-2 border-b border-[#eeeae2]">
-                            <span className="w-5 h-5 rounded-full bg-[#1f1e1d] text-white flex items-center justify-center font-mono text-[10px] font-semibold">
+                            <span className="w-5 h-5 -full bg-[#1f1e1d] text-white flex items-center justify-center font-mono text-[10px] font-semibold">
                                 {section1Number}
                             </span>
                             <div>
@@ -338,7 +338,7 @@ export function RegisterEnrollmentForm({
                                     onChange={function (e) {
                                         handleFieldChange('honorific', e.target.value);
                                     }}
-                                    className="w-full px-3.5 py-3 rounded-xl bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] shadow-2xs"
+                                    className="w-full px-3.5 py-3 -xl bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] shadow-2xs"
                                 >
                                     <option value="Lady">Lady</option>
                                     <option value="Lord">Lord</option>
@@ -366,7 +366,7 @@ export function RegisterEnrollmentForm({
                                         handleFieldChange('firstName', e.target.value);
                                     }}
                                     placeholder="e.g. Katherine"
-                                    className="w-full px-3.5 py-3 rounded-xl bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] shadow-2xs placeholder-[#a4a098]"
+                                    className="w-full px-3.5 py-3 -xl bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] shadow-2xs placeholder-[#a4a098]"
                                 />
                             </div>
 
@@ -383,7 +383,7 @@ export function RegisterEnrollmentForm({
                                         handleFieldChange('lastName', e.target.value);
                                     }}
                                     placeholder="e.g. Vane-Tempest"
-                                    className="w-full px-3.5 py-3 rounded-xl bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] shadow-2xs placeholder-[#a4a098]"
+                                    className="w-full px-3.5 py-3 -xl bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] shadow-2xs placeholder-[#a4a098]"
                                 />
                             </div>
 
@@ -401,7 +401,7 @@ export function RegisterEnrollmentForm({
                                             handleFieldChange('email', e.target.value);
                                         }}
                                         placeholder="patron@sovereign-holdings.co.uk"
-                                        className="w-full pl-9 pr-3.5 py-3 rounded-xl bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] shadow-2xs placeholder-[#a4a098]"
+                                        className="w-full pl-9 pr-3.5 py-3 -xl bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] shadow-2xs placeholder-[#a4a098]"
                                     />
                                     <svg
                                         className="w-3.5 h-3.5 text-[#8e763b] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
@@ -427,7 +427,7 @@ export function RegisterEnrollmentForm({
                                         onChange={function (e) {
                                             handleFieldChange('phoneCountryCode', e.target.value);
                                         }}
-                                        className="px-2.5 py-3 rounded-xl bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] shadow-2xs shrink-0"
+                                        className="px-2.5 py-3 -xl bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] shadow-2xs shrink-0"
                                     >
                                         <option value="+44">+44 (UK)</option>
                                         <option value="+41">+41 (CH)</option>
@@ -444,7 +444,7 @@ export function RegisterEnrollmentForm({
                                             handleFieldChange('phoneNumber', e.target.value);
                                         }}
                                         placeholder="7911 882901"
-                                        className="w-full px-3.5 py-3 rounded-xl bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] shadow-2xs placeholder-[#a4a098]"
+                                        className="w-full px-3.5 py-3 -xl bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] shadow-2xs placeholder-[#a4a098]"
                                     />
                                 </div>
                             </div>
@@ -456,7 +456,7 @@ export function RegisterEnrollmentForm({
                     {/* ------------------------------------------------------------- */}
                     <div className="space-y-4">
                         <div className="flex items-center gap-2.5 pb-2 border-b border-[#eeeae2]">
-                            <span className="w-5 h-5 rounded-full bg-[#1f1e1d] text-white flex items-center justify-center font-mono text-[10px] font-semibold">
+                            <span className="w-5 h-5 -full bg-[#1f1e1d] text-white flex items-center justify-center font-mono text-[10px] font-semibold">
                                 {section2Number}
                             </span>
                             <div>
@@ -495,7 +495,7 @@ export function RegisterEnrollmentForm({
                                         onChange={function (e) {
                                             handleFieldChange('passkey', e.target.value);
                                         }}
-                                        className="w-full pl-9 pr-3.5 py-3 rounded-xl bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] shadow-2xs"
+                                        className="w-full pl-9 pr-3.5 py-3 -xl bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] shadow-2xs"
                                     />
                                     <svg
                                         className="w-3.5 h-3.5 text-[#8e763b] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
@@ -511,7 +511,7 @@ export function RegisterEnrollmentForm({
 
                                 {/* Cryptographic Strength Gauge */}
                                 <div className="pt-1.5 space-y-1.5">
-                                    <div className="flex gap-1 h-1 w-full bg-[#eeeae2] rounded-full overflow-hidden">
+                                    <div className="flex gap-1 h-1 w-full bg-[#eeeae2] -full overflow-hidden">
                                         <span
                                             className={`h-full transition-all duration-300 ${
                                                 passkeyScore >= 1 ? 'w-1/4 bg-amber-500' : 'w-0'
@@ -567,7 +567,7 @@ export function RegisterEnrollmentForm({
                                         handleFieldChange('conciergePin', clean);
                                     }}
                                     placeholder="8829"
-                                    className="w-full px-3.5 py-3 rounded-xl bg-white border border-[#ded9ce] font-mono text-center text-sm tracking-[0.3em] font-semibold text-[#1f1e1d] outline-none focus:border-[#8e763b] shadow-2xs"
+                                    className="w-full px-3.5 py-3 -xl bg-white border border-[#ded9ce] font-mono text-center text-sm tracking-[0.3em] font-semibold text-[#1f1e1d] outline-none focus:border-[#8e763b] shadow-2xs"
                                 />
 
                                 <span className="block text-[9px] font-sans text-[#8e8a82] leading-tight text-center">
@@ -584,7 +584,7 @@ export function RegisterEnrollmentForm({
                     {/* ------------------------------------------------------------- */}
                     <div className="space-y-5">
                         <div className="flex items-center gap-2.5 pb-2 border-b border-[#eeeae2]">
-                            <span className="w-5 h-5 rounded-full bg-[#1f1e1d] text-white flex items-center justify-center font-mono text-[10px] font-semibold">
+                            <span className="w-5 h-5 -full bg-[#1f1e1d] text-white flex items-center justify-center font-mono text-[10px] font-semibold">
                                 {section3Number}
                             </span>
                             <div>
@@ -614,7 +614,7 @@ export function RegisterEnrollmentForm({
                                             onClick={function () {
                                                 handleToggleSanctuary(sanc.id);
                                             }}
-                                            className={`p-3 rounded-xl border text-left transition-all duration-200 flex flex-col justify-between space-y-1 ${
+                                            className={`p-3 -xl border text-left transition-all duration-200 flex flex-col justify-between space-y-1 ${
                                                 isSelected
                                                     ? 'bg-[#1f1e1d] text-white border-[#1f1e1d] shadow-sm'
                                                     : 'bg-white hover:bg-[#faf7f0] border-[#ded9ce] text-[#1f1e1d]'
@@ -629,7 +629,7 @@ export function RegisterEnrollmentForm({
                                                     {sanc.code}
                                                 </span>
                                                 <span
-                                                    className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center text-[9px] ${
+                                                    className={`w-3.5 h-3.5 -full border flex items-center justify-center text-[9px] ${
                                                         isSelected
                                                             ? 'border-[#bfa76f] bg-[#bfa76f] text-[#1f1e1d]'
                                                             : 'border-[#ded9ce]'
@@ -671,7 +671,7 @@ export function RegisterEnrollmentForm({
                                             onClick={function () {
                                                 handleFieldChange('selectedAromaId', aroma.id);
                                             }}
-                                            className={`p-3.5 rounded-xl border cursor-pointer transition-all ${
+                                            className={`p-3.5 -xl border cursor-pointer transition-all ${
                                                 isChosen
                                                     ? 'bg-[#f7f2e7] border-[#8e763b] shadow-xs'
                                                     : 'bg-white hover:bg-[#faf8f5] border-[#ded9ce]'
@@ -682,14 +682,14 @@ export function RegisterEnrollmentForm({
                                                     {aroma.label}
                                                 </span>
                                                 <span
-                                                    className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center ${
+                                                    className={`w-3.5 h-3.5 -full border flex items-center justify-center ${
                                                         isChosen
                                                             ? 'border-[#8e763b] bg-[#8e763b]'
                                                             : 'border-[#ded9ce]'
                                                     }`}
                                                 >
                                                     {isChosen && (
-                                                        <span className="w-1.5 h-1.5 rounded-full bg-white" />
+                                                        <span className="w-1.5 h-1.5 -full bg-white" />
                                                     )}
                                                 </span>
                                             </div>
@@ -718,7 +718,7 @@ export function RegisterEnrollmentForm({
                                             onClick={function () {
                                                 handleFieldChange('selectedCellarId', cellar.id);
                                             }}
-                                            className={`p-3.5 rounded-xl border cursor-pointer transition-all flex items-center justify-between ${
+                                            className={`p-3.5 -xl border cursor-pointer transition-all flex items-center justify-between ${
                                                 isChosen
                                                     ? 'bg-[#f7f2e7] border-[#8e763b] shadow-xs'
                                                     : 'bg-white hover:bg-[#faf8f5] border-[#ded9ce]'
@@ -734,14 +734,14 @@ export function RegisterEnrollmentForm({
                                             </div>
 
                                             <span
-                                                className={`w-4 h-4 rounded-full border flex items-center justify-center shrink-0 ml-3 ${
+                                                className={`w-4 h-4 -full border flex items-center justify-center shrink-0 ml-3 ${
                                                     isChosen
                                                         ? 'border-[#8e763b] bg-[#8e763b]'
                                                         : 'border-[#ded9ce]'
                                                 }`}
                                             >
                                                 {isChosen && (
-                                                    <span className="w-1.5 h-1.5 rounded-full bg-white" />
+                                                    <span className="w-1.5 h-1.5 -full bg-white" />
                                                 )}
                                             </span>
                                         </div>
@@ -756,7 +756,7 @@ export function RegisterEnrollmentForm({
                     {/* ------------------------------------------------------------- */}
                     <div className="space-y-3.5">
                         <div className="flex items-center gap-2.5 pb-2 border-b border-[#eeeae2]">
-                            <span className="w-5 h-5 rounded-full bg-[#1f1e1d] text-white flex items-center justify-center font-mono text-[10px] font-semibold">
+                            <span className="w-5 h-5 -full bg-[#1f1e1d] text-white flex items-center justify-center font-mono text-[10px] font-semibold">
                                 {section4Number}
                             </span>
                             <div>
@@ -776,12 +776,12 @@ export function RegisterEnrollmentForm({
                                     value={values.invitationToken}
                                     onChange={handleTokenChange}
                                     placeholder="E.G. AUR-8829-SVR"
-                                    className="flex-1 px-4 py-3 rounded-xl bg-white border border-[#ded9ce] font-mono text-xs uppercase tracking-widest text-[#1f1e1d] outline-none focus:border-[#8e763b] shadow-2xs"
+                                    className="flex-1 px-4 py-3 -xl bg-white border border-[#ded9ce] font-mono text-xs uppercase tracking-widest text-[#1f1e1d] outline-none focus:border-[#8e763b] shadow-2xs"
                                 />
 
-                                <div className="inline-flex items-center gap-2 px-3.5 py-3 rounded-xl bg-[#f6f2ea] border border-[#ded9ce] shrink-0">
+                                <div className="inline-flex items-center gap-2 px-3.5 py-3 -xl bg-[#f6f2ea] border border-[#ded9ce] shrink-0">
                                     <span
-                                        className={`w-2 h-2 rounded-full ${
+                                        className={`w-2 h-2 -full ${
                                             tokenVerified ? 'bg-emerald-500 animate-pulse' : 'bg-[#8e763b]'
                                         }`}
                                     />
@@ -802,7 +802,7 @@ export function RegisterEnrollmentForm({
                     {/* ------------------------------------------------------------- */}
                     {/* CONSENT PROTOCOLS & LEGAL CHECKBOXES                          */}
                     {/* ------------------------------------------------------------- */}
-                    <div className="p-4 sm:p-5 rounded-2xl bg-[#f6f2ea]/80 border border-[#ded9ce] space-y-3 text-xs font-sans">
+                    <div className="p-4 sm:p-5 -2xl bg-[#f6f2ea]/80 border border-[#ded9ce] space-y-3 text-xs font-sans">
                         <label className="flex items-start gap-3 cursor-pointer select-none">
                             <input
                                 type="checkbox"
@@ -811,7 +811,7 @@ export function RegisterEnrollmentForm({
                                 onChange={function (e) {
                                     handleFieldChange('agreeSwissPrivacy', e.target.checked);
                                 }}
-                                className="w-4 h-4 rounded border-[#ded9ce] text-[#8e763b] focus:ring-0 mt-0.5"
+                                className="w-4 h-4  border-[#ded9ce] text-[#8e763b] focus:ring-0 mt-0.5"
                             />
                             <span className="text-[11px] text-[#55524d] font-light leading-relaxed">
                                 I agree to the <strong className="font-semibold text-[#1f1e1d]">Aurelia Confidentiality Protocol</strong> and Swiss Federal Data Protection Standards. My identity will never be disclosed to commercial third parties.
@@ -825,7 +825,7 @@ export function RegisterEnrollmentForm({
                                 onChange={function (e) {
                                     handleFieldChange('agreeSensorySync', e.target.checked);
                                 }}
-                                className="w-4 h-4 rounded border-[#ded9ce] text-[#8e763b] focus:ring-0 mt-0.5"
+                                className="w-4 h-4  border-[#ded9ce] text-[#8e763b] focus:ring-0 mt-0.5"
                             />
                             <span className="text-[11px] text-[#55524d] font-light leading-relaxed">
                                 Permit sensory ambiance, dietary nuances, and cellar preferences to harmonize across all global Aurelia sanctuaries prior to arrival.
@@ -840,7 +840,7 @@ export function RegisterEnrollmentForm({
                         <button
                             type="submit"
                             disabled={isSubmitting}
-                            className="w-full inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-xs font-semibold uppercase tracking-[0.24em] transition-all shadow-md active:translate-y-0.5 disabled:opacity-75 group"
+                            className="w-full inline-flex items-center justify-center gap-2 px-8 py-4 -xl bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-xs font-semibold uppercase tracking-[0.24em] transition-all shadow-md active:translate-y-0.5 disabled:opacity-75 group"
                         >
                             <span>
                                 {isSubmitting

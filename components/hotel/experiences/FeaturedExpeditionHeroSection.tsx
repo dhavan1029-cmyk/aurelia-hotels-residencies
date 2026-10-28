@@ -150,7 +150,7 @@ export function FeaturedExpeditionHeroSection({
 
     return (
         <section className={`w-full max-w-340 mx-auto px-4 sm:px-8 lg:px-12 py-10 sm:py-12 ${className}`}>
-            <article className="bg-white border border-[#e8e4dc] rounded-lg overflow-hidden shadow-[0_8px_32px_rgba(31,30,29,0.04)] hover:border-[#8e763b]/40 transition-all duration-500">
+            <article className="bg-white border border-[#e8e4dc] -lg overflow-hidden shadow-[0_8px_32px_rgba(31,30,29,0.04)] hover:border-[#8e763b]/40 transition-all duration-500">
                 <div className="grid grid-cols-1 lg:grid-cols-12 items-stretch">
                     {/* Left Photographic Showcase Column (7 Columns) */}
                     <div className="lg:col-span-7 relative min-h-90 sm:min-h-115 lg:min-h-full bg-[#eeeae2] overflow-hidden group">
@@ -166,10 +166,10 @@ export function FeaturedExpeditionHeroSection({
 
                         {/* Top Badges */}
                         <div className="absolute top-4 left-4 z-10 flex flex-wrap items-center gap-2">
-                            <span className="px-3 py-1 rounded-sm bg-black/60 backdrop-blur-md text-white font-sans text-[10px] font-semibold uppercase tracking-[0.22em] shadow-sm">
+                            <span className="px-3 py-1 -sm bg-black/60 backdrop-blur-md text-white font-sans text-[10px] font-semibold uppercase tracking-[0.22em] shadow-sm">
                                 {heroBadge}
                             </span>
-                            <span className="px-3 py-1 rounded-sm bg-[#8e763b] text-white font-sans text-[10px] font-semibold uppercase tracking-[0.2em] shadow-sm">
+                            <span className="px-3 py-1 -sm bg-[#8e763b] text-white font-sans text-[10px] font-semibold uppercase tracking-[0.2em] shadow-sm">
                                 {heritageBadge}
                             </span>
                         </div>
@@ -224,9 +224,9 @@ export function FeaturedExpeditionHeroSection({
                                     return (
                                         <div
                                             key={idx}
-                                            className="p-3 rounded-xl bg-white border border-[#ded9ce] shadow-2xs flex items-start gap-2.5"
+                                            className="p-3 -xl bg-white border border-[#ded9ce] shadow-2xs flex items-start gap-2.5"
                                         >
-                                            <span className="p-1.5 rounded-lg bg-[#f6f2ea] border border-[#e8e4dc] shrink-0">
+                                            <span className="p-1.5 -lg bg-[#f6f2ea] border border-[#e8e4dc] shrink-0">
                                                 {renderSpecIcon(metric.iconType)}
                                             </span>
                                             <div>
@@ -247,7 +247,7 @@ export function FeaturedExpeditionHeroSection({
                                 {includedHighlights.map(function (highlight, idx) {
                                     return (
                                         <li key={idx} className="flex items-center gap-2">
-                                            <span className="w-1.5 h-1.5 rounded-full bg-[#8e763b] shrink-0" />
+                                            <span className="w-1.5 h-1.5 -full bg-[#8e763b] shrink-0" />
                                             <span>{highlight}</span>
                                         </li>
                                     );
@@ -259,7 +259,7 @@ export function FeaturedExpeditionHeroSection({
                         <div className="pt-6 border-t border-[#eeeae2] flex flex-col sm:flex-row items-center gap-3">
                             <Link
                                 href={`/checkout?experience=${slug}`}
-                                className="w-full sm:flex-1 inline-flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-[11px] font-semibold uppercase tracking-[0.2em] transition-all shadow-md active:translate-y-0.5 text-center group"
+                                className="w-full sm:flex-1 inline-flex items-center justify-center gap-2 px-6 py-4 -xl bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-[11px] font-semibold uppercase tracking-[0.2em] transition-all shadow-md active:translate-y-0.5 text-center group"
                             >
                                 <span>{primaryCtaLabel}</span>
                                 <span className="transform transition-transform duration-300 group-hover:translate-x-1">

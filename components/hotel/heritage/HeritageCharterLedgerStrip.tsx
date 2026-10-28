@@ -99,8 +99,8 @@ export function HeritageCharterLedgerStrip({
 				{/* Left: Seal & Ratification Statement */}
 				<div className="max-w-3xl space-y-2">
 					<div className="flex flex-wrap items-center gap-2.5">
-						<span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-[#ded9ce] text-[9px] font-mono uppercase tracking-[0.2em] text-[#8e763b] shadow-2xs">
-							<span className="w-1.5 h-1.5 rounded-full bg-[#8e763b]" />
+						<span className="inline-flex items-center gap-1.5 px-3 py-1 -full bg-white border border-[#ded9ce] text-[9px] font-mono uppercase tracking-[0.2em] text-[#8e763b] shadow-2xs">
+							<span className="w-1.5 h-1.5 -full bg-[#8e763b]" />
 							<span>{charterSealCode}</span>
 						</span>
 
@@ -127,7 +127,7 @@ export function HeritageCharterLedgerStrip({
 					<Link
 						href={downloadHref}
 						onClick={handleDownloadCharter}
-						className="inline-flex items-center gap-2.5 px-6 py-4 rounded-xl bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.2em] transition-all shadow-md active:translate-y-0.5 whitespace-nowrap group"
+						className="inline-flex items-center gap-2.5 px-6 py-4 -xl bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.2em] transition-all shadow-md active:translate-y-0.5 whitespace-nowrap group"
 					>
 						<svg
 							className="w-4 h-4 text-[#bfa76f] shrink-0"

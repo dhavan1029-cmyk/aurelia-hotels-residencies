@@ -328,19 +328,19 @@ export function DateRangeCalendar({
 
             let cellStyle = 'text-[#1f1e1d] hover:bg-[#eeeae2]';
             let containerBg = 'bg-transparent';
-            let shapeStyle = 'rounded-lg';
+            let shapeStyle = '-lg';
 
             if (isCheckIn) {
                 cellStyle = 'bg-[#8e763b] text-white font-semibold shadow-xs';
-                shapeStyle = 'rounded-l-lg rounded-r-none';
-                if (!pendingCheckOut && !hoveredDate) shapeStyle = 'rounded-lg';
+                shapeStyle = '-l-lg -r-none';
+                if (!pendingCheckOut && !hoveredDate) shapeStyle = '-lg';
             } else if (isCheckOut) {
                 cellStyle = 'bg-[#8e763b] text-white font-semibold shadow-xs';
-                shapeStyle = 'rounded-r-lg rounded-l-none';
+                shapeStyle = '-r-lg -l-none';
             } else if (isInRange) {
                 cellStyle = 'text-[#1f1e1d] font-medium';
                 containerBg = 'bg-[#8e763b]/12';
-                shapeStyle = 'rounded-none';
+                shapeStyle = '-none';
             } else if (isToday) {
                 cellStyle = 'text-[#8e763b] font-bold border border-[#8e763b]/40 hover:bg-[#eeeae2]';
             }
@@ -416,7 +416,7 @@ export function DateRangeCalendar({
             role="dialog"
             aria-modal="true"
             aria-label="Date Range Calendar Selector"
-            className={`w-100 sm:w-150 md:w-200 lg:w-200 bg-white border border-[#ded9ce] rounded-3xl p-5 sm:p-7 shadow-[0_20px_50px_rgba(31,30,29,0.14)] text-[#1f1e1d] animate-in fade-in-50 zoom-in-95 z-50 ${className}`}
+            className={`w-100 sm:w-150 md:w-200 lg:w-200 bg-white border border-[#ded9ce] -3xl p-5 sm:p-7 shadow-[0_20px_50px_rgba(31,30,29,0.14)] text-[#1f1e1d] animate-in fade-in-50 zoom-in-95 z-50 ${className}`}
         >
             {/* Header & Close */}
             <div className="flex items-start justify-between pb-4 border-b border-[#f2ede4]">
@@ -436,7 +436,7 @@ export function DateRangeCalendar({
                     type="button"
                     onClick={onClose}
                     aria-label="Close date picker"
-                    className="p-2 rounded-xl text-[#78756e] hover:text-[#1f1e1d] hover:bg-[#f6f3ee] transition-colors"
+                    className="p-2 -xl text-[#78756e] hover:text-[#1f1e1d] hover:bg-[#f6f3ee] transition-colors"
                 >
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <line x1="18" y1="6" x2="6" y2="18" />
@@ -453,7 +453,7 @@ export function DateRangeCalendar({
                         onClick={function () {
                             setActiveField('checkIn');
                         }}
-                        className={`p-3 rounded-2xl border text-left transition-all duration-200 ${
+                        className={`p-3 -2xl border text-left transition-all duration-200 ${
                             activeField === 'checkIn'
                                 ? 'bg-[#f6f3ee] border-[#8e763b] ring-1 ring-[#8e763b]/30'
                                 : 'bg-white border-[#ded9ce] hover:border-[#8e763b]/50'
@@ -474,7 +474,7 @@ export function DateRangeCalendar({
                                 setActiveField('checkOut');
                             }
                         }}
-                        className={`p-3 rounded-2xl border text-left transition-all duration-200 ${
+                        className={`p-3 -2xl border text-left transition-all duration-200 ${
                             activeField === 'checkOut'
                                 ? 'bg-[#f6f3ee] border-[#8e763b] ring-1 ring-[#8e763b]/30'
                                 : 'bg-white border-[#ded9ce] hover:border-[#8e763b]/50'
@@ -491,8 +491,8 @@ export function DateRangeCalendar({
 
                 <div className="shrink-0 flex items-center justify-end sm:justify-start gap-2">
                     {isValidRange ? (
-                        <div className="px-3.5 py-2 rounded-xl bg-[#f6f3ee] border border-[#ded9ce] flex items-center gap-2 text-xs font-sans text-[#1f1e1d]">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#8e763b]" />
+                        <div className="px-3.5 py-2 -xl bg-[#f6f3ee] border border-[#ded9ce] flex items-center gap-2 text-xs font-sans text-[#1f1e1d]">
+                            <span className="w-1.5 h-1.5 -full bg-[#8e763b]" />
                             <span className="font-serif font-semibold text-sm text-[#8e763b]">{nightsCount}</span>
                             <span className="text-[#78756e] font-light">
                                 {nightsCount === 1 ? 'Night Stay' : 'Nights Stay'}
@@ -513,7 +513,7 @@ export function DateRangeCalendar({
                     disabled={isPrevDisabled}
                     onClick={handlePrevMonth}
                     aria-label="Previous month"
-                    className="p-2 rounded-xl bg-[#f6f3ee] hover:bg-[#eeeae2] border border-[#ded9ce] text-[#1f1e1d] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                    className="p-2 -xl bg-[#f6f3ee] hover:bg-[#eeeae2] border border-[#ded9ce] text-[#1f1e1d] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                 >
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <polyline points="15 18 9 12 15 6" />
@@ -528,7 +528,7 @@ export function DateRangeCalendar({
                     type="button"
                     onClick={handleNextMonth}
                     aria-label="Next month"
-                    className="p-2 rounded-xl bg-[#f6f3ee] hover:bg-[#eeeae2] border border-[#ded9ce] text-[#1f1e1d] transition-colors"
+                    className="p-2 -xl bg-[#f6f3ee] hover:bg-[#eeeae2] border border-[#ded9ce] text-[#1f1e1d] transition-colors"
                 >
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <polyline points="9 18 15 12 9 6" />
@@ -569,7 +569,7 @@ export function DateRangeCalendar({
                     <button
                         type="button"
                         onClick={onClose}
-                        className="px-4 py-2.5 rounded-xl bg-[#f6f3ee] hover:bg-[#eeeae2] border border-[#ded9ce] text-[#2c2a26] text-xs font-sans font-medium transition-colors"
+                        className="px-4 py-2.5 -xl bg-[#f6f3ee] hover:bg-[#eeeae2] border border-[#ded9ce] text-[#2c2a26] text-xs font-sans font-medium transition-colors"
                     >
                         Cancel
                     </button>
@@ -578,7 +578,7 @@ export function DateRangeCalendar({
                         type="button"
                         disabled={!isValidRange}
                         onClick={handleApply}
-                        className="px-6 py-2.5 rounded-xl bg-[#1f1e1d] hover:bg-[#343230] text-white disabled:opacity-40 disabled:cursor-not-allowed text-xs font-sans font-semibold uppercase tracking-[0.18em] transition-all duration-200 shadow-sm"
+                        className="px-6 py-2.5 -xl bg-[#1f1e1d] hover:bg-[#343230] text-white disabled:opacity-40 disabled:cursor-not-allowed text-xs font-sans font-semibold uppercase tracking-[0.18em] transition-all duration-200 shadow-sm"
                     >
                         Apply dates {isValidRange ? `(${nightsCount} ${nightsCount === 1 ? 'Night' : 'Nights'})` : ''}
                     </button>

@@ -205,8 +205,8 @@ export function HeritageArchitecturalExcerptsSection({
                 </div>
 
                 <div className="shrink-0 self-start lg:self-auto">
-                    <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#f6f2ea] border border-[#ded9ce] text-[9px] sm:text-[10px] font-sans font-semibold uppercase tracking-[0.2em] text-[#8e763b] shadow-2xs">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#8e763b]" />
+                    <span className="inline-flex items-center gap-2 px-3.5 py-1.5 -full bg-[#f6f2ea] border border-[#ded9ce] text-[9px] sm:text-[10px] font-sans font-semibold uppercase tracking-[0.2em] text-[#8e763b] shadow-2xs">
+                        <span className="w-1.5 h-1.5 -full bg-[#8e763b]" />
                         <span>ARCHITECTURAL VOLUMETRICS</span>
                     </span>
                 </div>
@@ -223,7 +223,7 @@ export function HeritageArchitecturalExcerptsSection({
                                     onFigureClick(idx);
                                 }
                             }}
-                            className="group bg-white border border-[#e8e4dc] rounded-lg overflow-hidden shadow-[0_4px_24px_rgba(31,30,29,0.03)] hover:shadow-[0_16px_40px_rgba(31,30,29,0.08)] hover:border-[#8e763b]/40 transition-all duration-500 cursor-pointer flex flex-col justify-between"
+                            className="group bg-white border border-[#e8e4dc] -lg overflow-hidden shadow-[0_4px_24px_rgba(31,30,29,0.03)] hover:shadow-[0_16px_40px_rgba(31,30,29,0.08)] hover:border-[#8e763b]/40 transition-all duration-500 cursor-pointer flex flex-col justify-between"
                         >
                             {/* Photographic Image Frame */}
                             <div className="relative aspect-16/11 sm:aspect-16/10 w-full overflow-hidden bg-[#eeeae2]">
@@ -238,10 +238,10 @@ export function HeritageArchitecturalExcerptsSection({
 
                                 {/* Top Left Badges */}
                                 <div className="absolute top-4 left-4 z-10 flex items-center gap-2">
-                                    <span className="px-3 py-1 rounded-sm bg-black/60 backdrop-blur-md text-white font-sans text-[10px] font-semibold uppercase tracking-[0.22em] shadow-sm">
+                                    <span className="px-3 py-1 -sm bg-black/60 backdrop-blur-md text-white font-sans text-[10px] font-semibold uppercase tracking-[0.22em] shadow-sm">
                                         {fig.figureNumber}
                                     </span>
-                                    <span className="px-2.5 py-1 rounded-sm bg-[#8e763b] text-white font-sans text-[9px] font-semibold uppercase tracking-[0.18em] shadow-sm">
+                                    <span className="px-2.5 py-1 -sm bg-[#8e763b] text-white font-sans text-[9px] font-semibold uppercase tracking-[0.18em] shadow-sm">
                                         {fig.specBadge}
                                     </span>
                                 </div>
@@ -276,7 +276,7 @@ export function HeritageArchitecturalExcerptsSection({
             </div>
 
             {/* 3. CONSERVATOR EDITORIAL PULL-QUOTE CARD (STUDIO AURELIA ARCHIVES) */}
-            <div className="bg-[#191817] text-[#fcf9f4] border border-[#34322e] rounded-lg p-8 sm:p-12 lg:p-16 relative overflow-hidden shadow-2xl">
+            <div className="bg-[#191817] text-[#fcf9f4] border border-[#34322e] -lg p-8 sm:p-12 lg:p-16 relative overflow-hidden shadow-2xl">
                 {/* Subtle Geometric Dot Texture */}
                 <div
                     className="absolute inset-0 opacity-[0.03] pointer-events-none"
@@ -287,8 +287,8 @@ export function HeritageArchitecturalExcerptsSection({
                 />
 
                 <div className="relative z-10 max-w-4xl mx-auto text-center space-y-6">
-                    <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] sm:text-[10px] font-sans font-semibold uppercase tracking-[0.26em] text-[#bfa76f]">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#bfa76f] animate-pulse" />
+                    <div className="inline-flex items-center gap-2 px-3.5 py-1 -full bg-white/5 border border-white/10 text-[9px] sm:text-[10px] font-sans font-semibold uppercase tracking-[0.26em] text-[#bfa76f]">
+                        <span className="w-1.5 h-1.5 -full bg-[#bfa76f] animate-pulse" />
                         <span>{conservatorStamp}</span>
                     </div>
 
@@ -311,7 +311,7 @@ export function HeritageArchitecturalExcerptsSection({
             </div>
 
             {/* 4. ECOLOGICAL & GEOLOGICAL CUSTODIANSHIP TRI-FOLD STRIP */}
-            <div className="bg-[#f6f2ea] border border-[#e2ddd3] rounded-lg p-8 sm:p-10 lg:p-12 space-y-10">
+            <div className="bg-[#f6f2ea] border border-[#e2ddd3] -lg p-8 sm:p-10 lg:p-12 space-y-10">
                 <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 pb-6 border-b border-[#ded9ce]">
                     <div className="max-w-2xl">
                         <span className="block text-[10px] sm:text-[11px] font-sans font-semibold uppercase tracking-[0.28em] text-[#8e763b] mb-1.5">
@@ -338,11 +338,11 @@ export function HeritageArchitecturalExcerptsSection({
                         return (
                             <div
                                 key={metric.metricNumber}
-                                className="bg-white border border-[#ded9ce] rounded-2xl p-6 sm:p-7 flex flex-col justify-between space-y-6 shadow-2xs hover:border-[#8e763b]/60 transition-colors"
+                                className="bg-white border border-[#ded9ce] -2xl p-6 sm:p-7 flex flex-col justify-between space-y-6 shadow-2xs hover:border-[#8e763b]/60 transition-colors"
                             >
                                 <div>
                                     <div className="flex items-center justify-between pb-4 border-b border-[#f0ece3] mb-4">
-                                        <div className="p-2 rounded-lg bg-[#f6f2ea] border border-[#ded9ce] text-[#8e763b]">
+                                        <div className="p-2 -lg bg-[#f6f2ea] border border-[#ded9ce] text-[#8e763b]">
                                             {renderStewardshipIcon(metric.iconType)}
                                         </div>
                                         <span className="text-[9px] font-sans font-semibold uppercase tracking-[0.18em] text-[#8e763b]">

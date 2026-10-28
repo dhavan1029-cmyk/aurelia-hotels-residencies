@@ -65,7 +65,7 @@ export function AccommodationGallerySection({
                 <div className="col-span-12 flex flex-col lg:flex-row lg:items-end justify-between gap-4">
                     <div>
                         <div className="flex items-center gap-2 mb-2">
-                            <span className="px-2.5 py-0.5 rounded-sm bg-[#f2ede4] border border-[#ded9ce] text-[10px] font-sans font-semibold uppercase tracking-[0.2em] text-[#8e763b]">
+                            <span className="px-2.5 py-0.5 -sm bg-[#f2ede4] border border-[#ded9ce] text-[10px] font-sans font-semibold uppercase tracking-[0.2em] text-[#8e763b]">
                                 {sanctuaryEyebrow}
                             </span>
                             <span className="text-[10px] font-sans font-semibold uppercase tracking-[0.22em] text-[#8e8a82]">
@@ -99,7 +99,7 @@ export function AccommodationGallerySection({
                 {/* High-Fidelity Asymmetric Gallery Grid */}
                 <div className="col-span-12 grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-5 h-auto lg:h-135">
                     {/* Primary Hero Column (8 Columns) */}
-                    <div className="lg:col-span-8 relative min-h-90 sm:min-h-110 lg:min-h-full rounded-lg overflow-hidden bg-[#eeeae2] group">
+                    <div className="lg:col-span-8 relative min-h-90 sm:min-h-110 lg:min-h-full -lg overflow-hidden bg-[#eeeae2] group">
                         <Image
                             src={heroImage.url}
                             alt={heroImage.alt}
@@ -127,7 +127,7 @@ export function AccommodationGallerySection({
                                 <button
                                     type="button"
                                     onClick={onOpenGalleryModal}
-                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-black/60 backdrop-blur-md border border-white/20 text-[10px] font-sans font-medium uppercase tracking-[0.16em] hover:bg-black/80 transition-all self-start sm:self-auto"
+                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 -lg bg-black/60 backdrop-blur-md border border-white/20 text-[10px] font-sans font-medium uppercase tracking-[0.16em] hover:bg-black/80 transition-all self-start sm:self-auto"
                                 >
                                     <svg className="w-3.5 h-3.5 text-[#bfa76f]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                         <rect x="3" y="3" width="18" height="18" rx="2" />
@@ -143,7 +143,7 @@ export function AccommodationGallerySection({
                     {/* Secondary Stacked Photography Column (4 Columns) */}
                     <div className="lg:col-span-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4 lg:gap-5 h-full">
                         {/* Secondary Top: En-suite Travertine Bath */}
-                        <div className="relative min-h-55 lg:h-full rounded-lg overflow-hidden bg-[#eeeae2] group">
+                        <div className="relative min-h-55 lg:h-full -lg overflow-hidden bg-[#eeeae2] group">
                             <Image
                                 src={secondaryTopImage.url}
                                 alt={secondaryTopImage.alt}
@@ -155,7 +155,7 @@ export function AccommodationGallerySection({
 
                             <div className="absolute top-4 left-4 z-10">
                                 {secondaryTopImage.badge && (
-                                    <span className="px-2.5 py-1 rounded bg-black/60 backdrop-blur-md text-[9px] font-sans font-semibold uppercase tracking-[0.18em] text-[#dcdad5]">
+                                    <span className="px-2.5 py-1  bg-black/60 backdrop-blur-md text-[9px] font-sans font-semibold uppercase tracking-[0.18em] text-[#dcdad5]">
                                         {secondaryTopImage.badge}
                                     </span>
                                 )}
@@ -169,7 +169,7 @@ export function AccommodationGallerySection({
                         </div>
 
                         {/* Secondary Bottom: Basalt Plunge Deck with Explore Gallery Pill */}
-                        <div className="relative min-h-55 lg:h-full rounded-lg overflow-hidden bg-[#eeeae2] group">
+                        <div className="relative min-h-55 lg:h-full -lg overflow-hidden bg-[#eeeae2] group">
                             <Image
                                 src={secondaryBottomImage.url}
                                 alt={secondaryBottomImage.alt}
@@ -181,7 +181,7 @@ export function AccommodationGallerySection({
 
                             <div className="absolute top-4 left-4 z-10">
                                 {secondaryBottomImage.badge && (
-                                    <span className="px-2.5 py-1 rounded bg-black/60 backdrop-blur-md text-[9px] font-sans font-semibold uppercase tracking-[0.18em] text-[#bfa76f]">
+                                    <span className="px-2.5 py-1  bg-black/60 backdrop-blur-md text-[9px] font-sans font-semibold uppercase tracking-[0.18em] text-[#bfa76f]">
                                         {secondaryBottomImage.badge}
                                     </span>
                                 )}
@@ -196,7 +196,7 @@ export function AccommodationGallerySection({
                                     <button
                                         type="button"
                                         onClick={onOpenGalleryModal}
-                                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/95 hover:bg-white text-[#1f1e1d] text-[10px] font-sans font-semibold uppercase tracking-[0.16em] transition-all shadow-md shrink-0"
+                                        className="inline-flex items-center gap-1.5 px-3 py-1.5 -lg bg-white/95 hover:bg-white text-[#1f1e1d] text-[10px] font-sans font-semibold uppercase tracking-[0.16em] transition-all shadow-md shrink-0"
                                     >
                                         <span>{secondaryBottomImage.actionLabel}</span>
                                         <span className="text-xs">→</span>

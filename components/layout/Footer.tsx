@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
@@ -16,9 +17,7 @@ export function Footer() {
             <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12 pb-16 border-b border-[#343230]">
                 {/* Monograph Column */}
                 <div className="md:col-span-1 flex flex-col gap-4">
-                    <h4 className="font-serif text-2xl tracking-[0.2em] text-[#fcf9f4] uppercase font-light">
-                        Aurelia
-                    </h4>
+                    <Image src={'/aurelia-logo-dark.png'} alt='AURELIA' width={600} height={340} className='text-white'></Image>
 
                     <p className="text-xs text-[#a39f97] leading-relaxed font-sans">
                         Monolithic travertine sanctuaries and restorative coastal enclaves across the Mediterranean, Alps, and East Asia.

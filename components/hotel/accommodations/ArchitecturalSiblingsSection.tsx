@@ -1,55 +1,14 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { SiblingAccommodationItem } from '../types/accommodations';
-
-export const suite402SiblingsData: SiblingAccommodationItem[] = [
-    {
-        id: 'villa-limestone',
-        slug: 'the-limestone-villa',
-        name: 'The Limestone Villa',
-        category: 'CLIFFSIDE VILLA',
-        badge: 'STANDALONE ESTATE',
-        squareMeters: 210,
-        elevationTag: 'LEVEL I • WATERFRONT',
-        tagline:
-            'Multi-level independent cliff residence with heated infinity plunge pool, private Riva yacht tender dock, and dedicated sommelier cellar.',
-        basePriceNightly: 2850,
-        currencySymbol: '€',
-        heroImageUrl: '/limestone-villa.png',
-        privilegeText: 'Dedicated Majordomo & Private Dock',
-        features: ['2 King Chambers', 'Private Mooring', 'Basalt Solarium'],
-    },
-    {
-        id: 'garden-pavilion',
-        slug: 'lemon-grove-garden-pavilion',
-        name: 'Lemon Grove Garden Pavilion',
-        category: 'GARDEN SANCTUARY',
-        badge: 'CENTURY ORCHARD',
-        squareMeters: 175,
-        elevationTag: 'UPPER GROVE TERRACE',
-        tagline:
-            'Nestled among two-century-old Amalfi lemon groves with freestanding carved travertine baths and secluded sun solarium.',
-        basePriceNightly: 1800,
-        currencySymbol: '€',
-        heroImageUrl: '/garden-pavillion.png',
-        privilegeText: 'Artisan Orchard Breakfast Daily',
-        features: ['Emperor Linen King', 'Travertine Bath', 'Citrus Solarium'],
-    },
-]
-    // eyebrow: 'ARCHITECTURAL SIBLINGS',
-    // heading: 'Alternative Sanctuaries of Equal Distinction',
-    // description:
-    //     'Should Suite 402 be unavailable during your preferred stay horizon, our coastal master estate includes these complementary sanctuaries.',
-    // viewAllHref: '/accommodations',
-    
+import { SiblingAccommodationItem } from '../types/accommodations'; 
 
 export interface AccommodationArchitecturalSiblingsProps {
-    data?: SiblingAccommodationItem[];
+    data: SiblingAccommodationItem[];
     className?: string;
 }
 
 export function AccommodationArchitecturalSiblingsSection({
-    data = suite402SiblingsData,
+    data,
     className = '',
 }: AccommodationArchitecturalSiblingsProps) {
 
@@ -86,7 +45,7 @@ export function AccommodationArchitecturalSiblingsSection({
                     return (
                         <article
                             key={item.id}
-                            className="group bg-white border border-[#e8e4dc] rounded-2xl overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.02)] hover:shadow-[0_16px_40px_rgba(31,30,29,0.07)] hover:border-[#8e763b]/50 transition-all duration-500 flex flex-col justify-between"
+                            className="group bg-white border border-[#e8e4dc] -2xl overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.02)] hover:shadow-[0_16px_40px_rgba(31,30,29,0.07)] hover:border-[#8e763b]/50 transition-all duration-500 flex flex-col justify-between"
                         >
                             {/* Card Media Container */}
                             <div>
@@ -102,16 +61,16 @@ export function AccommodationArchitecturalSiblingsSection({
 
                                     {/* Top Left Category Badges */}
                                     <div className="absolute top-4 left-4 z-10 flex items-center gap-2">
-                                        <span className="px-2.5 py-1 rounded-sm bg-black/60 backdrop-blur-md text-white font-sans text-[9px] font-semibold uppercase tracking-[0.18em]">
+                                        <span className="px-2.5 py-1 -sm bg-black/60 backdrop-blur-md text-white font-sans text-[9px] font-semibold uppercase tracking-[0.18em]">
                                             {item.category}
                                         </span>
-                                        <span className="px-2.5 py-1 rounded-sm bg-white/90 backdrop-blur-md text-[#1f1e1d] font-sans text-[9px] font-semibold uppercase tracking-[0.18em]">
+                                        <span className="px-2.5 py-1 -sm bg-white/90 backdrop-blur-md text-[#1f1e1d] font-sans text-[9px] font-semibold uppercase tracking-[0.18em]">
                                             {item.badge}
                                         </span>
                                     </div>
 
                                     {/* Bottom Floating Price Tag */}
-                                    <div className="absolute bottom-3 right-3 z-10 bg-white/95 backdrop-blur-md px-3.5 py-1.5 rounded-sm shadow-sm border border-[#e8e4dc] text-right">
+                                    <div className="absolute bottom-3 right-3 z-10 bg-white/95 backdrop-blur-md px-3.5 py-1.5 -sm shadow-sm border border-[#e8e4dc] text-right">
                                         <div className="flex items-baseline gap-1">
                                             <span className="font-serif text-base sm:text-lg font-bold text-[#1f1e1d]">
                                                 {item.currencySymbol}
@@ -145,7 +104,7 @@ export function AccommodationArchitecturalSiblingsSection({
                                             return (
                                                 <span
                                                     key={idx}
-                                                    className="px-2.5 py-1 rounded-sm bg-[#f6f2ea] border border-[#e8e4dc] text-[9px] font-sans font-medium uppercase tracking-[0.15em] text-[#646159]"
+                                                    className="px-2.5 py-1 -sm bg-[#f6f2ea] border border-[#e8e4dc] text-[9px] font-sans font-medium uppercase tracking-[0.15em] text-[#646159]"
                                                 >
                                                     {feat}
                                                 </span>

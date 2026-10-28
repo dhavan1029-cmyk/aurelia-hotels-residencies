@@ -159,8 +159,8 @@ export function SignatureRhythmsDualBentoSection({
                 </div>
 
                 <div className="shrink-0 self-start lg:self-auto">
-                    <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#f6f2ea] border border-[#ded9ce] text-[9px] sm:text-[10px] font-sans font-semibold uppercase tracking-[0.2em] text-[#8e763b] shadow-2xs">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#8e763b]" />
+                    <span className="inline-flex items-center gap-2 px-3.5 py-1.5 -full bg-[#f6f2ea] border border-[#ded9ce] text-[9px] sm:text-[10px] font-sans font-semibold uppercase tracking-[0.2em] text-[#8e763b] shadow-2xs">
+                        <span className="w-1.5 h-1.5 -full bg-[#8e763b]" />
                         <span>{advisoryPill}</span>
                     </span>
                 </div>
@@ -172,7 +172,7 @@ export function SignatureRhythmsDualBentoSection({
                     return (
                         <article
                             key={card.id}
-                            className="bg-white border border-[#e8e4dc] rounded-lg overflow-hidden shadow-[0_4px_24px_rgba(31,30,29,0.03)] hover:shadow-[0_16px_40px_rgba(31,30,29,0.08)] hover:border-[#8e763b]/40 transition-all duration-500 flex flex-col justify-between group"
+                            className="bg-white border border-[#e8e4dc] -lg overflow-hidden shadow-[0_4px_24px_rgba(31,30,29,0.03)] hover:shadow-[0_16px_40px_rgba(31,30,29,0.08)] hover:border-[#8e763b]/40 transition-all duration-500 flex flex-col justify-between group"
                         >
                             {/* Card Media Container */}
                             <div>
@@ -188,12 +188,12 @@ export function SignatureRhythmsDualBentoSection({
 
                                     {/* Top Left Badges */}
                                     <div className="absolute top-4 left-4 z-10 flex flex-wrap items-center gap-2">
-                                        <span className="px-3 py-1 rounded-sm bg-black/60 backdrop-blur-md text-white font-sans text-[9px] sm:text-[10px] font-semibold uppercase tracking-[0.2em] shadow-sm">
+                                        <span className="px-3 py-1 -sm bg-black/60 backdrop-blur-md text-white font-sans text-[9px] sm:text-[10px] font-semibold uppercase tracking-[0.2em] shadow-sm">
                                             {card.categoryBadge}
                                         </span>
 
                                         {card.isMichelin && (
-                                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-sm bg-[#8e763b] text-white font-sans text-[9px] sm:text-[10px] font-semibold uppercase tracking-[0.18em] shadow-sm">
+                                            <span className="inline-flex items-center gap-1.5 px-3 py-1 -sm bg-[#8e763b] text-white font-sans text-[9px] sm:text-[10px] font-semibold uppercase tracking-[0.18em] shadow-sm">
                                                 <svg className="w-3 h-3 text-white fill-current" viewBox="0 0 24 24">
                                                     <path d="M12 2l2.4 7.4h7.6l-6 4.5 2.3 7.1-6.3-4.6-6.3 4.6 2.3-7.1-6-4.5h7.6z" />
                                                 </svg>
@@ -203,7 +203,7 @@ export function SignatureRhythmsDualBentoSection({
                                     </div>
 
                                     {/* Floating Bottom Right Tariff Badge */}
-                                    <div className="absolute bottom-4 right-4 z-10 bg-white/95 backdrop-blur-md px-4 py-2 rounded-xl shadow-md border border-[#e8e4dc] text-right">
+                                    <div className="absolute bottom-4 right-4 z-10 bg-white/95 backdrop-blur-md px-4 py-2 -xl shadow-md border border-[#e8e4dc] text-right">
                                         <div className="flex items-baseline gap-1">
                                             <span className="font-serif text-xl sm:text-2xl font-bold text-[#1f1e1d] leading-none">
                                                 {card.currencySymbol}{card.tariffAmount.toLocaleString()}
@@ -235,9 +235,9 @@ export function SignatureRhythmsDualBentoSection({
                                             return (
                                                 <div
                                                     key={idx}
-                                                    className="p-2.5 rounded-xl bg-[#fcf9f4] border border-[#ded9ce] flex items-center gap-2 shadow-2xs"
+                                                    className="p-2.5 -xl bg-[#fcf9f4] border border-[#ded9ce] flex items-center gap-2 shadow-2xs"
                                                 >
-                                                    <span className="p-1 rounded-md bg-white border border-[#e8e4dc] shrink-0">
+                                                    <span className="p-1 -md bg-white border border-[#e8e4dc] shrink-0">
                                                         {renderSpecIcon(spec.iconType)}
                                                     </span>
                                                     <span className="text-[11px] font-sans font-medium text-[#2c2a26] truncate">
@@ -254,7 +254,7 @@ export function SignatureRhythmsDualBentoSection({
                             <div className="p-6 sm:p-8 pt-0 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-[#f0ece3] mt-2">
                                 <Link
                                     href={`/checkout?experience=${card.slug}`}
-                                    className="w-full sm:flex-1 inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-[11px] font-semibold uppercase tracking-[0.2em] transition-all shadow-md active:translate-y-0.5 text-center group/btn"
+                                    className="w-full sm:flex-1 inline-flex items-center justify-center gap-2 px-6 py-3.5 -xl bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-[11px] font-semibold uppercase tracking-[0.2em] transition-all shadow-md active:translate-y-0.5 text-center group/btn"
                                 >
                                     <span>{card.primaryCtaLabel}</span>
                                     <span className="transform transition-transform duration-300 group-hover/btn:translate-x-1">

@@ -6,11 +6,7 @@ export default async function Page() {
 
   try {
     const accommodations =
-      await prisma.roomUnit.findMany({
-        include: {
-          accommodationCategory: true
-        }
-      });
+      await prisma.user.findMany({});
 
     return (
       <pre>

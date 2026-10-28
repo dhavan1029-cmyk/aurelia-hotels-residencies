@@ -147,7 +147,7 @@ export function PrivilegesAndPoliciesSection({
     return (
         <div className={`space-y-10 sm:space-y-12 ${className}`}>
             {/* 1. Curated Privileges Bento Grid Card */}
-            <article className="bg-white border border-[#e8e4dc] rounded-lg p-6 sm:p-8 lg:p-10 shadow-[0_4px_24px_rgba(0,0,0,0.02)]">
+            <article className="bg-white border border-[#e8e4dc] -lg p-6 sm:p-8 lg:p-10 shadow-[0_4px_24px_rgba(0,0,0,0.02)]">
                 <div>
                     <span className="block text-[10px] sm:text-[11px] font-sans font-semibold uppercase tracking-[0.25em] text-[#8e763b] mb-2.5">
                         {privilegesEyebrow}
@@ -166,16 +166,16 @@ export function PrivilegesAndPoliciesSection({
                         return (
                             <div
                                 key={item.id}
-                                className="group bg-white border border-[#ded9ce] rounded-xl p-5 sm:p-6 transition-all duration-300 hover:border-[#8e763b] hover:shadow-xs flex flex-col justify-between"
+                                className="group bg-white border border-[#ded9ce] -xl p-5 sm:p-6 transition-all duration-300 hover:border-[#8e763b] hover:shadow-xs flex flex-col justify-between"
                             >
                                 <div>
                                     <div className="flex items-center justify-between gap-2 mb-4">
-                                        <div className="p-2.5 rounded-lg bg-[#f6f2ea] border border-[#e8e4dc] shadow-2xs shrink-0 group-hover:bg-white group-hover:border-[#ded9ce] transition-colors">
+                                        <div className="p-2.5 -lg bg-[#f6f2ea] border border-[#e8e4dc] shadow-2xs shrink-0 group-hover:bg-white group-hover:border-[#ded9ce] transition-colors">
                                             {item.icon}
                                         </div>
 
                                         {item.badge && (
-                                            <span className="px-2.5 py-0.5 rounded-sm bg-[#f2ede4] border border-[#ded9ce] text-[9px] font-sans font-semibold uppercase tracking-[0.16em] text-[#8e763b]">
+                                            <span className="px-2.5 py-0.5 -sm bg-[#f2ede4] border border-[#ded9ce] text-[9px] font-sans font-semibold uppercase tracking-[0.16em] text-[#8e763b]">
                                                 {item.badge}
                                             </span>
                                         )}
@@ -196,7 +196,7 @@ export function PrivilegesAndPoliciesSection({
             </article>
 
             {/* 2. Sanctuary Policies & Courtesy Protocol Card */}
-            <article className="bg-white border border-[#e8e4dc] rounded-lg p-6 sm:p-8 lg:p-10 shadow-[0_4px_24px_rgba(0,0,0,0.02)]">
+            <article className="bg-white border border-[#e8e4dc] -lg p-6 sm:p-8 lg:p-10 shadow-[0_4px_24px_rgba(0,0,0,0.02)]">
                 <div className="border-b border-[#eeeae2] pb-5 mb-6">
                     <span className="block text-[10px] sm:text-[11px] font-sans font-semibold uppercase tracking-[0.25em] text-[#8e763b] mb-1">
                         {policiesEyebrow}
@@ -212,7 +212,7 @@ export function PrivilegesAndPoliciesSection({
                         return (
                             <div
                                 key={idx}
-                                className="p-4 sm:p-5 rounded-xl bg-[#f6f2ea]/70 border border-[#e8e4dc] flex flex-col justify-between"
+                                className="p-4 sm:p-5 -xl bg-[#f6f2ea]/70 border border-[#e8e4dc] flex flex-col justify-between"
                             >
                                 <div>
                                     <span className="text-[9px] font-sans font-semibold uppercase tracking-[0.2em] text-[#8e8a82]">
@@ -233,7 +233,7 @@ export function PrivilegesAndPoliciesSection({
                 </div>
 
                 {/* Concierge Maritime / Helipad Advisory Footer */}
-                <div className="mt-6 pt-5 border-t border-[#eeeae2] flex items-center gap-3 p-4 rounded-xl bg-white border text-xs font-sans text-[#5c5952]">
+                <div className="mt-6 pt-5 border-t border-[#eeeae2] flex items-center gap-3 p-4 -xl bg-white border text-xs font-sans text-[#5c5952]">
                     <svg
                         className="w-4 h-4 text-[#8e763b] shrink-0"
                         viewBox="0 0 24 24"

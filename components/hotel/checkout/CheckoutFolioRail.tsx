@@ -1,6 +1,7 @@
+'use client';
+
 import React from 'react';
 import Image from 'next/image';
-
 
 export interface FolioStayDetails {
     suiteTitle: string;
@@ -61,7 +62,7 @@ export const checkoutFolioDefaultData: CheckoutFolioRailData = {
         suiteTitle: 'Azure Master Ocean Suite',
         suiteCategoryBadge: 'LEVEL IV OCEANFRONT RESIDENCE',
         villaLocation: 'Villa Aurelia • Amalfi Coastline',
-        heroImageUrl: '/suite-402.png',
+        heroImageUrl: '/limestone-villa.png',
         checkInDateDisplay: 'Oct 14, 2025',
         checkInTimeDisplay: 'Tuesday, from 14:00',
         checkOutDateDisplay: 'Oct 19, 2025',
@@ -75,14 +76,17 @@ export const checkoutFolioDefaultData: CheckoutFolioRailData = {
     nightlyRate: 980,
     sovereignDiscountPercentage: 15,
     sovereignDiscountAmount: 735,
-    environmentalAndHeritageTax: 442.50,
+    environmentalAndHeritageTax: 442.5,
     guarantees: {
         cancellationHeadline: 'Flexible Cancellation Courtesy',
-        cancellationPolicy: '100% refundable if amended or released prior to 23:59 CET, Oct 1, 2025.',
+        cancellationPolicy:
+            '100% refundable if amended or released prior to 23:59 CET, Oct 1, 2025.',
         privacyHeadline: 'Patron Privacy & Vault Clearance',
-        privacyNote: 'Encrypted booking records with zero third-party disclosure. Highest protocol adherence.',
+        privacyNote:
+            'Encrypted booking records with zero third-party disclosure. Highest protocol adherence.',
         liaisonHeadline: 'Dedicated On-Property Majordomo',
-        liaisonNote: 'Continuous residential host allocation from harbor arrival through departure.',
+        liaisonNote:
+            'Continuous residential host allocation from harbor arrival through departure.',
         compliancePill: 'PCI-DSS Compliant • Sovereign Tier Secured',
     },
     host: {
@@ -112,8 +116,16 @@ export interface CheckoutFolioRailProps {
 export function CheckoutFolioRail({
     data = checkoutFolioDefaultData,
     selectedAddOns = [
-        { id: 'riva-harbor-transfer', title: 'Private Riva Yacht Harbor Transfer', price: 480 },
-        { id: 'roman-thermal-grotto', title: 'Subterranean Roman Grotto Ritual', price: 240 },
+        {
+            id: 'riva-harbor-transfer',
+            title: 'Private Riva Yacht Harbor Transfer',
+            price: 480,
+        },
+        {
+            id: 'roman-thermal-grotto',
+            title: 'Subterranean Roman Grotto Ritual',
+            price: 240,
+        },
     ],
     onCallHost,
     onMessageHost,
@@ -142,7 +154,7 @@ export function CheckoutFolioRail({
     return (
         <aside className={`w-full space-y-6 ${className}`}>
             {/* 1. Main Sticky Folio Card */}
-            <article className="bg-white border border-[#e8e4dc] rounded-lg overflow-hidden shadow-[0_8px_32px_rgba(31,30,29,0.04)]">
+            <article className="bg-white border border-[#e8e4dc] -2xl overflow-hidden shadow-[0_8px_32px_rgba(31,30,29,0.04)]">
                 {/* Suite Photographic Preview Header */}
                 <div className="relative aspect-16/10 w-full overflow-hidden bg-[#eeeae2]">
                     <Image
@@ -156,7 +168,7 @@ export function CheckoutFolioRail({
 
                     {/* Top Location Badge */}
                     <div className="absolute top-3.5 left-3.5 z-10">
-                        <span className="px-2.5 py-1 rounded-sm bg-black/60 backdrop-blur-md text-white font-sans text-[9px] font-semibold uppercase tracking-[0.18em]">
+                        <span className="px-2.5 py-1 -sm bg-black/60 backdrop-blur-md text-white font-sans text-[9px] font-semibold uppercase tracking-[0.18em]">
                             {stay.suiteCategoryBadge}
                         </span>
                     </div>
@@ -182,7 +194,7 @@ export function CheckoutFolioRail({
                     </div>
 
                     <div className="grid grid-cols-2 gap-3 text-xs font-sans">
-                        <div className="p-3 rounded-sm bg-white border border-[#ded9ce] shadow-2xs">
+                        <div className="p-3 -xl bg-white border border-[#ded9ce] shadow-2xs">
                             <span className="text-[9px] uppercase tracking-wider text-[#8e8a82] block">
                                 CHECK-IN
                             </span>
@@ -194,7 +206,7 @@ export function CheckoutFolioRail({
                             </span>
                         </div>
 
-                        <div className="p-3 rounded-sm bg-white border border-[#ded9ce] shadow-2xs">
+                        <div className="p-3 -xl bg-white border border-[#ded9ce] shadow-2xs">
                             <span className="text-[9px] uppercase tracking-wider text-[#8e8a82] block">
                                 CHECK-OUT
                             </span>
@@ -233,12 +245,16 @@ export function CheckoutFolioRail({
                             </span>
                         </div>
                         <span className="font-medium text-[#1f1e1d] shrink-0">
-                            {currencySymbol}{roomSubtotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            {currencySymbol}
+                            {roomSubtotal.toLocaleString(undefined, {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                            })}
                         </span>
                     </div>
 
                     {/* Sovereign Direct Privilege (15% discount) */}
-                    <div className="flex items-start justify-between text-[#8e763b] gap-2 bg-[#f7f2e7]/70 -mx-2 px-2 py-1.5 rounded-lg border border-[#e8dfcb]">
+                    <div className="flex items-start justify-between text-[#8e763b] gap-2 bg-[#f7f2e7]/70 -mx-2 px-2 py-1.5 -lg border border-[#e8dfcb]">
                         <div>
                             <span className="font-medium">
                                 ☆ Sovereign Direct Privilege (-{sovereignDiscountPercentage}%)
@@ -248,20 +264,31 @@ export function CheckoutFolioRail({
                             </span>
                         </div>
                         <span className="font-semibold shrink-0">
-                            -{currencySymbol}{sovereignDiscountAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            -{currencySymbol}
+                            {sovereignDiscountAmount.toLocaleString(undefined, {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                            })}
                         </span>
                     </div>
 
                     {/* Dynamic Add-Ons Rows */}
                     {selectedAddOns.map(function (addOn) {
                         return (
-                            <div key={addOn.id} className="flex items-start justify-between text-[#5f5c56] gap-2">
+                            <div
+                                key={addOn.id}
+                                className="flex items-start justify-between text-[#5f5c56] gap-2"
+                            >
                                 <div className="flex items-center gap-1.5">
                                     <span className="text-[#8e763b] text-xs">+</span>
                                     <span>{addOn.title}</span>
                                 </div>
                                 <span className="font-medium text-[#1f1e1d] shrink-0">
-                                    {currencySymbol}{addOn.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                    {currencySymbol}
+                                    {addOn.price.toLocaleString(undefined, {
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2,
+                                    })}
                                 </span>
                             </div>
                         );
@@ -269,7 +296,7 @@ export function CheckoutFolioRail({
 
                     {/* Complimentary Resort & Concierge */}
                     <div className="flex items-center justify-between text-[#5f5c56] gap-2">
-                        <span>Resort & Dedicated 24/7 Concierge</span>
+                        <span>Resort &amp; Dedicated 24/7 Concierge</span>
                         <span className="font-sans text-[10px] uppercase font-semibold text-[#24633b] tracking-wider">
                             COMPLIMENTARY
                         </span>
@@ -278,11 +305,15 @@ export function CheckoutFolioRail({
                     {/* Environmental & UNESCO Heritage Surcharge */}
                     <div className="flex items-center justify-between text-[#5f5c56] gap-2">
                         <div className="flex items-center gap-1">
-                            <span>Regional Environmental & UNESCO Heritage</span>
+                            <span>Regional Environmental &amp; UNESCO Heritage</span>
                             <span className="text-[10px] text-[#8e8a82]">(Tax)</span>
                         </div>
                         <span className="font-medium text-[#1f1e1d] shrink-0">
-                            {currencySymbol}{environmentalAndHeritageTax.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            {currencySymbol}
+                            {environmentalAndHeritageTax.toLocaleString(undefined, {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                            })}
                         </span>
                     </div>
 
@@ -293,13 +324,17 @@ export function CheckoutFolioRail({
                                 Total Sovereign Investment
                             </span>
                             <span className="text-[10px] text-[#78756d] font-light block">
-                                All VAT, port taxes, & service charges included
+                                All VAT, port taxes, &amp; service charges included
                             </span>
                         </div>
 
                         <div className="text-right">
                             <span className="font-serif text-2xl sm:text-[28px] font-normal text-[#1f1e1d] tracking-tight block">
-                                {currencySymbol}{grandTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                {currencySymbol}
+                                {grandTotal.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2,
+                                })}
                             </span>
                             <span className="text-[9px] font-mono text-[#8e763b] uppercase tracking-wider block">
                                 {currencyCode} CURRENCY
@@ -310,7 +345,6 @@ export function CheckoutFolioRail({
 
                 {/* Trust & Guarantee Policies Strip */}
                 <div className="p-5 sm:p-6 bg-[#f6f2ea] border-t border-[#ded9ce] space-y-3">
-                    {/* Flexible Cancellation */}
                     <div className="flex items-start gap-2.5">
                         <svg
                             className="w-4 h-4 text-[#8e763b] shrink-0 mt-0.5"
@@ -333,7 +367,6 @@ export function CheckoutFolioRail({
                         </div>
                     </div>
 
-                    {/* Patron Privacy */}
                     <div className="flex items-start gap-2.5">
                         <svg
                             className="w-4 h-4 text-[#8e763b] shrink-0 mt-0.5"
@@ -357,7 +390,6 @@ export function CheckoutFolioRail({
                         </div>
                     </div>
 
-                    {/* PCI-DSS Assurance Badge */}
                     <div className="pt-2 border-t border-[#ded9ce]/80 text-center">
                         <span className="inline-block text-[9px] font-sans font-semibold uppercase tracking-[0.2em] text-[#8e763b]">
                             {guarantees.compliancePill}
@@ -366,11 +398,10 @@ export function CheckoutFolioRail({
                 </div>
             </article>
 
-            {/* 2. Patron Host On Duty Floating Card */}
-            <div className="bg-[#1f1e1d] text-[#fcf9f4] border border-[#383530] rounded-lg p-4 sm:p-5 shadow-lg flex items-center justify-between gap-4">
+            {/* 2. Patron Host On Duty Card */}
+            <div className="bg-[#1f1e1d] text-[#fcf9f4] border border-[#383530] -2xl p-4 sm:p-5 shadow-lg flex items-center justify-between gap-4">
                 <div className="flex items-center gap-3.5">
-                    {/* Host Avatar */}
-                    <div className="relative w-11 h-11 rounded-full overflow-hidden border border-[#bfa76f] bg-[#2a2826] shrink-0">
+                    <div className="relative w-11 h-11 -full overflow-hidden border border-[#bfa76f] bg-[#2a2826] shrink-0">
                         <Image
                             src={host.avatarUrl}
                             alt={host.name}
@@ -382,7 +413,7 @@ export function CheckoutFolioRail({
 
                     <div>
                         <div className="flex items-center gap-1.5 mb-0.5">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                            <span className="w-1.5 h-1.5 -full bg-emerald-400 animate-pulse" />
                             <span className="text-[9px] font-sans font-semibold uppercase tracking-[0.2em] text-[#bfa76f]">
                                 {host.roleTag}
                             </span>
@@ -396,15 +427,20 @@ export function CheckoutFolioRail({
                     </div>
                 </div>
 
-                {/* Quick Call & SMS Actions */}
                 <div className="flex items-center gap-2 shrink-0">
                     <a
                         href={`tel:${host.directPhone}`}
                         onClick={onCallHost}
-                        className="p-2.5 rounded-sm bg-[#2a2826] hover:bg-[#383530] border border-[#44403a] text-[#bfa76f] transition-colors"
+                        className="p-2.5 -xl bg-[#2a2826] hover:bg-[#383530] border border-[#44403a] text-[#bfa76f] transition-colors"
                         aria-label="Call Host on Duty"
                     >
-                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                        <svg
+                            className="w-4 h-4"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.8"
+                        >
                             <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
                         </svg>
                     </a>
@@ -412,10 +448,16 @@ export function CheckoutFolioRail({
                     <a
                         href={`mailto:${host.directEmail}`}
                         onClick={onMessageHost}
-                        className="p-2.5 rounded-sm bg-[#2a2826] hover:bg-[#383530] border border-[#44403a] text-[#bfa76f] transition-colors"
+                        className="p-2.5 -xl bg-[#2a2826] hover:bg-[#383530] border border-[#44403a] text-[#bfa76f] transition-colors"
                         aria-label="Email Host on Duty"
                     >
-                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                        <svg
+                            className="w-4 h-4"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.8"
+                        >
                             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
                             <polyline points="22,6 12,13 2,6" />
                         </svg>

@@ -224,13 +224,13 @@ export function NotFoundPage({
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-[10px] font-mono tracking-[0.16em] uppercase">
                     {/* Left Node Badge */}
                     <div className="inline-flex items-center gap-2 text-[#68655e]">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#24633b]" />
+                        <span className="w-1.5 h-1.5 -full bg-[#24633b]" />
                         <span>{nodeRegistryBadge}</span>
                     </div>
 
                     {/* Right Operational Status Pill */}
-                    <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#f4efe6] border border-[#e5dfd3] text-[#4d4a43] self-start sm:self-auto">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#24633b] animate-pulse" />
+                    <div className="inline-flex items-center gap-2 px-3.5 py-1.5 -full bg-[#f4efe6] border border-[#e5dfd3] text-[#4d4a43] self-start sm:self-auto">
+                        <span className="w-1.5 h-1.5 -full bg-[#24633b] animate-pulse" />
                         <span>{estatesOperationalPill}</span>
                     </div>
                 </div>
@@ -259,7 +259,7 @@ export function NotFoundPage({
                         {/* Search Input Bar */}
                         <form
                             onSubmit={handleSearchSubmit}
-                            className="max-w-md w-full relative flex items-center bg-white border border-[#ded9ce] rounded-xl p-1.5 shadow-2xs focus-within:border-[#8e763b] transition-colors"
+                            className="max-w-md w-full relative flex items-center bg-white border border-[#ded9ce] -xl p-1.5 shadow-2xs focus-within:border-[#8e763b] transition-colors"
                         >
                             <svg
                                 className="w-4 h-4 text-[#8e763b] ml-3 shrink-0"
@@ -284,7 +284,7 @@ export function NotFoundPage({
 
                             <button
                                 type="submit"
-                                className="px-4 py-2 rounded-lg bg-[#1f1e1d] hover:bg-[#343230] text-white text-[10px] font-sans font-semibold uppercase tracking-wider transition-colors shrink-0"
+                                className="px-4 py-2 -lg bg-[#1f1e1d] hover:bg-[#343230] text-white text-[10px] font-sans font-semibold uppercase tracking-wider transition-colors shrink-0"
                             >
                                 Locate
                             </button>
@@ -294,7 +294,7 @@ export function NotFoundPage({
                         <div className="flex flex-wrap items-center gap-3.5 pt-1">
                             <Link
                                 href={primaryCtaHref}
-                                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-xs font-semibold uppercase tracking-[0.18em] transition-all shadow-md active:translate-y-0.5 group"
+                                className="inline-flex items-center gap-2 px-6 py-3.5 -xl bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-xs font-semibold uppercase tracking-[0.18em] transition-all shadow-md active:translate-y-0.5 group"
                             >
                                 <span>{primaryCtaLabel}</span>
                                 <span className="transform transition-transform duration-300 group-hover:translate-x-1">
@@ -304,7 +304,7 @@ export function NotFoundPage({
 
                             <Link
                                 href={secondaryCtaHref}
-                                className="inline-flex items-center justify-center px-5 py-3.5 rounded-xl bg-[#f4efe6] hover:bg-[#eae4d8] text-[#1f1e1d] font-sans text-xs font-semibold uppercase tracking-[0.16em] transition-colors border border-[#ded9ce]"
+                                className="inline-flex items-center justify-center px-5 py-3.5 -xl bg-[#f4efe6] hover:bg-[#eae4d8] text-[#1f1e1d] font-sans text-xs font-semibold uppercase tracking-[0.16em] transition-colors border border-[#ded9ce]"
                             >
                                 <span>{secondaryCtaLabel}</span>
                             </Link>
@@ -341,7 +341,7 @@ export function NotFoundPage({
 
                     {/* Right Column: Hero Photographic Card (5 cols) */}
                     <div className="lg:col-span-5">
-                        <article className="relative w-full aspect-4/5 sm:aspect-3/4 lg:aspect-4/5 rounded-3xl overflow-hidden shadow-2xl border border-[#ded9ce] bg-[#191817] group">
+                        <article className="relative w-full aspect-4/5 sm:aspect-3/4 lg:aspect-4/5 -3xl overflow-hidden shadow-2xl border border-[#ded9ce] bg-[#191817] group">
                             <Image
                                 src={heroCard.imageUrl}
                                 alt={heroCard.imageAlt}
@@ -357,7 +357,7 @@ export function NotFoundPage({
 
                             {/* Top Right Enclave Badge */}
                             <div className="absolute top-4 right-4 z-10">
-                                <span className="px-3 py-1 rounded-sm bg-black/60 backdrop-blur-md text-white font-sans text-[9px] font-semibold uppercase tracking-[0.22em] shadow-sm">
+                                <span className="px-3 py-1 -sm bg-black/60 backdrop-blur-md text-white font-sans text-[9px] font-semibold uppercase tracking-[0.22em] shadow-sm">
                                     {heroCard.enclaveTag}
                                 </span>
                             </div>
@@ -402,10 +402,10 @@ export function NotFoundPage({
                             return (
                                 <article
                                     key={item.id}
-                                    className="p-6 sm:p-7 rounded-2xl bg-white border border-[#ded9ce] shadow-2xs hover:border-[#8e763b]/60 transition-colors flex flex-col justify-between space-y-6"
+                                    className="p-6 sm:p-7 -2xl bg-white border border-[#ded9ce] shadow-2xs hover:border-[#8e763b]/60 transition-colors flex flex-col justify-between space-y-6"
                                 >
                                     <div className="space-y-2.5">
-                                        <div className="p-2.5 rounded-xl bg-[#fcf9f4] border border-[#ded9ce] w-fit shadow-2xs">
+                                        <div className="p-2.5 -xl bg-[#fcf9f4] border border-[#ded9ce] w-fit shadow-2xs">
                                             {renderPathwayIcon(item.iconType)}
                                         </div>
 

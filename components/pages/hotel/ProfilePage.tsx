@@ -237,7 +237,7 @@ export function ProfilePage({
 
 				{/* TAB 2: UPCOMING STAYS & ITINERARIES VIEW */}
 				{activeTab === 'upcoming-stays' && (
-					<section className="bg-white border border-[#ded9ce] rounded-3xl p-8 sm:p-12 shadow-sm space-y-6">
+					<section className="bg-white border border-[#ded9ce] 8 sm:p-12 shadow-sm space-y-6">
 						<div className="border-b border-[#eeeae2] pb-4">
 							<span className="text-[10px] font-mono uppercase tracking-[0.22em] text-[#8e763b] font-semibold block">
 								ACTIVE SANCTUARY CONFIRMATION • 1 UPCOMING
@@ -252,7 +252,7 @@ export function ProfilePage({
 						</div>
 
 						<div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs font-sans">
-							<div className="p-4 rounded-2xl bg-[#fcf9f4] border border-[#ded9ce] space-y-1">
+							<div className="p-4 -[#fcf9f4] border border-[#ded9ce] space-y-1">
 								<span className="text-[9px] font-mono uppercase text-[#8e763b] block">
 									CHAUFFEUR
 								</span>
@@ -264,7 +264,7 @@ export function ProfilePage({
 								</p>
 							</div>
 
-							<div className="p-4 rounded-2xl bg-[#fcf9f4] border border-[#ded9ce] space-y-1">
+							<div className="p-4 -[#fcf9f4] border border-[#ded9ce] space-y-1">
 								<span className="text-[9px] font-mono uppercase text-[#8e763b] block">
 									SANCTUARY ACCESS
 								</span>
@@ -276,7 +276,7 @@ export function ProfilePage({
 								</p>
 							</div>
 
-							<div className="p-4 rounded-2xl bg-[#fcf9f4] border border-[#ded9ce] space-y-1">
+							<div className="p-4 -[#fcf9f4] border border-[#ded9ce] space-y-1">
 								<span className="text-[9px] font-mono uppercase text-[#8e763b] block">
 									ATTENDING HOST
 								</span>
@@ -292,7 +292,7 @@ export function ProfilePage({
 						<div className="pt-4 flex items-center justify-between">
 							<Link
 								href="/confirmation?bookingRef=AUR-8911-POS"
-								className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-xs font-semibold uppercase tracking-[0.2em] transition-colors"
+								className="inline-flex items-center gap-2 px-6 py-3.5 [#1f1e1d] hover:bg-[#343230] text-white font-sans text-xs font-semibold uppercase tracking-[0.2em] transition-colors"
 							>
 								<span>VIEW MASTER DIGITAL ITINERARY PASS</span>
 								<span>→</span>
@@ -313,7 +313,7 @@ export function ProfilePage({
 
 				{/* TAB 3: PRIVATE CELLAR ALLOCATIONS VIEW */}
 				{activeTab === 'cellar-allocations' && (
-					<section className="bg-white border border-[#ded9ce] rounded-3xl p-8 sm:p-12 shadow-sm space-y-6">
+					<section className="bg-white border border-[#ded9ce] 8 sm:p-12 shadow-sm space-y-6">
 						<div className="border-b border-[#eeeae2] pb-4">
 							<span className="text-[10px] font-mono uppercase tracking-[0.22em] text-[#8e763b] font-semibold block">
 								SUBTERRANEAN VOLCANIC VAULT ALLOCATION • 6 CRUS HELD
@@ -352,7 +352,7 @@ export function ProfilePage({
 								return (
 									<div
 										key={idx}
-										className="p-4 rounded-2xl bg-[#fcf9f4] border border-[#ded9ce] flex items-center justify-between text-xs font-sans"
+										className="p-4 -[#fcf9f4] border border-[#ded9ce] flex items-center justify-between text-xs font-sans"
 									>
 										<div className="space-y-0.5">
 											<h4 className="font-serif text-sm font-semibold text-[#1f1e1d]">
@@ -363,7 +363,7 @@ export function ProfilePage({
 											</p>
 										</div>
 
-										<span className="px-3 py-1 rounded-sm bg-[#f6f2ea] border border-[#ded9ce] text-[9px] font-mono uppercase text-[#8e763b] font-semibold">
+										<span className="px-3 py-1 [#f6f2ea] border border-[#ded9ce] text-[9px] font-mono uppercase text-[#8e763b] font-semibold">
 											{wine.status}
 										</span>
 									</div>
@@ -375,7 +375,7 @@ export function ProfilePage({
 
 				{/* TAB 4: CONFIDENTIAL ACCESS & SECURITY PROTOCOLS */}
 				{activeTab === 'security-access' && (
-					<section className="bg-white border border-[#ded9ce] rounded-3xl p-8 sm:p-12 shadow-sm space-y-6">
+					<section className="bg-white border border-[#ded9ce] 8 sm:p-12 shadow-sm space-y-6">
 						<div className="border-b border-[#eeeae2] pb-4">
 							<span className="text-[10px] font-mono uppercase tracking-[0.22em] text-[#8e763b] font-semibold block">
 								SWISS DATA CONFIDENTIALITY PROTOCOL LEVEL IV
@@ -390,7 +390,7 @@ export function ProfilePage({
 						</div>
 
 						<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-sans">
-							<div className="p-5 rounded-2xl bg-[#fcf9f4] border border-[#ded9ce] space-y-2">
+							<div className="p-5 -[#fcf9f4] border border-[#ded9ce] space-y-2">
 								<span className="text-[9px] font-mono uppercase text-[#8e763b] block font-semibold">
 									VERBAL CONCIERGE PIN
 								</span>
@@ -404,7 +404,7 @@ export function ProfilePage({
 								</p>
 							</div>
 
-							<div className="p-5 rounded-2xl bg-[#fcf9f4] border border-[#ded9ce] space-y-2">
+							<div className="p-5 -[#fcf9f4] border border-[#ded9ce] space-y-2">
 								<span className="text-[9px] font-mono uppercase text-[#8e763b] block font-semibold">
 									BIOMETRIC PASSKEY STATUS
 								</span>
@@ -426,7 +426,7 @@ export function ProfilePage({
 			{/* ============================================================= */}
 			{showAddCompanionModal && (
 				<div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-					<div className="bg-[#fcf9f4] border border-[#ded9ce] rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl space-y-5 text-[#1f1e1d]">
+					<div className="bg-[#fcf9f4] border border-[#ded9ce] 6 sm:p-8 max-w-md w-full shadow-2xl space-y-5 text-[#1f1e1d]">
 						<div className="border-b border-[#eeeae2] pb-3">
 							<span className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#8e763b] font-semibold block">
 								DISCRETION PROTOCOL ALPHA
@@ -452,7 +452,7 @@ export function ProfilePage({
 										setNewCompanionName(e.target.value);
 									}}
 									placeholder="e.g. Lord Arthur Beaumont"
-									className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#ded9ce] text-xs outline-none focus:border-[#8e763b]"
+									className="w-full px-3.5 py-2.5 white border border-[#ded9ce] text-xs outline-none focus:border-[#8e763b]"
 								/>
 							</div>
 
@@ -467,7 +467,7 @@ export function ProfilePage({
 											e.target.value
 										);
 									}}
-									className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#ded9ce] text-xs outline-none focus:border-[#8e763b]"
+									className="w-full px-3.5 py-2.5 white border border-[#ded9ce] text-xs outline-none focus:border-[#8e763b]"
 								>
 									<option value="SPOUSE">
 										Spouse • Full Villa &amp; Thermal Spa
@@ -490,14 +490,14 @@ export function ProfilePage({
 									onClick={function () {
 										setShowAddCompanionModal(false);
 									}}
-									className="px-4 py-2 rounded-xl bg-white border border-[#ded9ce] text-[#78756d] hover:text-[#1f1e1d]"
+									className="px-4 py-2 white border border-[#ded9ce] text-[#78756d] hover:text-[#1f1e1d]"
 								>
 									Cancel
 								</button>
 
 								<button
 									type="submit"
-									className="px-5 py-2 rounded-xl bg-[#1f1e1d] text-white font-semibold uppercase tracking-wider text-[10px]"
+									className="px-5 py-2 [#1f1e1d] text-white font-semibold uppercase tracking-wider text-[10px]"
 								>
 									Inscribe Companion
 								</button>

@@ -267,10 +267,10 @@ export function ProfileLogisticsRail({
 			{/* 1. NEXT CONFIRMED SANCTUARY CARD */}
 			{/* ============================================================= */}
 
-			<article className="bg-[#fcf9f4] border border-[#e8e4dc] rounded-3xl p-6 sm:p-7 shadow-[0_4px_24px_rgba(31,30,29,0.03)] space-y-5">
+			<article className="bg-[#fcf9f4] border border-[#e8e4dc] -3xl p-6 sm:p-7 shadow-[0_4px_24px_rgba(31,30,29,0.03)] space-y-5">
 				<div className="flex items-center justify-between pb-3 border-b border-[#eeeae2]">
-					<span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#f6f2ea] border border-[#ded9ce] text-[9px] font-mono uppercase tracking-[0.18em] text-[#24633b]">
-						<span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+					<span className="inline-flex items-center gap-1.5 px-2.5 py-1 -full bg-[#f6f2ea] border border-[#ded9ce] text-[9px] font-mono uppercase tracking-[0.18em] text-[#24633b]">
+						<span className="w-1.5 h-1.5 -full bg-emerald-500 animate-pulse" />
 						<span>{nextSanctuary.countdownBadge}</span>
 					</span>
 
@@ -304,7 +304,7 @@ export function ProfileLogisticsRail({
 						return (
 							<div
 								key={item.id}
-								className="p-3.5 rounded-2xl bg-white border border-[#ded9ce] shadow-2xs space-y-1"
+								className="p-3.5 -2xl bg-white border border-[#ded9ce] shadow-2xs space-y-1"
 							>
 								<div className="flex items-center justify-between">
 									<div className="flex items-center gap-2">
@@ -318,7 +318,7 @@ export function ProfileLogisticsRail({
 									</div>
 
 									{item.statusBadge && (
-										<span className="text-[8px] font-mono uppercase px-2 py-0.5 rounded-xs bg-[#f6f2ea] text-[#24633b] font-medium border border-[#ded9ce]">
+										<span className="text-[8px] font-mono uppercase px-2 py-0.5 -xs bg-[#f6f2ea] text-[#24633b] font-medium border border-[#ded9ce]">
 											{item.statusBadge}
 										</span>
 									)}
@@ -335,7 +335,7 @@ export function ProfileLogisticsRail({
 				<div className="pt-2">
 					<Link
 						href={nextSanctuary.itineraryHref}
-						className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white hover:bg-[#faf8f5] border border-[#ded9ce] text-[10px] font-sans font-semibold uppercase tracking-[0.2em] text-[#1f1e1d] transition-colors shadow-2xs text-center"
+						className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 -xl bg-white hover:bg-[#faf8f5] border border-[#ded9ce] text-[10px] font-sans font-semibold uppercase tracking-[0.2em] text-[#1f1e1d] transition-colors shadow-2xs text-center"
 					>
 						<span>VIEW COMPREHENSIVE ITINERARY</span>
 						<span>→</span>
@@ -347,7 +347,7 @@ export function ProfileLogisticsRail({
 			{/* 2. REGISTERED SANCTUARY COMPANIONS CARD */}
 			{/* ============================================================= */}
 
-			<article className="bg-[#fcf9f4] border border-[#e8e4dc] rounded-3xl p-6 sm:p-7 shadow-[0_4px_24px_rgba(31,30,29,0.03)] space-y-4">
+			<article className="bg-[#fcf9f4] border border-[#e8e4dc] -3xl p-6 sm:p-7 shadow-[0_4px_24px_rgba(31,30,29,0.03)] space-y-4">
 				<div className="flex items-center justify-between pb-3 border-b border-[#eeeae2]">
 					<div>
 						<span className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#8e763b] block font-semibold">
@@ -373,10 +373,10 @@ export function ProfileLogisticsRail({
 						return (
 							<div
 								key={companion.id}
-								className="p-3.5 rounded-2xl bg-white border border-[#ded9ce] shadow-2xs flex items-center justify-between gap-3"
+								className="p-3.5 -2xl bg-white border border-[#ded9ce] shadow-2xs flex items-center justify-between gap-3"
 							>
 								<div className="flex items-center gap-3 min-w-0">
-									<div className="relative w-10 h-10 rounded-full overflow-hidden border border-[#bfa76f] bg-[#f6f2ea] shrink-0">
+									<div className="relative w-10 h-10 -full overflow-hidden border border-[#bfa76f] bg-[#f6f2ea] shrink-0">
 										<Image
 											src={companion.avatarUrl}
 											alt={companion.avatarAlt}
@@ -414,7 +414,7 @@ export function ProfileLogisticsRail({
 			{/* 3. ENCRYPTED HISTORICAL ARCHIVE CARD */}
 			{/* ============================================================= */}
 
-			<article className="bg-[#fcf9f4] border border-[#e8e4dc] rounded-3xl p-6 sm:p-7 shadow-[0_4px_24px_rgba(31,30,29,0.03)] space-y-4">
+			<article className="bg-[#fcf9f4] border border-[#e8e4dc] -3xl p-6 sm:p-7 shadow-[0_4px_24px_rgba(31,30,29,0.03)] space-y-4">
 				<div className="flex items-center justify-between pb-3 border-b border-[#eeeae2]">
 					<div>
 						<span className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#8e763b] block font-semibold">
@@ -436,7 +436,7 @@ export function ProfileLogisticsRail({
 						return (
 							<div
 								key={item.id}
-								className="p-3 rounded-2xl bg-white border border-[#ded9ce] shadow-2xs flex items-center justify-between gap-3 text-xs font-sans"
+								className="p-3 -2xl bg-white border border-[#ded9ce] shadow-2xs flex items-center justify-between gap-3 text-xs font-sans"
 							>
 								<div className="min-w-0 space-y-0.5">
 									<h5 className="font-serif text-xs font-semibold text-[#1f1e1d] tracking-tight truncate">
@@ -463,7 +463,7 @@ export function ProfileLogisticsRail({
 											onDownloadFolioPdf(item.folioCode);
 										}
 									}}
-									className="px-2.5 py-1.5 rounded-lg bg-[#f6f2ea] hover:bg-[#eeeae2] border border-[#ded9ce] text-[9px] font-mono uppercase tracking-wider text-[#1f1e1d] transition-colors shrink-0"
+									className="px-2.5 py-1.5 -lg bg-[#f6f2ea] hover:bg-[#eeeae2] border border-[#ded9ce] text-[9px] font-mono uppercase tracking-wider text-[#1f1e1d] transition-colors shrink-0"
 									title="Download Encrypted Folio PDF"
 								>
 									PDF ⤓
@@ -483,7 +483,7 @@ export function ProfileLogisticsRail({
 					type="button"
 					disabled={isTransmitting}
 					onClick={handleTransmitClick}
-					className="w-full inline-flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-xs font-semibold uppercase tracking-[0.22em] transition-all shadow-md active:translate-y-0.5 disabled:opacity-75 group"
+					className="w-full inline-flex items-center justify-center gap-2 px-6 py-4 -xl bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-xs font-semibold uppercase tracking-[0.22em] transition-all shadow-md active:translate-y-0.5 disabled:opacity-75 group"
 				>
 					<span>
 						{isTransmitting

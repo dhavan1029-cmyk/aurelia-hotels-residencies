@@ -122,11 +122,3 @@ export interface SiblingAccommodationItem {
     privilegeText: string;
     features: string[];
 }
-
-export interface AccommodationSiblingsData {
-    eyebrow: string;
-    heading: string;
-    description: string;
-    viewAllHref: string;
-    siblings: SiblingAccommodationItem[];
-}

@@ -195,8 +195,8 @@ export function HeritageSanctuariesTimelineSection({
                 </div>
 
                 <div className="shrink-0 self-start lg:self-auto">
-                    <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#f6f2ea] border border-[#ded9ce] text-[9px] sm:text-[10px] font-sans font-semibold uppercase tracking-[0.2em] text-[#8e763b] shadow-2xs">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#8e763b] animate-pulse" />
+                    <span className="inline-flex items-center gap-2 px-3.5 py-1.5 -full bg-[#f6f2ea] border border-[#ded9ce] text-[9px] sm:text-[10px] font-sans font-semibold uppercase tracking-[0.2em] text-[#8e763b] shadow-2xs">
+                        <span className="w-1.5 h-1.5 -full bg-[#8e763b] animate-pulse" />
                         <span>{archiveLedgerNotice}</span>
                     </span>
                 </div>
@@ -213,7 +213,7 @@ export function HeritageSanctuariesTimelineSection({
                             onClick={function () {
                                 handleSanctuaryClick(milestone.id);
                             }}
-                            className={`p-5 sm:p-6 rounded-2xl border transition-all duration-300 cursor-pointer flex flex-col justify-between space-y-4 ${
+                            className={`p-5 sm:p-6 -2xl border transition-all duration-300 cursor-pointer flex flex-col justify-between space-y-4 ${
                                 isSelected
                                     ? 'bg-[#191817] text-[#fcf9f4] border-[#383530] shadow-xl scale-[1.01]'
                                     : 'bg-white border-[#e8e4dc] text-[#1f1e1d] hover:border-[#8e763b]/60 shadow-2xs'
@@ -272,7 +272,7 @@ export function HeritageSanctuariesTimelineSection({
             </div>
 
             {/* 3. ACTIVE SANCTUARY ARCHITECTURAL DOSSIER SPOTLIGHT */}
-            <article className="bg-white border border-[#e8e4dc] rounded-lg overflow-hidden shadow-[0_4px_24px_rgba(31,30,29,0.03)]">
+            <article className="bg-white border border-[#e8e4dc] -lg overflow-hidden shadow-[0_4px_24px_rgba(31,30,29,0.03)]">
                 <div className="grid grid-cols-1 lg:grid-cols-12 items-stretch">
                     {/* Visual Photographic Column (7 cols) */}
                     <div className="lg:col-span-7 relative min-h-95 sm:min-h-115 lg:min-h-full overflow-hidden bg-[#eeeae2] group">
@@ -287,10 +287,10 @@ export function HeritageSanctuariesTimelineSection({
 
                         {/* Top Badges */}
                         <div className="absolute top-4 left-4 z-10 flex flex-wrap items-center gap-2">
-                            <span className="px-3 py-1 rounded-sm bg-black/60 backdrop-blur-md text-white font-sans text-[10px] font-semibold uppercase tracking-[0.22em] shadow-sm">
+                            <span className="px-3 py-1 -sm bg-black/60 backdrop-blur-md text-white font-sans text-[10px] font-semibold uppercase tracking-[0.22em] shadow-sm">
                                 {activeMilestone.year} ARCHIVE
                             </span>
-                            <span className="px-2.5 py-1 rounded-sm bg-[#8e763b] text-white font-sans text-[9px] font-semibold uppercase tracking-[0.18em] shadow-sm">
+                            <span className="px-2.5 py-1 -sm bg-[#8e763b] text-white font-sans text-[9px] font-semibold uppercase tracking-[0.18em] shadow-sm">
                                 {activeMilestone.statusBadge}
                             </span>
                         </div>
@@ -311,7 +311,7 @@ export function HeritageSanctuariesTimelineSection({
                         <div>
                             {/* Materials Eyebrow */}
                             <div className="inline-flex items-center gap-2 pb-3 mb-4 border-b border-[#eeeae2] w-full">
-                                <span className="w-1.5 h-1.5 rounded-full bg-[#8e763b]" />
+                                <span className="w-1.5 h-1.5 -full bg-[#8e763b]" />
                                 <span className="text-[9px] sm:text-[10px] font-sans font-semibold uppercase tracking-[0.22em] text-[#8e763b]">
                                     {activeMilestone.materialsHighlight}
                                 </span>
@@ -333,7 +333,7 @@ export function HeritageSanctuariesTimelineSection({
 
                             {/* Spatial Specifications Strip */}
                             <div className="grid grid-cols-2 gap-3.5 mt-8 pt-6 border-t border-[#eeeae2]">
-                                <div className="p-3.5 rounded-xl bg-white border border-[#ded9ce] shadow-2xs">
+                                <div className="p-3.5 -xl bg-white border border-[#ded9ce] shadow-2xs">
                                     <span className="text-[9px] uppercase tracking-wider text-[#8e8a82] block">
                                         CAPACITY & ALLOCATION
                                     </span>
@@ -342,7 +342,7 @@ export function HeritageSanctuariesTimelineSection({
                                     </span>
                                 </div>
 
-                                <div className="p-3.5 rounded-xl bg-white border border-[#ded9ce] shadow-2xs">
+                                <div className="p-3.5 -xl bg-white border border-[#ded9ce] shadow-2xs">
                                     <span className="text-[9px] uppercase tracking-wider text-[#8e8a82] block">
                                         GEOLOGICAL ELEVATION
                                     </span>
@@ -369,7 +369,7 @@ export function HeritageSanctuariesTimelineSection({
             </article>
 
             {/* 4. POSITANO TOPOGRAPHIC CARTOGRAPHY CARD */}
-            <div className="bg-[#191817] text-[#fcf9f4] border border-[#34322e] rounded-lg p-8 sm:p-10 lg:p-12 shadow-2xl relative overflow-hidden">
+            <div className="bg-[#191817] text-[#fcf9f4] border border-[#34322e] -lg p-8 sm:p-10 lg:p-12 shadow-2xl relative overflow-hidden">
                 {/* Subtle Coordinate Grid Texture */}
                 <div
                     className="absolute inset-0 opacity-[0.04] pointer-events-none"
@@ -383,8 +383,8 @@ export function HeritageSanctuariesTimelineSection({
                 <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
                     {/* Left Monograph Column (7 cols) */}
                     <div className="lg:col-span-7 space-y-6">
-                        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] sm:text-[10px] font-sans font-semibold uppercase tracking-[0.24em] text-[#bfa76f]">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#bfa76f] animate-pulse" />
+                        <div className="inline-flex items-center gap-2 px-3.5 py-1 -full bg-white/5 border border-white/10 text-[9px] sm:text-[10px] font-sans font-semibold uppercase tracking-[0.24em] text-[#bfa76f]">
+                            <span className="w-1.5 h-1.5 -full bg-[#bfa76f] animate-pulse" />
                             <span>{cartography.badge}</span>
                         </div>
 
@@ -421,7 +421,7 @@ export function HeritageSanctuariesTimelineSection({
 
                         {/* Maritime & Helipad Advisory Notes */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-4 border-t border-white/10 text-[11px] font-sans text-[#a4a098]">
-                            <div className="p-3.5 rounded-xl bg-white/5 border border-white/10">
+                            <div className="p-3.5 -xl bg-white/5 border border-white/10">
                                 <span className="text-[9px] uppercase tracking-wider text-[#bfa76f] font-semibold block mb-1">
                                     NAUTICAL SLIPWAY BERTH
                                 </span>
@@ -430,7 +430,7 @@ export function HeritageSanctuariesTimelineSection({
                                 </p>
                             </div>
 
-                            <div className="p-3.5 rounded-xl bg-white/5 border border-white/10">
+                            <div className="p-3.5 -xl bg-white/5 border border-white/10">
                                 <span className="text-[9px] uppercase tracking-wider text-[#bfa76f] font-semibold block mb-1">
                                     AMALFI COAST HELIPAD
                                 </span>
@@ -442,7 +442,7 @@ export function HeritageSanctuariesTimelineSection({
                     </div>
 
                     {/* Right Cartographic Matrix Data Card (5 cols) */}
-                    <div className="lg:col-span-5 bg-[#22201e] border border-[#3e3a35] rounded-2xl p-6 sm:p-8 space-y-6 shadow-xl">
+                    <div className="lg:col-span-5 bg-[#22201e] border border-[#3e3a35] -2xl p-6 sm:p-8 space-y-6 shadow-xl">
                         <div className="border-b border-white/10 pb-4">
                             <span className="text-[9px] font-sans font-semibold uppercase tracking-[0.22em] text-[#bfa76f] block mb-1">
                                 GEODETIC SPECIFICATION

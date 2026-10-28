@@ -274,13 +274,13 @@ export function ProfileSleepAndEpicureanSection({
             {/* ============================================================= */}
             <section
                 id="sleep-architecture"
-                className="w-full bg-[#fcf9f4] border border-[#e8e4dc] rounded-3xl p-6 sm:p-9 lg:p-11 shadow-[0_4px_24px_rgba(31,30,29,0.03)] space-y-8 lg:space-y-10"
+                className="w-full bg-[#fcf9f4] border border-[#e8e4dc] 6 sm:p-9 lg:p-11 shadow-[0_4px_24px_rgba(31,30,29,0.03)] space-y-8 lg:space-y-10"
             >
                 {/* 1. Header & Badges */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-[#eeeae2]">
                     <div className="space-y-1.5">
                         <div className="flex items-center gap-2">
-                            <span className="w-5 h-5 rounded-full bg-[#1f1e1d] text-white flex items-center justify-center font-mono text-[10px] font-semibold">
+                            <span className="w-5 h-5 g-[#1f1e1d] text-white flex items-center justify-center font-mono text-[10px] font-semibold">
                                 {section2Number}
                             </span>
                             <span className="text-[10px] font-sans font-semibold uppercase tracking-[0.24em] text-[#8e763b]">
@@ -298,15 +298,15 @@ export function ProfileSleepAndEpicureanSection({
                     </div>
 
                     <div className="self-start sm:self-auto shrink-0">
-                        <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#f6f2ea] border border-[#ded9ce] text-[9px] font-mono uppercase tracking-[0.2em] text-[#24633b] shadow-2xs">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                        <span className="inline-flex items-center gap-2 px-3 py-1.5 g-[#f6f2ea] border border-[#ded9ce] text-[9px] font-mono uppercase tracking-[0.2em] text-[#24633b] shadow-2xs">
+                            <span className="w-1.5 h-1.5 g-emerald-500 animate-pulse" />
                             <span>{section2StatusBadge}</span>
                         </span>
                     </div>
                 </div>
 
                 {/* 2. Photographic Bedroom Showcase & Acoustic Monograph */}
-                <article className="relative w-full rounded-2xl overflow-hidden border border-[#ded9ce] bg-[#191817] shadow-lg group">
+                <article className="relative w-full erflow-hidden border border-[#ded9ce] bg-[#191817] shadow-lg group">
                     <div className="relative aspect-video sm:aspect-21/9 w-full overflow-hidden">
                         <Image
                             src={heroBedroomImageUrl}
@@ -320,10 +320,10 @@ export function ProfileSleepAndEpicureanSection({
 
                         {/* Top Badges */}
                         <div className="absolute top-4 left-4 right-4 z-10 flex items-center justify-between">
-                            <span className="px-3 py-1 rounded-sm bg-black/60 backdrop-blur-md text-white text-[9px] font-mono uppercase tracking-[0.2em]">
+                            <span className="px-3 py-1 black/60 backdrop-blur-md text-white text-[9px] font-mono uppercase tracking-[0.2em]">
                                 ACOUSTIC DECOUPLING: &lt; 14 dB
                             </span>
-                            <span className="px-2.5 py-1 rounded-sm bg-[#8e763b] text-white text-[9px] font-sans font-semibold uppercase tracking-[0.18em]">
+                            <span className="px-2.5 py-1 [#8e763b] text-white text-[9px] font-sans font-semibold uppercase tracking-[0.18em]">
                                 GEOTHERMAL RADIANT CHILL
                             </span>
                         </div>
@@ -343,7 +343,7 @@ export function ProfileSleepAndEpicureanSection({
                 {/* 3. Microclimate Temperature Stepper & Pillow Architecture */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                     {/* Temperature Stepper (5 cols) */}
-                    <div className="lg:col-span-5 bg-[#f6f2ea] border border-[#ded9ce] rounded-2xl p-5 sm:p-6 flex flex-col justify-between space-y-4 shadow-2xs">
+                    <div className="lg:col-span-5 bg-[#f6f2ea] border border-[#ded9ce] 5 sm:p-6 flex flex-col justify-between space-y-4 shadow-2xs">
                         <div className="space-y-1">
                             <span className="text-[10px] font-sans font-semibold uppercase tracking-[0.22em] text-[#8e763b] block">
                                 TARGET SLEEP AMBIENT
@@ -356,9 +356,9 @@ export function ProfileSleepAndEpicureanSection({
                             </p>
                         </div>
 
-                        <div className="bg-white border border-[#ded9ce] rounded-xl p-4 flex items-center justify-between shadow-2xs">
+                        <div className="bg-white border border-[#ded9ce]  flex items-center justify-between shadow-2xs">
                             <div className="flex items-center gap-3">
-                                <span className="p-2 rounded-lg bg-[#f6f2ea] border border-[#ded9ce] text-[#8e763b]">
+                                <span className="p-2 [#f6f2ea] border border-[#ded9ce] text-[#8e763b]">
                                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                         <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z" />
                                     </svg>
@@ -379,7 +379,7 @@ export function ProfileSleepAndEpicureanSection({
                                     onClick={function () {
                                         handleTempChange(-0.5);
                                     }}
-                                    className="w-8 h-8 rounded-lg bg-[#f6f2ea] hover:bg-[#eeeae2] border border-[#ded9ce] text-[#1f1e1d] flex items-center justify-center font-mono text-base font-semibold transition-colors"
+                                    className="w-8 h-8 [#f6f2ea] hover:bg-[#eeeae2] border border-[#ded9ce] text-[#1f1e1d] flex items-center justify-center font-mono text-base font-semibold transition-colors"
                                     aria-label="Decrease Sleep Temperature"
                                 >
                                     −
@@ -389,7 +389,7 @@ export function ProfileSleepAndEpicureanSection({
                                     onClick={function () {
                                         handleTempChange(0.5);
                                     }}
-                                    className="w-8 h-8 rounded-lg bg-[#f6f2ea] hover:bg-[#eeeae2] border border-[#ded9ce] text-[#1f1e1d] flex items-center justify-center font-mono text-base font-semibold transition-colors"
+                                    className="w-8 h-8 [#f6f2ea] hover:bg-[#eeeae2] border border-[#ded9ce] text-[#1f1e1d] flex items-center justify-center font-mono text-base font-semibold transition-colors"
                                     aria-label="Increase Sleep Temperature"
                                 >
                                     +
@@ -399,7 +399,7 @@ export function ProfileSleepAndEpicureanSection({
                     </div>
 
                     {/* Pillow Architecture Dual Ensemble (7 cols) */}
-                    <div className="lg:col-span-7 bg-white border border-[#ded9ce] rounded-2xl p-5 sm:p-6 space-y-4 shadow-2xs">
+                    <div className="lg:col-span-7 bg-white border border-[#ded9ce] 5 sm:p-6 space-y-4 shadow-2xs">
                         <div className="flex items-center justify-between pb-2 border-b border-[#eeeae2]">
                             <span className="text-[10px] font-sans font-semibold uppercase tracking-[0.22em] text-[#8e763b] block">
                                 BESPOKE PILLOW ENSEMBLE
@@ -414,10 +414,10 @@ export function ProfileSleepAndEpicureanSection({
                                 return (
                                     <div
                                         key={pillow.id}
-                                        className="p-3.5 rounded-xl bg-[#faf8f5] border border-[#ded9ce] space-y-1.5 shadow-2xs"
+                                        className="p-3.5 [#faf8f5] border border-[#ded9ce] space-y-1.5 shadow-2xs"
                                     >
                                         <div className="flex items-center justify-between">
-                                            <span className="px-2 py-0.5 rounded-xs bg-[#1f1e1d] text-white text-[8px] font-mono uppercase tracking-wider">
+                                            <span className="px-2 py-0.5 [#1f1e1d] text-white text-[8px] font-mono uppercase tracking-wider">
                                                 {pillow.position} CHAMBER
                                             </span>
                                             <span className="text-[9px] font-sans text-[#8e763b] font-semibold">
@@ -452,7 +452,7 @@ export function ProfileSleepAndEpicureanSection({
                                 onClick={function () {
                                     handleToggleAutomation(auto.id);
                                 }}
-                                className={`p-4 sm:p-5 rounded-2xl border transition-all cursor-pointer flex items-start justify-between gap-4 ${
+                                className={`p-4 sm:p-5 rder transition-all cursor-pointer flex items-start justify-between gap-4 ${
                                     auto.enabled
                                         ? 'bg-[#f7f2e7] border-[#8e763b] shadow-xs'
                                         : 'bg-white border-[#ded9ce] hover:bg-[#faf8f5]'
@@ -461,7 +461,7 @@ export function ProfileSleepAndEpicureanSection({
                                 <div className="space-y-1 min-w-0">
                                     <div className="flex items-center gap-2">
                                         <span
-                                            className={`w-2 h-2 rounded-full ${
+                                            className={`w-2 h-2 {
                                                 auto.enabled ? 'bg-emerald-500 animate-pulse' : 'bg-[#ded9ce]'
                                             }`}
                                         />
@@ -481,12 +481,12 @@ export function ProfileSleepAndEpicureanSection({
 
                                 <div className="shrink-0 pt-0.5">
                                     <div
-                                        className={`w-9 h-5 rounded-full p-0.5 transition-colors ${
+                                        className={`w-9 h-5 -0.5 transition-colors ${
                                             auto.enabled ? 'bg-[#8e763b]' : 'bg-[#ded9ce]'
                                         }`}
                                     >
                                         <div
-                                            className={`w-4 h-4 rounded-full bg-white transition-transform ${
+                                            className={`w-4 h-4 g-white transition-transform ${
                                                 auto.enabled ? 'translate-x-4' : 'translate-x-0'
                                             }`}
                                         />
@@ -503,13 +503,13 @@ export function ProfileSleepAndEpicureanSection({
             {/* ============================================================= */}
             <section
                 id="epicurean-provisions"
-                className="w-full bg-[#fcf9f4] border border-[#e8e4dc] rounded-3xl p-6 sm:p-9 lg:p-11 shadow-[0_4px_24px_rgba(31,30,29,0.03)] space-y-8"
+                className="w-full bg-[#fcf9f4] border border-[#e8e4dc] 6 sm:p-9 lg:p-11 shadow-[0_4px_24px_rgba(31,30,29,0.03)] space-y-8"
             >
                 {/* 1. Header & Badges */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-[#eeeae2]">
                     <div className="space-y-1.5">
                         <div className="flex items-center gap-2">
-                            <span className="w-5 h-5 rounded-full bg-[#1f1e1d] text-white flex items-center justify-center font-mono text-[10px] font-semibold">
+                            <span className="w-5 h-5 g-[#1f1e1d] text-white flex items-center justify-center font-mono text-[10px] font-semibold">
                                 {section3Number}
                             </span>
                             <span className="text-[10px] font-sans font-semibold uppercase tracking-[0.24em] text-[#8e763b]">
@@ -527,8 +527,8 @@ export function ProfileSleepAndEpicureanSection({
                     </div>
 
                     <div className="self-start sm:self-auto shrink-0">
-                        <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#f6f2ea] border border-[#ded9ce] text-[9px] font-mono uppercase tracking-[0.2em] text-[#8e763b] shadow-2xs">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#8e763b]" />
+                        <span className="inline-flex items-center gap-2 px-3 py-1.5 g-[#f6f2ea] border border-[#ded9ce] text-[9px] font-mono uppercase tracking-[0.2em] text-[#8e763b] shadow-2xs">
+                            <span className="w-1.5 h-1.5 g-[#8e763b]" />
                             <span>{section3StatusBadge}</span>
                         </span>
                     </div>
@@ -540,10 +540,10 @@ export function ProfileSleepAndEpicureanSection({
                         return (
                             <article
                                 key={item.id}
-                                className="bg-white border border-[#ded9ce] rounded-2xl p-5 sm:p-6 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-5 hover:border-[#8e763b]/60 transition-colors"
+                                className="bg-white border border-[#ded9ce] 5 sm:p-6 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-5 hover:border-[#8e763b]/60 transition-colors"
                             >
                                 <div className="flex items-start gap-4 min-w-0">
-                                    <div className="p-3 rounded-xl bg-[#f6f2ea] border border-[#ded9ce] text-[#8e763b] shadow-2xs shrink-0 mt-0.5">
+                                    <div className="p-3 [#f6f2ea] border border-[#ded9ce] text-[#8e763b] shadow-2xs shrink-0 mt-0.5">
                                         {renderEpicureanIcon(item.iconType)}
                                     </div>
 
@@ -569,7 +569,7 @@ export function ProfileSleepAndEpicureanSection({
                                 </div>
 
                                 <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-2 shrink-0 pt-3 sm:pt-0 border-t sm:border-t-0 border-[#eeeae2]">
-                                    <span className="px-3 py-1 rounded-sm bg-[#f6f2ea] border border-[#ded9ce] text-[9px] font-mono uppercase tracking-wider text-[#1f1e1d] font-semibold">
+                                    <span className="px-3 py-1 [#f6f2ea] border border-[#ded9ce] text-[9px] font-mono uppercase tracking-wider text-[#1f1e1d] font-semibold">
                                         {item.temperatureOrTimingDisplay}
                                     </span>
 
@@ -593,7 +593,7 @@ export function ProfileSleepAndEpicureanSection({
                 </div>
 
                 {/* 3. Subterranean Cellar Concierge Footnote */}
-                <div className="p-4 rounded-2xl bg-[#f6f2ea] border border-[#ded9ce] flex items-center justify-between text-xs font-sans text-[#6e6b64]">
+                <div className="p-4 -[#f6f2ea] border border-[#ded9ce] flex items-center justify-between text-xs font-sans text-[#6e6b64]">
                     <div className="flex items-center gap-2.5">
                         <span className="text-base leading-none text-[#8e763b]">☆</span>
                         <p className="text-[11px] font-light leading-snug">

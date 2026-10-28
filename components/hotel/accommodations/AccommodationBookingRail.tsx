@@ -82,7 +82,7 @@ export function AccommodationBookingRail({
 
     return (
         <aside
-            className={`w-full bg-white border border-[#e8e4dc] rounded-lg p-6 sm:p-7 lg:p-8 shadow-[0_8px_32px_rgba(31,30,29,0.04)] text-[#1f1e1d] ${className}`}
+            className={`w-full bg-white border border-[#e8e4dc] -lg p-6 sm:p-7 lg:p-8 shadow-[0_8px_32px_rgba(31,30,29,0.04)] text-[#1f1e1d] ${className}`}
         >
             {/* 1. Header: Sovereign Nightly Tariff Headline */}
             <div className="flex items-baseline justify-between border-b border-[#eeeae2] pb-5 mb-6">
@@ -101,8 +101,8 @@ export function AccommodationBookingRail({
                 </div>
 
                 <div className="text-right">
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#f2ede4] border border-[#ded9ce] text-[9px] font-sans font-semibold uppercase tracking-[0.16em] text-[#8e763b]">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#8e763b] animate-pulse" />
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 -full bg-[#f2ede4] border border-[#ded9ce] text-[9px] font-sans font-semibold uppercase tracking-[0.16em] text-[#8e763b]">
+                        <span className="w-1.5 h-1.5 -full bg-[#8e763b] animate-pulse" />
                         AVAILABLE
                     </span>
                 </div>
@@ -113,7 +113,7 @@ export function AccommodationBookingRail({
                 {/* Stay Horizon Date Picker Box */}
                 <div
                     onClick={onDatesClick}
-                    className="p-3.5 bg-white border border-[#ded9ce] rounded-xl hover:border-[#8e763b] transition-all cursor-pointer shadow-2xs group"
+                    className="p-3.5 bg-white border border-[#ded9ce] -xl hover:border-[#8e763b] transition-all cursor-pointer shadow-2xs group"
                 >
                     <div className="flex items-center justify-between">
                         <span className="text-[9px] font-sans font-semibold uppercase tracking-[0.2em] text-[#8e8a82] group-hover:text-[#8e763b] transition-colors">
@@ -152,7 +152,7 @@ export function AccommodationBookingRail({
                 {/* Patrons & Suite Composition Box */}
                 <div
                     onClick={onPartyClick}
-                    className="p-3.5 bg-white border border-[#ded9ce] rounded-xl hover:border-[#8e763b] transition-all cursor-pointer shadow-2xs group"
+                    className="p-3.5 bg-white border border-[#ded9ce] -xl hover:border-[#8e763b] transition-all cursor-pointer shadow-2xs group"
                 >
                     <div className="flex items-center justify-between">
                         <span className="text-[9px] font-sans font-semibold uppercase tracking-[0.2em] text-[#8e8a82] group-hover:text-[#8e763b] transition-colors">
@@ -239,7 +239,7 @@ export function AccommodationBookingRail({
                 <Link
                     href={`/checkout?suite=azure-master-ocean-suite&nights=${nights}&guests=${guests}`}
                     onClick={handleReserveClick}
-                    className="w-full inline-flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-[11px] sm:text-[12px] font-semibold uppercase tracking-[0.22em] transition-all duration-300 shadow-md active:translate-y-0.5 text-center group"
+                    className="w-full inline-flex items-center justify-center gap-2 px-6 py-4 -xl bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-[11px] sm:text-[12px] font-semibold uppercase tracking-[0.22em] transition-all duration-300 shadow-md active:translate-y-0.5 text-center group"
                 >
                     <span>RESERVE SANCTUARY DIRECT</span>
                     <span className="text-sm font-normal transform transition-transform duration-300 group-hover:translate-x-1">
@@ -265,8 +265,8 @@ export function AccommodationBookingRail({
             </div>
 
             {/* 5. Complimentary Helipad / Riva Tender Arrival Card */}
-            <div className="mt-6 pt-5 border-t border-[#eeeae2] flex items-start gap-3.5 p-4 rounded-xl bg-[#f6f2ea]/80 border">
-                <div className="p-2 rounded-lg bg-white border border-[#ded9ce] shadow-2xs shrink-0 text-[#8e763b]">
+            <div className="mt-6 pt-5 border-t border-[#eeeae2] flex items-start gap-3.5 p-4 -xl bg-[#f6f2ea]/80 border">
+                <div className="p-2 -lg bg-white border border-[#ded9ce] shadow-2xs shrink-0 text-[#8e763b]">
                     <svg
                         className="w-4 h-4"
                         viewBox="0 0 24 24"

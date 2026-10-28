@@ -11,7 +11,7 @@ export function AuthSubmitButton({ label }: { label: string }) {
             type="submit"
             disabled={pending}
             className="w-full inline-flex items-center justify-center
-                       gap-2 px-6 py-4 rounded-xl bg-[#1f1e1d]
+                       gap-2 px-6 py-4 -xl bg-[#1f1e1d]
                        hover:bg-[#343230] text-white font-sans
                        text-[11px] font-semibold uppercase
                        tracking-[0.22em] transition-all shadow-md

@@ -227,7 +227,7 @@ export function BookingBar({
 	return (
 		<div
 			ref={containerRef}
-			className={`w-full max-w-340 mx-auto bg-white/95 backdrop-blur-xl border border-[#ded9ce] rounded-3xl shadow-[0_16px_48px_rgba(31,30,29,0.12)] p-4 sm:p-5 lg:p-6 transition-all duration-300 ${className}`}
+			className={`w-full max-w-340 mx-auto bg-white/95 backdrop-blur-xl border border-[#ded9ce] -3xl shadow-[0_16px_48px_rgba(31,30,29,0.12)] p-4 sm:p-5 lg:p-6 transition-all duration-300 ${className}`}
 		>
 			<form onSubmit={handleSearch} className="space-y-4">
 				{/* Master 5-Column Responsive Grid */}
@@ -243,7 +243,7 @@ export function BookingBar({
 										: 'sanctuary'
 								)
 							}
-							className={`w-full h-full text-left p-4 rounded-2xl border transition-all duration-200 flex flex-col justify-between group ${
+							className={`w-full h-full text-left p-4 -2xl border transition-all duration-200 flex flex-col justify-between group ${
 								activeDropdown === 'sanctuary'
 									? 'bg-[#f7f2e7] border-[#8e763b] shadow-xs'
 									: 'bg-[#fcfaf7] hover:bg-[#f6f2ea] border-[#e8e4dc]'
@@ -251,13 +251,13 @@ export function BookingBar({
 						>
 							<div className="flex items-center justify-between w-full mb-1">
 								<div className="flex items-center gap-2">
-									<span className="w-1.5 h-1.5 rounded-full bg-[#8e763b]" />
+									<span className="w-1.5 h-1.5 -full bg-[#8e763b]" />
 									<span className="text-[10px] font-sans font-semibold uppercase tracking-[0.22em] text-[#8e763b]">
 										SANCTUARY ENCLAVE
 									</span>
 								</div>
 
-								<span className="px-2 py-0.5 rounded-sm bg-white border border-[#ded9ce] text-[9px] font-mono uppercase tracking-wider text-[#78756d]">
+								<span className="px-2 py-0.5 -sm bg-white border border-[#ded9ce] text-[9px] font-mono uppercase tracking-wider text-[#78756d]">
 									{activeSanctuary.badge}
 								</span>
 							</div>
@@ -274,7 +274,7 @@ export function BookingBar({
 
 						{/* Dropdown Overlay: Sanctuary Select */}
 						{activeDropdown === 'sanctuary' && (
-							<div className="absolute top-[calc(100%+8px)] left-0 w-full sm:w-95 bg-white border border-[#ded9ce] rounded-2xl shadow-2xl p-2 z-50 animate-in fade-in zoom-in-95 duration-150">
+							<div className="absolute top-[calc(100%+8px)] left-0 w-full sm:w-95 bg-white border border-[#ded9ce] -2xl shadow-2xl p-2 z-50 animate-in fade-in zoom-in-95 duration-150">
 								<div className="px-3.5 py-2 border-b border-[#f0ece3] flex items-center justify-between">
 									<span className="text-[9px] font-sans font-semibold uppercase tracking-[0.2em] text-[#8e763b]">
 										SELECT MONOLITHIC ENCLAVE
@@ -298,7 +298,7 @@ export function BookingBar({
 													);
 													setActiveDropdown(null);
 												}}
-												className={`p-3 rounded-xl cursor-pointer transition-colors flex items-center justify-between ${
+												className={`p-3 -xl cursor-pointer transition-colors flex items-center justify-between ${
 													isSelected
 														? 'bg-[#f7f2e7] text-[#1f1e1d]'
 														: 'hover:bg-[#fcfaf7] text-[#4a4742]'
@@ -338,13 +338,13 @@ export function BookingBar({
 					    <button
 					        type="button"
 					        onClick={() => setIsCalendarOpen(prev => !prev)}
-					        className="w-full h-full text-left p-4 rounded-2xl border bg-[#fcfaf7] hover:bg-[#f6f2ea] border-[#e8e4dc]"
+					        className="w-full h-full text-left p-4 -2xl border bg-[#fcfaf7] hover:bg-[#f6f2ea] border-[#e8e4dc]"
 					    >
 					        <div className="flex items-center justify-between w-full mb-1">
 					            <span className="text-[10px] font-sans font-semibold uppercase tracking-[0.22em] text-[#8e763b]">
 					                STAY HORIZON
 					            </span>
-					            <span className="px-2 py-0.5 rounded-sm bg-white border border-[#ded9ce] text-[9px] font-mono text-[#8e763b]">
+					            <span className="px-2 py-0.5 -sm bg-white border border-[#ded9ce] text-[9px] font-mono text-[#8e763b]">
 					                {nightsCount} NIGHTS
 					            </span>
 					        </div>
@@ -384,7 +384,7 @@ export function BookingBar({
 									activeDropdown === 'party' ? null : 'party'
 								)
 							}
-							className={`w-full h-full text-left p-4 rounded-2xl border transition-all duration-200 flex flex-col justify-between group ${
+							className={`w-full h-full text-left p-4 -2xl border transition-all duration-200 flex flex-col justify-between group ${
 								activeDropdown === 'party'
 									? 'bg-[#f7f2e7] border-[#8e763b] shadow-xs'
 									: 'bg-[#fcfaf7] hover:bg-[#f6f2ea] border-[#e8e4dc]'
@@ -424,7 +424,7 @@ export function BookingBar({
 
 						{/* Dropdown Overlay: Steppers */}
 						{activeDropdown === 'party' && (
-							<div className="absolute top-[calc(100%+8px)] left-0 w-full sm:w-70 bg-white border border-[#ded9ce] rounded-2xl shadow-2xl p-4 z-50 animate-in fade-in zoom-in-95 duration-150 space-y-4">
+							<div className="absolute top-[calc(100%+8px)] left-0 w-full sm:w-70 bg-white border border-[#ded9ce] -2xl shadow-2xl p-4 z-50 animate-in fade-in zoom-in-95 duration-150 space-y-4">
 								<div className="border-b border-[#f0ece3] pb-2">
 									<span className="text-[9px] font-sans font-semibold uppercase tracking-[0.2em] text-[#8e763b]">
 										PATRON PARTY COMPOSITION
@@ -443,7 +443,7 @@ export function BookingBar({
 											</span>
 										</div>
 
-										<div className="flex items-center gap-2 bg-[#fcfaf7] border border-[#ded9ce] rounded-lg px-2 py-1">
+										<div className="flex items-center gap-2 bg-[#fcfaf7] border border-[#ded9ce] -lg px-2 py-1">
 											<button
 												type="button"
 												onClick={() =>
@@ -454,7 +454,7 @@ export function BookingBar({
 														)
 													)
 												}
-												className="w-6 h-6 rounded flex items-center justify-center text-sm font-semibold hover:bg-[#eeeae2]"
+												className="w-6 h-6  flex items-center justify-center text-sm font-semibold hover:bg-[#eeeae2]"
 											>
 												−
 											</button>
@@ -473,7 +473,7 @@ export function BookingBar({
 														)
 													)
 												}
-												className="w-6 h-6 rounded flex items-center justify-center text-sm font-semibold hover:bg-[#eeeae2]"
+												className="w-6 h-6  flex items-center justify-center text-sm font-semibold hover:bg-[#eeeae2]"
 											>
 												+
 											</button>
@@ -491,7 +491,7 @@ export function BookingBar({
 											</span>
 										</div>
 
-										<div className="flex items-center gap-2 bg-[#fcfaf7] border border-[#ded9ce] rounded-lg px-2 py-1">
+										<div className="flex items-center gap-2 bg-[#fcfaf7] border border-[#ded9ce] -lg px-2 py-1">
 											<button
 												type="button"
 												onClick={() =>
@@ -502,7 +502,7 @@ export function BookingBar({
 														)
 													)
 												}
-												className="w-6 h-6 rounded flex items-center justify-center text-sm font-semibold hover:bg-[#eeeae2]"
+												className="w-6 h-6  flex items-center justify-center text-sm font-semibold hover:bg-[#eeeae2]"
 											>
 												−
 											</button>
@@ -521,7 +521,7 @@ export function BookingBar({
 														)
 													)
 												}
-												className="w-6 h-6 rounded flex items-center justify-center text-sm font-semibold hover:bg-[#eeeae2]"
+												className="w-6 h-6  flex items-center justify-center text-sm font-semibold hover:bg-[#eeeae2]"
 											>
 												+
 											</button>
@@ -533,7 +533,7 @@ export function BookingBar({
 									<button
 										type="button"
 										onClick={() => setActiveDropdown(null)}
-										className="px-4 py-2 rounded-xl bg-[#1f1e1d] text-white text-[10px] font-sans font-semibold uppercase tracking-[0.2em] hover:bg-[#343230]"
+										className="px-4 py-2 -xl bg-[#1f1e1d] text-white text-[10px] font-sans font-semibold uppercase tracking-[0.2em] hover:bg-[#343230]"
 									>
 										Confirm Party
 									</button>
@@ -544,7 +544,7 @@ export function BookingBar({
 
 					{/* 4. SOVEREIGN PRIVILEGE CODE (1.5 cols on Desktop) */}
 					<div className="relative lg:col-span-2">
-						<div className="h-full p-4 rounded-2xl bg-[#fcfaf7] border border-[#e8e4dc] flex flex-col justify-between">
+						<div className="h-full p-4 -2xl bg-[#fcfaf7] border border-[#e8e4dc] flex flex-col justify-between">
 							<div className="flex items-center justify-between mb-1">
 								<span className="text-[10px] font-sans font-semibold uppercase tracking-[0.22em] text-[#8e763b]">
 									SOVEREIGN CODE
@@ -578,7 +578,7 @@ export function BookingBar({
 					<div className="sm:col-span-2 flex items-stretch">
 						<button
 							type="submit"
-							className="w-full min-h-14.5 sm:min-h-16 rounded-2xl bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-[11px] font-semibold uppercase tracking-[0.22em] transition-all shadow-md hover:shadow-lg active:translate-y-0.5 flex flex-col items-center justify-center gap-1 group text-center"
+							className="w-full min-h-14.5 sm:min-h-16 -2xl bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-[11px] font-semibold uppercase tracking-[0.22em] transition-all shadow-md hover:shadow-lg active:translate-y-0.5 flex flex-col items-center justify-center gap-1 group text-center"
 						>
 							<span className="flex items-center gap-2">
 								<span>Check Rates</span>
@@ -597,7 +597,7 @@ export function BookingBar({
 				{/* Sub-strip: Direct Reservation Privilege Protocol */}
 				<div className="pt-3 border-t border-[#f0ece3] flex flex-col md:flex-row md:items-center justify-between gap-2.5 text-xs font-sans text-[#6e6b64]">
 					<div className="flex items-center gap-2">
-						<span className="p-1 rounded-full bg-[#f6f2ea] text-[#8e763b] shrink-0">
+						<span className="p-1 -full bg-[#f6f2ea] text-[#8e763b] shrink-0">
 							<svg
 								className="w-3.5 h-3.5"
 								viewBox="0 0 24 24"
@@ -627,7 +627,7 @@ export function BookingBar({
 								key={idx}
 								className="flex items-center gap-1.5"
 							>
-								<span className="w-1.5 h-1.5 rounded-full bg-[#8e763b]" />
+								<span className="w-1.5 h-1.5 -full bg-[#8e763b]" />
 								<span>{pill}</span>
 							</div>
 						))}

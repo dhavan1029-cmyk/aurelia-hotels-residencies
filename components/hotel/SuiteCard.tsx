@@ -154,7 +154,7 @@ export function SuiteCard({
     if (variant === 'master-featured' || variant === 'featured') {
         return (
             <article
-                className={`w-full bg-white border border-[#e8e4dc] rounded-2xl overflow-hidden shadow-[0_4px_30px_rgba(0,0,0,0.03)] grid grid-cols-1 lg:grid-cols-12 transition-all duration-500 hover:border-[#8e763b]/50 hover:shadow-[0_12px_36px_rgba(31,30,29,0.06)] ${className}`}
+                className={`w-full bg-white border border-[#e8e4dc] -2xl overflow-hidden shadow-[0_4px_30px_rgba(0,0,0,0.03)] grid grid-cols-1 lg:grid-cols-12 transition-all duration-500 hover:border-[#8e763b]/50 hover:shadow-[0_12px_36px_rgba(31,30,29,0.06)] ${className}`}
             >
                 {/* Left 7 Columns: Media Container with Badges, Valet Banner & Photo Counter */}
                 <div className="lg:col-span-7 relative min-h-95 sm:min-h-115 lg:min-h-125 bg-[#eeeae2] overflow-hidden group">
@@ -173,12 +173,12 @@ export function SuiteCard({
                     {/* Top Badges Row */}
                     <div className="absolute top-4 left-4 z-10 flex flex-wrap items-center gap-2">
                         {resolvedBadge && (
-                            <span className="px-3 py-1 bg-[#8e763b]/95 backdrop-blur-md rounded-md text-[10px] font-sans font-semibold uppercase tracking-[0.2em] text-white shadow-xs">
+                            <span className="px-3 py-1 bg-[#8e763b]/95 backdrop-blur-md -md text-[10px] font-sans font-semibold uppercase tracking-[0.2em] text-white shadow-xs">
                                 {resolvedBadge}
                             </span>
                         )}
                         {resolvedElevation && (
-                            <span className="px-3 py-1 bg-white/90 backdrop-blur-md rounded-md text-[10px] font-sans font-semibold uppercase tracking-[0.18em] text-[#2c2a26] shadow-xs">
+                            <span className="px-3 py-1 bg-white/90 backdrop-blur-md -md text-[10px] font-sans font-semibold uppercase tracking-[0.18em] text-[#2c2a26] shadow-xs">
                                 {resolvedElevation}
                             </span>
                         )}
@@ -186,7 +186,7 @@ export function SuiteCard({
 
                     {/* Bottom Valet / Direct Reservation Privilege Micro-Banner */}
                     {resolvedPrivilegeNotice && (
-                        <div className="absolute bottom-4 left-4 right-24 sm:right-auto sm:max-w-md z-10 bg-white/95 backdrop-blur-md rounded-xl p-3 sm:px-4 sm:py-3 border border-[#ded9ce] shadow-md">
+                        <div className="absolute bottom-4 left-4 right-24 sm:right-auto sm:max-w-md z-10 bg-white/95 backdrop-blur-md -xl p-3 sm:px-4 sm:py-3 border border-[#ded9ce] shadow-md">
                             <span className="block text-[8px] sm:text-[9px] font-mono font-semibold uppercase tracking-[0.2em] text-[#8e763b]">
                                 DIRECT RESERVATION PRIVILEGE
                             </span>
@@ -198,7 +198,7 @@ export function SuiteCard({
 
                     {/* Bottom Right Photo Counter Pill */}
                     {Boolean(photoCount) && (
-                        <div className="absolute bottom-4 right-4 z-10 bg-black/70 backdrop-blur-md px-3 py-1.5 rounded-lg text-white flex items-center gap-1.5 text-[10px] font-mono font-medium tracking-wider uppercase">
+                        <div className="absolute bottom-4 right-4 z-10 bg-black/70 backdrop-blur-md px-3 py-1.5 -lg text-white flex items-center gap-1.5 text-[10px] font-mono font-medium tracking-wider uppercase">
                             <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                 <rect x="3" y="3" width="18" height="18" rx="2" />
                                 <circle cx="8.5" cy="8.5" r="1.5" />
@@ -257,7 +257,7 @@ export function SuiteCard({
                                 {features.map((feat, idx) => (
                                     <div
                                         key={`${feat.title}-${idx}`}
-                                        className="p-2.5 rounded-xl bg-white border border-[#ded9ce] shadow-2xs"
+                                        className="p-2.5 -xl bg-white border border-[#ded9ce] shadow-2xs"
                                     >
                                         <span className="font-serif text-xs font-semibold text-[#1f1e1d] block truncate">
                                             {feat.title}
@@ -284,7 +284,7 @@ export function SuiteCard({
                                             key={`${amenity.label}-${idx}`}
                                             className="flex items-center gap-2.5"
                                         >
-                                            <span className="w-6 h-6 rounded-md bg-[#f6f2ea] border border-[#ded9ce] flex items-center justify-center text-[#8e763b] shrink-0">
+                                            <span className="w-6 h-6 -md bg-[#f6f2ea] border border-[#ded9ce] flex items-center justify-center text-[#8e763b] shrink-0">
                                                 <IconComponent
                                                     size={13}
                                                     strokeWidth={1.6}
@@ -305,9 +305,9 @@ export function SuiteCard({
                     {/* Dual Action Buttons */}
                     <div className="mt-8 pt-5 border-t border-[#eeeae2] flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                         <Link
-                            href={`/checkout?suite=${slug || id}`}
+                            href={`/checkout?accommodation=${slug || id}&checkInDate=${checkInDate}&checkOutDate=${checkOutDate}&nightsCount=${nightsCount}&guestsCount=${guestsCount}`}
                             onClick={onPrimaryAction}
-                            className="flex-1 inline-flex items-center justify-center gap-1.5 px-6 py-3.5 bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-[11px] font-semibold uppercase tracking-[0.2em] rounded-xl transition-all duration-200 shadow-sm text-center"
+                            className="flex-1 inline-flex items-center justify-center gap-1.5 px-6 py-3.5 bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-[11px] font-semibold uppercase tracking-[0.2em] -xl transition-all duration-200 shadow-sm text-center"
                         >
                             <span>{primaryCtaLabel}</span>
                             <span className="ml-1">→</span>
@@ -315,7 +315,7 @@ export function SuiteCard({
                         <Link
                             href={`/accommodations/${slug || id}?checkInDate=${checkInDate}&checkOutDate=${checkOutDate}&nightsCount=${nightsCount}&guestsCount=${guestsCount}`}
                             onClick={onSecondaryAction}
-                            className="inline-flex items-center justify-center px-6 py-3.5 bg-white hover:bg-[#f6f2ea] text-[#2c2a26] border border-[#ded9ce] font-sans text-[11px] font-medium uppercase tracking-[0.18em] rounded-xl transition-all duration-200 text-center shadow-2xs"
+                            className="inline-flex items-center justify-center px-6 py-3.5 bg-white hover:bg-[#f6f2ea] text-[#2c2a26] border border-[#ded9ce] font-sans text-[11px] font-medium uppercase tracking-[0.18em] -xl transition-all duration-200 text-center shadow-2xs"
                         >
                             {secondaryCtaLabel}
                         </Link>
@@ -330,7 +330,7 @@ export function SuiteCard({
     // -------------------------------------------------------------------------
     return (
         <article
-            className={`w-full bg-white border border-[#e8e4dc] rounded-2xl overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_32px_rgba(31,30,29,0.06)] hover:border-[#8e763b]/50 transition-all duration-500 flex flex-col justify-between group ${className}`}
+            className={`w-full bg-white border border-[#e8e4dc] -2xl overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_32px_rgba(31,30,29,0.06)] hover:border-[#8e763b]/50 transition-all duration-500 flex flex-col justify-between group ${className}`}
         >
             <div>
                 {/* Media Image with Badges, Feature Overlay & Embedded Price Tag */}
@@ -349,12 +349,12 @@ export function SuiteCard({
                     {/* Top Badges */}
                     <div className="absolute top-3.5 left-3.5 z-10 flex flex-wrap items-center gap-1.5">
                         {resolvedBadge && (
-                            <span className="px-2.5 py-1 bg-[#8e763b]/95 backdrop-blur-md rounded-md text-[9px] font-sans font-semibold uppercase tracking-[0.18em] text-white shadow-xs">
+                            <span className="px-2.5 py-1 bg-[#8e763b]/95 backdrop-blur-md -md text-[9px] font-sans font-semibold uppercase tracking-[0.18em] text-white shadow-xs">
                                 {resolvedBadge}
                             </span>
                         )}
                         {resolvedElevation && (
-                            <span className="px-2.5 py-1 bg-white/90 backdrop-blur-md rounded-md text-[9px] font-sans font-semibold uppercase tracking-[0.16em] text-[#2c2a26] shadow-xs">
+                            <span className="px-2.5 py-1 bg-white/90 backdrop-blur-md -md text-[9px] font-sans font-semibold uppercase tracking-[0.16em] text-[#2c2a26] shadow-xs">
                                 {resolvedElevation}
                             </span>
                         )}
@@ -363,7 +363,7 @@ export function SuiteCard({
                     {/* Bottom Overlay Row: Feature Indicator (Left) & Price Tag (Right) */}
                     <div className="absolute bottom-3 left-3 right-3 z-10 flex items-end justify-between gap-2 text-white">
                         {featureOverlayText ? (
-                            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-black/60 backdrop-blur-md text-[10px] font-sans font-medium tracking-wide">
+                            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 -md bg-black/60 backdrop-blur-md text-[10px] font-sans font-medium tracking-wide">
                                 {featureOverlayIcon || (
                                     <svg className="w-3.5 h-3.5 text-[#bfa76f]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                         <path d="M2 12h20M2 17h20M2 7h20" />
@@ -372,13 +372,13 @@ export function SuiteCard({
                                 <span>{featureOverlayText}</span>
                             </div>
                         ) : resolvedPrivilegeNotice ? (
-                            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-black/60 backdrop-blur-md text-[10px] font-sans font-medium text-white/95">
-                                <span className="w-1.5 h-1.5 rounded-full bg-[#bfa76f]" />
+                            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 -md bg-black/60 backdrop-blur-md text-[10px] font-sans font-medium text-white/95">
+                                <span className="w-1.5 h-1.5 -full bg-[#bfa76f]" />
                                 <span className="truncate max-w-42.5">{resolvedPrivilegeNotice}</span>
                             </div>
                         ) : null}
 
-                        <div className="text-right bg-black/70 backdrop-blur-md px-3 py-1.5 rounded-xl ml-auto border border-white/10">
+                        <div className="text-right bg-black/70 backdrop-blur-md px-3 py-1.5 -xl ml-auto border border-white/10">
                             <span className="font-serif text-lg sm:text-xl font-bold leading-none block text-white">
                                 {symbol}{pricePerNight.toLocaleString()}
                             </span>
@@ -430,7 +430,7 @@ export function SuiteCard({
                                 return (
                                     <span
                                         key={idx}
-                                        className="px-2.5 py-1 bg-[#f6f3ee] border border-[#e8e4dc] rounded-md text-[9px] font-mono font-medium uppercase tracking-[0.16em] text-[#55524d]"
+                                        className="px-2.5 py-1 bg-[#f6f3ee] border border-[#e8e4dc] -md text-[9px] font-mono font-medium uppercase tracking-[0.16em] text-[#55524d]"
                                     >
                                         {tag}
                                     </span>
@@ -444,9 +444,9 @@ export function SuiteCard({
             {/* Bottom Actions Row */}
             <div className="px-6 pb-6 pt-3 flex items-center justify-between gap-3 border-t border-[#f2ede4] mt-2">
                 <Link
-                    href={`/checkout?suite=${slug || id}`}
+                    href={`/checkout?accommodation=${slug || id}`}
                     onClick={onPrimaryAction}
-                    className="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-3 bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-[10px] font-semibold uppercase tracking-[0.2em] rounded-xl transition-all duration-200 shadow-sm text-center"
+                    className="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-3 bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-[10px] font-semibold uppercase tracking-[0.2em] -xl transition-all duration-200 shadow-sm text-center"
                 >
                     <span>{primaryCtaLabel}</span>
                     <span className="ml-1">→</span>
@@ -455,7 +455,7 @@ export function SuiteCard({
                 <Link
                     href={`/accommodations/${slug || id}?checkInDate=${checkInDate}&checkOutDate=${checkOutDate}&nightsCount=${nightsCount}&guestsCount=${guestsCount}`}
                     onClick={onSecondaryAction}
-                    className="inline-flex items-center justify-center px-4 py-3 bg-[#f6f3ee] hover:bg-[#eeeae2] text-[#2c2a26] border border-[#ded9ce] font-sans text-[10px] font-medium uppercase tracking-[0.18em] rounded-xl transition-all duration-200 text-center"
+                    className="inline-flex items-center justify-center px-4 py-3 bg-[#f6f3ee] hover:bg-[#eeeae2] text-[#2c2a26] border border-[#ded9ce] font-sans text-[10px] font-medium uppercase tracking-[0.18em] -xl transition-all duration-200 text-center"
                 >
                     {secondaryCtaLabel}
                 </Link>

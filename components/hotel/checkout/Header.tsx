@@ -109,7 +109,7 @@ export function CheckoutHeader({
                 {/* Left: Brand Monogram Wordmark & Secure Booking Indicator */}
                 <div className="flex items-center gap-4 sm:gap-6">
                     <div className="hidden sm:inline-flex items-center gap-2 pl-4 border-l border-[#e8e4dc]">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#8e763b] animate-pulse" />
+                        <span className="w-1.5 h-1.5 -full bg-[#8e763b] animate-pulse" />
                         <span className="text-[9px] font-sans font-semibold uppercase tracking-[0.24em] text-[#78756d]">
                             {securityBadgeText}
                         </span>
@@ -119,7 +119,7 @@ export function CheckoutHeader({
                 {/* Right: Currency Selector, Private Concierge Trigger & Patron Avatar */}
                 <div className="flex items-center gap-3 sm:gap-5">
                     {/* Currency Selector Pill */}
-                    <div className="hidden sm:flex items-center gap-1 px-2.5 py-1 rounded-md bg-white border border-[#ded9ce] text-[10px] font-sans font-medium text-[#1f1e1d]">
+                    <div className="hidden sm:flex items-center gap-1 px-2.5 py-1 -md bg-white border border-[#ded9ce] text-[10px] font-sans font-medium text-[#1f1e1d]">
                         <span>{currencySymbol}</span>
                         <span>{currencyCode}</span>
                     </div>
@@ -147,7 +147,7 @@ export function CheckoutHeader({
                     {/* Patron Profile Monogram / Avatar */}
                     <div className="flex items-center gap-2 pl-2">
                         {currentUser.avatarUrl ? (
-                            <div className="relative w-8 h-8 rounded-full overflow-hidden bg-[#eeeae2] border border-[#dcdad5]">
+                            <div className="relative w-8 h-8 -full overflow-hidden bg-[#eeeae2] border border-[#dcdad5]">
                                 <Image
                                     src={currentUser.avatarUrl}
                                     alt={currentUser.fullName}
@@ -157,7 +157,7 @@ export function CheckoutHeader({
                                 />
                             </div>
                         ) : (
-                            <div className="w-8 h-8 rounded-full bg-[#1f1e1d] text-white flex items-center justify-center font-serif text-xs font-semibold">
+                            <div className="w-8 h-8 -full bg-[#1f1e1d] text-white flex items-center justify-center font-serif text-xs font-semibold">
                                 JV
                             </div>
                         )}
@@ -170,7 +170,7 @@ export function CheckoutHeader({
                 <div className="max-w-340 mx-auto flex flex-col sm:flex-row items-center justify-between gap-1.5">
                     {/* Left: Folio ID */}
                     <div className="flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#8e763b]" />
+                        <span className="w-1.5 h-1.5 -full bg-[#8e763b]" />
                         <span className="font-mono font-medium text-[#1f1e1d]">
                             {sanctuaryFolioCode}
                         </span>

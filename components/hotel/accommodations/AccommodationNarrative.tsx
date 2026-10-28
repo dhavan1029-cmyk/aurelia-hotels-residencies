@@ -197,7 +197,7 @@ export function AccommodationNarrativeAndFloorplanSection({
                     return (
                         <div
                             key={idx}
-                            className="bg-white border border-[#e8e4dc] p-4 sm:p-5 rounded-lg flex items-start gap-3.5 transition-all duration-300 hover:shadow-xs"
+                            className="bg-white border border-[#e8e4dc] p-4 sm:p-5 -lg flex items-start gap-3.5 transition-all duration-300 hover:shadow-xs"
                         >
                             <div className="flex flex-col gap-2.5">
                                 <span className="bg-white shrink-0">
@@ -216,7 +216,7 @@ export function AccommodationNarrativeAndFloorplanSection({
             </div>
 
             {/* 1. Atmospheric Resonance & Architectural Monograph Card */}
-            <article className="bg-white border border-[#e8e4dc] rounded-lg p-6 sm:p-8 lg:p-10 shadow-[0_4px_24px_rgba(0,0,0,0.02)]">
+            <article className="bg-white border border-[#e8e4dc] -lg p-6 sm:p-8 lg:p-10 shadow-[0_4px_24px_rgba(0,0,0,0.02)]">
                 <div>
                     <span className="block text-[10px] sm:text-[11px] font-sans font-semibold uppercase tracking-[0.25em] text-[#8e763b] mb-2.5">
                         {sectionEyebrow}
@@ -239,9 +239,9 @@ export function AccommodationNarrativeAndFloorplanSection({
                         return (
                             <div
                                 key={idx}
-                                className="flex items-start gap-3 p-3.5 rounded-xl bg-[#f6f2ea]/70 border border-[#e8e4dc] transition-all hover:bg-[#f6f2ea]"
+                                className="flex items-start gap-3 p-3.5 -xl bg-[#f6f2ea]/70 border border-[#e8e4dc] transition-all hover:bg-[#f6f2ea]"
                             >
-                                <div className="p-2 rounded-lg bg-white border border-[#ded9ce] shadow-2xs shrink-0">
+                                <div className="p-2 -lg bg-white border border-[#ded9ce] shadow-2xs shrink-0">
                                     {feat.icon}
                                 </div>
                                 <div className="flex flex-col">
@@ -259,7 +259,7 @@ export function AccommodationNarrativeAndFloorplanSection({
             </article>
 
             {/* 2. Architectural Composition & 1:50 Spatial Floorplan Blueprint */}
-            <article className="bg-white border border-[#e8e4dc] rounded-lg p-6 sm:p-8 lg:p-10 shadow-[0_4px_24px_rgba(0,0,0,0.02)]">
+            <article className="bg-white border border-[#e8e4dc] -lg p-6 sm:p-8 lg:p-10 shadow-[0_4px_24px_rgba(0,0,0,0.02)]">
                 <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 border-b border-[#eeeae2] pb-5 mb-6">
                     <div>
                         <span className="block text-[10px] sm:text-[11px] font-sans font-semibold uppercase tracking-[0.25em] text-[#8e763b] mb-1">
@@ -279,7 +279,7 @@ export function AccommodationNarrativeAndFloorplanSection({
 
                 {/* 1:50 Spatial CAD Floorplan Diagram Frame */}
                 <div
-                    className="relative w-full rounded-lg bg-[#f6f2ea] border border-[#ded9ce] p-5 sm:p-7 overflow-hidden cursor-crosshair group"
+                    className="relative w-full -lg bg-[#f6f2ea] border border-[#ded9ce] p-5 sm:p-7 overflow-hidden cursor-crosshair group"
                     onClick={onExploreFloorplanModal}
                 >
                     {/* Architectural Grid Texture Background */}
@@ -295,7 +295,7 @@ export function AccommodationNarrativeAndFloorplanSection({
                     {/* Blueprint Architectural Assembly (Interior Suite + Exterior Plunge Deck) */}
                     <div className="relative z-10 grid grid-cols-1 md:grid-cols-12 gap-5 items-stretch min-h-72.5">
                         {/* Interior Suite Wing (8 cols) */}
-                        <div className="md:col-span-8 bg-white/90 border border-[#ded9ce] rounded-xl p-5 sm:p-6 shadow-xs flex flex-col justify-between">
+                        <div className="md:col-span-8 bg-white/90 border border-[#ded9ce] -xl p-5 sm:p-6 shadow-xs flex flex-col justify-between">
                             <div className="flex items-center justify-between pb-3 border-b border-[#f0ece3] text-[9px] font-sans uppercase tracking-[0.2em] text-[#8e8a82]">
                                 <span>INTERIOR CHAMBER • 88 M²</span>
                                 <span>LEVEL IV SOUTH WING</span>
@@ -305,10 +305,10 @@ export function AccommodationNarrativeAndFloorplanSection({
                             <div className="grid grid-cols-2 gap-4 my-4">
                                 {/* Custom Silk King Bed Chamber */}
                                 <div
-                                    className={`p-4 rounded-xl border border-dashed transition-all duration-200 flex flex-col justify-center items-center text-center bg-[#faf8f5] border-[#ded9ce]`}
+                                    className={`p-4 -xl border border-dashed transition-all duration-200 flex flex-col justify-center items-center text-center bg-[#faf8f5] border-[#ded9ce]`}
                                 >
-                                    <div className="w-10 h-7 border border-[#ded9ce] rounded-sm bg-white mb-2 flex items-center justify-center">
-                                        <span className="w-8 h-2 bg-[#eeeae2] rounded-xs" />
+                                    <div className="w-10 h-7 border border-[#ded9ce] -sm bg-white mb-2 flex items-center justify-center">
+                                        <span className="w-8 h-2 bg-[#eeeae2] -xs" />
                                     </div>
                                     <span className="font-serif text-xs font-semibold text-[#1f1e1d]">
                                         Custom Silk King
@@ -320,9 +320,9 @@ export function AccommodationNarrativeAndFloorplanSection({
 
                                 {/* Oak Living Salon */}
                                 <div
-                                    className={`p-4 rounded-xl border border-dashed transition-all duration-200 flex flex-col justify-center items-center text-center bg-[#faf8f5] border-[#ded9ce]`}
+                                    className={`p-4 -xl border border-dashed transition-all duration-200 flex flex-col justify-center items-center text-center bg-[#faf8f5] border-[#ded9ce]`}
                                 >
-                                    <div className="w-9 h-7 border border-[#ded9ce] rounded-md bg-white mb-2 flex items-center justify-center">
+                                    <div className="w-9 h-7 border border-[#ded9ce] -md bg-white mb-2 flex items-center justify-center">
                                         <span className="text-[9px] text-[#8e763b]">□</span>
                                     </div>
                                     <span className="font-serif text-xs font-semibold text-[#1f1e1d]">
@@ -336,14 +336,14 @@ export function AccommodationNarrativeAndFloorplanSection({
 
                             {/* Bath & Vanity Row */}
                             <div className="grid grid-cols-2 gap-4 pt-3 border-t border-[#f0ece3] text-[10px] font-sans">
-                                <div className="p-2.5 rounded-lg bg-[#fcfaf7] border border-[#ded9ce] flex items-center gap-2">
-                                    <span className="w-2 h-2 rounded-full bg-[#ded9ce]" />
+                                <div className="p-2.5 -lg bg-[#fcfaf7] border border-[#ded9ce] flex items-center gap-2">
+                                    <span className="w-2 h-2 -full bg-[#ded9ce]" />
                                     <span className="text-[#3b3935] font-medium">
                                         Freestanding Bath
                                     </span>
                                 </div>
-                                <div className="p-2.5 rounded-lg bg-[#fcfaf7] border border-[#ded9ce] flex items-center gap-2">
-                                    <span className="w-2 h-2 rounded-full bg-[#ded9ce]" />
+                                <div className="p-2.5 -lg bg-[#fcfaf7] border border-[#ded9ce] flex items-center gap-2">
+                                    <span className="w-2 h-2 -full bg-[#ded9ce]" />
                                     <span className="text-[#3b3935] font-medium">
                                         Rain Shower & Double Vanity
                                     </span>
@@ -352,7 +352,7 @@ export function AccommodationNarrativeAndFloorplanSection({
                         </div>
 
                         {/* Exterior Clifftop Deck Wing (4 cols) */}
-                        <div className="md:col-span-4 bg-[#f2ede4]/90 border border-[#ded9ce] rounded-xl p-5 sm:p-6 shadow-xs flex flex-col justify-between">
+                        <div className="md:col-span-4 bg-[#f2ede4]/90 border border-[#ded9ce] -xl p-5 sm:p-6 shadow-xs flex flex-col justify-between">
                             <div className="flex items-center justify-between pb-3 border-b border-[#ded9ce] text-[9px] font-sans uppercase tracking-[0.2em] text-[#8e763b]">
                                 <span>CLIFF DECK • 44 M²</span>
                                 <span>180° HORIZON</span>
@@ -360,18 +360,18 @@ export function AccommodationNarrativeAndFloorplanSection({
 
                             {/* Heated Basalt Geothermal Plunge Pool Box */}
                             <div
-                                className={`p-4 rounded-xl border transition-all duration-200 flex flex-col justify-center items-center text-center my-3 'bg-[#bfa76f]/10 border-[#ded9ce]'`}
+                                className={`p-4 -xl border transition-all duration-200 flex flex-col justify-center items-center text-center my-3 'bg-[#bfa76f]/10 border-[#ded9ce]'`}
                             >
                                 <span className="font-serif text-xs font-semibold text-[#1f1e1d]">
                                     Basalt Plunge Pool
                                 </span>
-                                <span className="inline-block mt-1 px-2 py-0.5 rounded bg-white/80 border border-[#ded9ce] text-[8px] font-sans font-bold text-[#8e763b] uppercase tracking-wider">
+                                <span className="inline-block mt-1 px-2 py-0.5  bg-white/80 border border-[#ded9ce] text-[8px] font-sans font-bold text-[#8e763b] uppercase tracking-wider">
                                     32°C GEOTHERMAL
                                 </span>
                             </div>
 
                             {/* Teak Solarium Deck Area */}
-                            <div className="p-2.5 rounded-lg bg-white/70 border border-[#ded9ce] text-center text-[10px] font-sans text-[#5c5952]">
+                            <div className="p-2.5 -lg bg-white/70 border border-[#ded9ce] text-center text-[10px] font-sans text-[#5c5952]">
                                 <span className="font-medium">Teak Solarium Deck</span>
                                 <span className="block text-[8px] uppercase tracking-wider text-[#8e8a82] mt-0.5">
                                     2 Sunken Daybeds
@@ -388,7 +388,7 @@ export function AccommodationNarrativeAndFloorplanSection({
                             return (
                                 <div key={idx} className="flex items-center gap-2">
                                     <span
-                                        className={`w-2.5 h-2.5 rounded-sm ${item.colorClass} border border-black/10`}
+                                        className={`w-2.5 h-2.5 -sm ${item.colorClass} border border-black/10`}
                                     />
                                     <span className="text-[11px] font-medium text-[#3b3935]">
                                         {item.label}

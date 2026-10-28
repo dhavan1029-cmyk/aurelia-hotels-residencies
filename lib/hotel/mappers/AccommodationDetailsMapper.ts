@@ -36,6 +36,7 @@ import type {
     SiblingAccommodationItem,
     SpatialMetric,
 } from '@/components/hotel/types/accommodations';
+import { calculateNights } from '@/components/hotel/DateRangeCalendar';
 
 // ============================================================================
 // INPUT TYPES
@@ -584,8 +585,11 @@ function mapRateBreakdown(
         Math.max(1, bookingContext?.guestsCount ?? 2),
     );
 
-    const checkIn = bookingContext?.checkInDate ?? '';
-    const checkOut = bookingContext?.checkOutDate ?? '';
+    const today = new Date()
+    const [year, month, date] = [today.getFullYear(), today.getMonth() + 1, today.getDate()]
+
+    const checkIn = bookingContext?.checkInDate ?? `${year}-${month}-${date}`;
+    const checkOut = bookingContext?.checkOutDate ?? `${year}-${month + 1}-${date}`;
 
     return {
         baseRateNightly: accommodation.basePriceNightly,
@@ -595,8 +599,8 @@ function mapRateBreakdown(
         ),
         checkInDate: checkIn,
         checkOutDate: checkOut,
-        nightsCount: nights,
-        guestsCount: guests,
+        nightsCount: nights || calculateNights(checkIn, checkOut),
+        guestsCount: guests || 2,
         maxGuests: accommodation.maxOccupancy,
         vatRatePercentage: accommodation.vatRate,
         cityTaxPerGuestNight: accommodation.cityTaxPerGuest,
@@ -689,13 +693,6 @@ export function mapAccommodationSiblings(
         });
 
     return siblings
-    //  {
-    //     eyebrow: 'EXPLORE OUR COLLECTION',
-    //     heading: 'Other Exceptional Sanctuaries',
-    //     description:
-    //         'Discover other distinctive residences, each thoughtfully designed to offer its own expression of comfort and refinement.',
-    //     viewAllHref: '/accommodations',
-    // };
 }
 
 // ============================================================================

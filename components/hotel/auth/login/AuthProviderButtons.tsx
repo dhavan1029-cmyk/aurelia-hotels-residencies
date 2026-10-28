@@ -23,7 +23,7 @@ export function AuthProviderButtons({
                     // Replace with your real Apple authentication flow.
                     console.info('Start Apple authentication');
                 }}
-                className="p-3.5 rounded-xl bg-white hover:bg-[#f6f2ea]
+                className="p-3.5 -xl bg-white hover:bg-[#f6f2ea]
                            border border-[#ded9ce] flex items-center
                            justify-center gap-2.5 transition-colors
                            shadow-2xs"
@@ -40,7 +40,7 @@ export function AuthProviderButtons({
                     // Replace with the concierge verification flow.
                     router.push('/concierge');
                 }}
-                className="p-3.5 rounded-xl bg-white hover:bg-[#f6f2ea]
+                className="p-3.5 -xl bg-white hover:bg-[#f6f2ea]
                            border border-[#ded9ce] flex items-center
                            justify-center gap-2 transition-colors
                            shadow-2xs"

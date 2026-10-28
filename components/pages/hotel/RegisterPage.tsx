@@ -1,14 +1,12 @@
 import Link from 'next/link';
-import { RegisterDossierRail } from '@/components/hotel/auth/RegisterDossierRail';
-import { RegisterEnrollmentForm } from '@/components/hotel/auth/RegisterEnrollmentForm';
+import { RegisterDossierRail } from '@/components/hotel/auth/register/RegisterDossierRail';
+import { RegisterEnrollmentForm } from '@/components/hotel/auth/register/RegisterEnrollmentForm';
+
 import {
-    RegisterDossierData,
-} from '@/components/hotel/auth/RegisterDossierRail';
-import {
-    RegisterFormData,
     registerFormDefaultData,
-} from '@/components/hotel/auth/RegisterEnrollmentForm';
+} from '@/components/hotel/auth/register/RegisterEnrollmentForm';
 import Image from 'next/image';
+import { RegisterDossierData, RegisterFormData } from '@/components/hotel/types/auth';
 
 export interface RegisterPageProps {
     dossierData?: RegisterDossierData;
@@ -35,8 +33,8 @@ export function RegisterPage({
                     </Link>
 
                     {/* Center Protocol Badge (Hidden on Mobile) */}
-                    <div className="hidden md:inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-[#f6f2ea] border border-[#ded9ce] text-[9px] font-mono uppercase tracking-[0.2em] text-[#6d6961]">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#8e763b] animate-pulse" />
+                    <div className="hidden md:inline-flex items-center gap-2.5 px-4 py-1.5 -full bg-[#f6f2ea] border border-[#ded9ce] text-[9px] font-mono uppercase tracking-[0.2em] text-[#6d6961]">
+                        <span className="w-1.5 h-1.5 -full bg-[#8e763b] animate-pulse" />
                         <span>SOVEREIGN PATRONAGE ENCLAVE • TIER I APPLICATION</span>
                     </div>
 

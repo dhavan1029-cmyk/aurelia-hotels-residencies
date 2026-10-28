@@ -7,9 +7,14 @@ import { CheckoutHeader } from '@/components/hotel/checkout/Header';
 // Phase 2, 3 and 4
 import { CheckoutInteractive } from '@/components/hotel/checkout/CheckoutInteractive';
 
-export function CheckoutPage() {
-    
+import { AccommodationBookingContext } from '@/lib/hotel/mappers/AccommodationDetailsMapper'; 
 
+interface PageProps {
+    bookingParams: AccommodationBookingContext
+}
+
+export function CheckoutPage({ bookingParams } : PageProps) {
+    
     return (
         <div className={`min-h-screen bg-[#fcf9f4] text-[#1f1e1d] flex flex-col font-sans selection:bg-[#8e763b]/20 selection:text-[#1f1e1d]`}>
             {/* Phase 1: Header, Brand Wordmark, Stepper & Verification Bar */}

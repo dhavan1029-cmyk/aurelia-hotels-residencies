@@ -1,4 +1,3 @@
-import React from 'react';
 import { AuthLoginPage } from '@/components/pages/hotel/AuthLoginPage';
 
 export const metadata = {

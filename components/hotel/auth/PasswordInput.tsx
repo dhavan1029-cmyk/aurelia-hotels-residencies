@@ -25,7 +25,7 @@ export function PasswordInput({
                 required
                 autoComplete="current-password"
                 placeholder={placeholder}
-                className="w-full pl-10 pr-14 py-3.5 rounded-xl
+                className="w-full pl-10 pr-14 py-3.5 -xl
                            bg-white border border-[#ded9ce]
                            text-xs font-sans text-[#1f1e1d]
                            outline-none focus:border-[#8e763b]

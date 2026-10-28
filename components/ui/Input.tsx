@@ -88,7 +88,7 @@ export function FormInput({
                     maxLength={maxLength}
                     inputMode={numericOnly ? 'numeric' : undefined}
                     className={[
-                        'w-full px-3.5 py-3.5 rounded-xl bg-white',
+                        'w-full px-3.5 py-3.5 -xl bg-white',
                         'border border-[#ded9ce] text-xs font-sans',
                         'text-[#1f1e1d] outline-none',
                         'focus:border-[#8e763b] shadow-2xs',

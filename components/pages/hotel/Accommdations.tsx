@@ -44,8 +44,8 @@ export default async function Accommodations({ searchParams } : AccommodationsPr
                     </span>
                     <div className="inline-flex items-center gap-2 mt-2">
                         <span className="relative flex h-2 w-2">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#8e763b] opacity-75" />
-                            <span className="relative inline-flex rounded-full h-2 w-2 bg-[#8e763b]" />
+                            <span className="animate-ping absolute inline-flex h-full w-full -full bg-[#8e763b] opacity-75" />
+                            <span className="relative inline-flex -full h-2 w-2 bg-[#8e763b]" />
                         </span>
                         <span className="text-[10px] sm:text-[11px] font-sans font-semibold uppercase tracking-[0.22em] text-[#8e763b]">
                             {'RESERVATIONS OPEN FOR 2025'}
@@ -76,7 +76,7 @@ export default async function Accommodations({ searchParams } : AccommodationsPr
                 {/* </Suspense> */}
 
                 {/* 3. Dark Bespoke Multi-Week Stays Callout Banner */}
-                <div className="bg-[#1f1e1d] text-[#fcf9f4] border border-[#383530] rounded-lg p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 shadow-xl">
+                <div className="bg-[#1f1e1d] text-[#fcf9f4] border border-[#383530] -lg p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 shadow-xl">
                     <div>
                         <span className="text-[10px] font-sans font-semibold uppercase tracking-[0.25em] text-[#bfa76f] block mb-1">
                             EXCLUSIVE RESIDENTIAL ENCLAVES
@@ -91,7 +91,7 @@ export default async function Accommodations({ searchParams } : AccommodationsPr
 
                     <a
                         href="tel:+39089875000"
-                        className="px-6 py-3.5 rounded-lg bg-[#bfa76f] hover:bg-[#aa935e] text-white font-sans text-[11px] font-semibold uppercase tracking-[0.2em] whitespace-nowrap transition-all shadow-md self-stretch sm:self-auto text-center active:scale-[0.99]"
+                        className="px-6 py-3.5 -lg bg-[#bfa76f] hover:bg-[#aa935e] text-white font-sans text-[11px] font-semibold uppercase tracking-[0.2em] whitespace-nowrap transition-all shadow-md self-stretch sm:self-auto text-center active:scale-[0.99]"
                     >
                         CALL CONCIERGE DESK
                     </a>

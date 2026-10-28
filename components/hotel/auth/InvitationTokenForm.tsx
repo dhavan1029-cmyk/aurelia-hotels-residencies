@@ -43,7 +43,7 @@ export function InvitationTokenForm({
                 placeholder={placeholder}
                 required
                 autoCapitalize="characters"
-                className="min-w-0 flex-1 px-3.5 py-2.5 rounded-xl
+                className="min-w-0 flex-1 px-3.5 py-2.5 -xl
                            bg-white border border-[#ded9ce] font-mono
                            text-xs uppercase tracking-widest
                            text-[#1f1e1d] outline-none
@@ -54,7 +54,7 @@ export function InvitationTokenForm({
             <button
                 type="submit"
                 disabled={isSubmitting}
-                className="px-5 py-2.5 rounded-xl bg-[#8e763b]
+                className="px-5 py-2.5 -xl bg-[#8e763b]
                            hover:bg-[#78632f] text-white font-sans
                            text-[10px] font-semibold uppercase
                            tracking-[0.2em] transition-colors

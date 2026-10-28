@@ -44,7 +44,7 @@ export function HeritageSovereignInquiryBanner({
 			id="sovereign-inquiry"
 			className={`w-full max-w-340 mx-auto px-4 sm:px-8 lg:px-12 py-12 sm:py-16 ${className}`}
 		>
-			<div className="bg-[#191817] text-[#fcf9f4] border border-[#34322e] rounded-lg p-8 sm:p-12 lg:p-16 shadow-2xl relative overflow-hidden">
+			<div className="bg-[#191817] text-[#fcf9f4] border border-[#34322e] -lg p-8 sm:p-12 lg:p-16 shadow-2xl relative overflow-hidden">
 				{/* Subtle Radial Architectural Watermark */}
 				<div
 					className="absolute inset-0 opacity-[0.03] pointer-events-none"
@@ -58,8 +58,8 @@ export function HeritageSovereignInquiryBanner({
 				<div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
 					{/* Left Narrative Column (7 cols) */}
 					<div className="lg:col-span-7 space-y-6">
-						<div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] sm:text-[10px] font-sans font-semibold uppercase tracking-[0.24em] text-[#bfa76f]">
-							<span className="w-1.5 h-1.5 rounded-full bg-[#bfa76f] animate-pulse" />
+						<div className="inline-flex items-center gap-2 px-3.5 py-1 -full bg-white/5 border border-white/10 text-[9px] sm:text-[10px] font-sans font-semibold uppercase tracking-[0.24em] text-[#bfa76f]">
+							<span className="w-1.5 h-1.5 -full bg-[#bfa76f] animate-pulse" />
 							<span>{eyebrow}</span>
 						</div>
 
@@ -101,7 +101,7 @@ export function HeritageSovereignInquiryBanner({
 					</div>
 
 					{/* Right Curatorial Desk Hotline & Action Card (5 cols) */}
-					<div className="lg:col-span-5 bg-[#22201e] border border-[#3e3a35] rounded-2xl p-6 sm:p-8 flex flex-col justify-between space-y-6 shadow-xl">
+					<div className="lg:col-span-5 bg-[#22201e] border border-[#3e3a35] -2xl p-6 sm:p-8 flex flex-col justify-between space-y-6 shadow-xl">
 						<div>
 							<span className="block text-[9px] font-sans font-semibold uppercase tracking-[0.22em] text-[#bfa76f] mb-1">
 								{curatorOfficeNotice}
@@ -123,7 +123,7 @@ export function HeritageSovereignInquiryBanner({
 							<button
 								type="button"
 								onClick={handleRequestMonograph}
-								className="w-full inline-flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-[#bfa76f] hover:bg-[#aa935e] text-[#191817] font-sans text-[11px] font-semibold uppercase tracking-[0.2em] transition-all shadow-md active:translate-y-0.5 text-center group"
+								className="w-full inline-flex items-center justify-center gap-2 px-6 py-4 -xl bg-[#bfa76f] hover:bg-[#aa935e] text-[#191817] font-sans text-[11px] font-semibold uppercase tracking-[0.2em] transition-all shadow-md active:translate-y-0.5 text-center group"
 							>
 								<span>{primaryCtaLabel}</span>
 
@@ -135,7 +135,7 @@ export function HeritageSovereignInquiryBanner({
 							<button
 								type="button"
 								onClick={handleConsultConcierge}
-								className="w-full inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-transparent hover:bg-white/5 border border-white/20 text-white font-sans text-[10px] font-semibold uppercase tracking-[0.18em] transition-all text-center"
+								className="w-full inline-flex items-center justify-center px-6 py-3.5 -xl bg-transparent hover:bg-white/5 border border-white/20 text-white font-sans text-[10px] font-semibold uppercase tracking-[0.18em] transition-all text-center"
 							>
 								<span>{secondaryCtaLabel}</span>
 							</button>

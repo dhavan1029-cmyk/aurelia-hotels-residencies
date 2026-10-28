@@ -1,9 +1,9 @@
 import Link from 'next/link';
-import { PasswordInput } from './PasswordInput';
+import { PasswordInput } from '../PasswordInput';
 import { AuthProviderButtons } from './AuthProviderButtons';
-import { InvitationTokenForm } from './InvitationTokenForm';
+import { InvitationTokenForm } from '../InvitationTokenForm';
 import { AuthSubmitButton } from './AuthSubmitButton';
-import { AuthLoginFormData } from '../types/auth';
+import { AuthLoginFormData } from '../../types/auth';
 
 
 
@@ -58,7 +58,7 @@ export function AuthLoginForm({
                 <header className="space-y-3">
                     <div className="flex items-center justify-between gap-4">
                         <div className="flex items-center gap-2">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#8e763b]" />
+                            <span className="w-1.5 h-1.5 -full bg-[#8e763b]" />
                             <span className="text-[10px] font-sans font-semibold
                                              uppercase tracking-[0.28em]
                                              text-[#8e763b]">
@@ -67,11 +67,11 @@ export function AuthLoginForm({
                         </div>
 
                         <div className="inline-flex items-center gap-1.5
-                                        px-2.5 py-1 rounded-full
+                                        px-2.5 py-1 -full
                                         bg-[#f6f2ea] border border-[#ded9ce]
                                         text-[9px] font-mono uppercase
                                         tracking-[0.18em] text-[#24633b]">
-                            <span className="w-1.5 h-1.5 rounded-full
+                            <span className="w-1.5 h-1.5 -full
                                              bg-emerald-500 animate-pulse" />
                             {data.securityBadge}
                         </div>
@@ -131,7 +131,7 @@ export function AuthLoginForm({
                                 required
                                 autoComplete="username"
                                 placeholder={data.identifierPlaceholder}
-                                className="w-full pl-10 pr-4 py-3.5 rounded-xl
+                                className="w-full pl-10 pr-4 py-3.5 -xl
                                            bg-white border border-[#ded9ce]
                                            text-xs font-sans text-[#1f1e1d]
                                            outline-none focus:border-[#8e763b]
@@ -200,7 +200,7 @@ export function AuthLoginForm({
                                 name="remember"
                                 value="true"
                                 defaultChecked
-                                className="w-4 h-4 rounded border-[#ded9ce]
+                                className="w-4 h-4  border-[#ded9ce]
                                            text-[#8e763b] focus:ring-0
                                            focus:ring-offset-0"
                             />
@@ -244,11 +244,11 @@ export function AuthLoginForm({
                 </div>
 
                 {/* Invitation redemption */}
-                <div className="p-5 sm:p-6 rounded-2xl
+                <div className="p-5 sm:p-6 -2xl
                                 bg-[#f6f2ea]/90 border border-[#ded9ce]
                                 space-y-3.5 shadow-2xs">
                     <div className="flex items-center gap-2">
-                        <span className="p-1 rounded-md bg-white
+                        <span className="p-1 -md bg-white
                                          border border-[#ded9ce]
                                          text-[#8e763b]">
                             <svg

@@ -193,7 +193,7 @@ export function FilterBar({
                 {/* ========================================================= */}
                 {/* MASTER FILTER CONSOLE CARD                                */}
                 {/* ========================================================= */}
-                <div className="border border-[#e4ded2] rounded-3xl p-5 sm:p-7 space-y-6">
+                <div className="border border-[#e4ded2] -3xl p-5 sm:p-7 space-y-6">
                     {/* ----------------------------------------------------- */}
                     {/* ROW 1: PRIMARY STAY HORIZON & PATRON SELECTION (2 COL) */}
                     {/* ----------------------------------------------------- */}
@@ -212,14 +212,14 @@ export function FilterBar({
                                     });
                                     setIsSortPopoverOpen(false);
                                 }}
-                                className={`w-full group bg-white hover:bg-[#faf7f0] border rounded-2xl p-4 text-left transition-all duration-200 flex items-center justify-between gap-4 shadow-2xs ${
+                                className={`w-full group bg-white hover:bg-[#faf7f0] border -2xl p-4 text-left transition-all duration-200 flex items-center justify-between gap-4 shadow-2xs ${
                                     isCalendarOpen
                                         ? 'border-[#8e763b] ring-2 ring-[#8e763b]/20 bg-[#faf7f0]'
                                         : 'border-[#ded9ce] hover:border-[#8e763b]/60'
                                 }`}
                             >
                                 <div className="flex items-center gap-3.5 min-w-0">
-                                    <div className="w-10 h-10 rounded-xl bg-[#f6f2ea] border border-[#e5dfd3] text-[#8e763b] flex items-center justify-center shrink-0 group-hover:bg-white transition-colors">
+                                    <div className="w-10 h-10 -xl bg-[#f6f2ea] border border-[#e5dfd3] text-[#8e763b] flex items-center justify-center shrink-0 group-hover:bg-white transition-colors">
                                         <svg
                                             className="w-4 h-4"
                                             viewBox="0 0 24 24"
@@ -243,7 +243,7 @@ export function FilterBar({
                                                     ? `${formatDate(checkIn)} – ${formatDate(checkOut)}`
                                                     : 'Select your stay dates'}
                                             </span>
-                                            <span className={`${nights ? '' : 'hidden'} px-2 py-0.5 rounded-full bg-[#f6f2ea] border border-[#ded9ce] text-[9px] font-mono text-[#8e763b] font-medium shrink-0`}>
+                                            <span className={`${nights ? '' : 'hidden'} px-2 py-0.5 -full bg-[#f6f2ea] border border-[#ded9ce] text-[9px] font-mono text-[#8e763b] font-medium shrink-0`}>
                                                 {nights} Nights
                                             </span>
                                         </div>
@@ -305,14 +305,14 @@ export function FilterBar({
                                     setIsCalendarOpen(false);
                                     setIsSortPopoverOpen(false);
                                 }}
-                                className={`w-full group bg-white hover:bg-[#faf7f0] border rounded-2xl p-4 text-left transition-all duration-200 flex items-center justify-between gap-4 shadow-2xs ${
+                                className={`w-full group bg-white hover:bg-[#faf7f0] border -2xl p-4 text-left transition-all duration-200 flex items-center justify-between gap-4 shadow-2xs ${
                                     isPartyPopoverOpen
                                         ? 'border-[#8e763b] ring-2 ring-[#8e763b]/20 bg-[#faf7f0]'
                                         : 'border-[#ded9ce] hover:border-[#8e763b]/60'
                                 }`}
                             >
                                 <div className="flex items-center gap-3.5 min-w-0">
-                                    <div className="w-10 h-10 rounded-xl bg-[#f6f2ea] border border-[#e5dfd3] text-[#8e763b] flex items-center justify-center shrink-0 group-hover:bg-white transition-colors">
+                                    <div className="w-10 h-10 -xl bg-[#f6f2ea] border border-[#e5dfd3] text-[#8e763b] flex items-center justify-center shrink-0 group-hover:bg-white transition-colors">
                                         <svg
                                             className="w-4 h-4"
                                             viewBox="0 0 24 24"
@@ -361,7 +361,7 @@ export function FilterBar({
 
                             {/* Self-Contained Party Stepper Popover */}
                             {isPartyPopoverOpen && (
-                                <div className="absolute left-0 right-0 top-full mt-2 z-40 bg-white border border-[#ded9ce] rounded-3xl p-5 sm:p-6 shadow-2xl space-y-4 animate-in fade-in-50 zoom-in-95">
+                                <div className="absolute left-0 right-0 top-full mt-2 z-40 bg-white border border-[#ded9ce] -3xl p-5 sm:p-6 shadow-2xl space-y-4 animate-in fade-in-50 zoom-in-95">
                                     <div className="flex items-center justify-between pb-3 border-b border-[#eeeae2]">
                                         <div>
                                             <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#8e763b] font-semibold block">
@@ -376,14 +376,14 @@ export function FilterBar({
                                             onClick={function () {
                                                 setIsPartyPopoverOpen(false);
                                             }}
-                                            className="p-1 rounded-lg hover:bg-[#f6f2ea] text-[#8e8a82] hover:text-[#1f1e1d] text-xs"
+                                            className="p-1 -lg hover:bg-[#f6f2ea] text-[#8e8a82] hover:text-[#1f1e1d] text-xs"
                                         >
                                             ✕
                                         </button>
                                     </div>
 
                                     {/* Adults Stepper */}
-                                    <div className="p-3.5 rounded-2xl bg-[#fcf9f4] border border-[#ded9ce] flex items-center justify-between">
+                                    <div className="p-3.5 -2xl bg-[#fcf9f4] border border-[#ded9ce] flex items-center justify-between">
                                         <div>
                                             <span className="font-serif text-sm font-semibold text-[#1f1e1d] block">
                                                 Adult Patrons
@@ -401,7 +401,7 @@ export function FilterBar({
                                                     const nextVal = Math.max(1, adults - 1);
                                                     setAdults(nextVal);
                                                 }}
-                                                className="w-8 h-8 rounded-xl bg-white border border-[#ded9ce] text-[#1f1e1d] flex items-center justify-center font-mono text-sm hover:bg-[#f6f2ea] disabled:opacity-40 transition-colors shadow-2xs"
+                                                className="w-8 h-8 -xl bg-white border border-[#ded9ce] text-[#1f1e1d] flex items-center justify-center font-mono text-sm hover:bg-[#f6f2ea] disabled:opacity-40 transition-colors shadow-2xs"
                                             >
                                                 −
                                             </button>
@@ -415,7 +415,7 @@ export function FilterBar({
                                                     const nextVal = Math.min(8, adults + 1);
                                                     setAdults(nextVal);
                                                 }}
-                                                className="w-8 h-8 rounded-xl bg-white border border-[#ded9ce] text-[#1f1e1d] flex items-center justify-center font-mono text-sm hover:bg-[#f6f2ea] disabled:opacity-40 transition-colors shadow-2xs"
+                                                className="w-8 h-8 -xl bg-white border border-[#ded9ce] text-[#1f1e1d] flex items-center justify-center font-mono text-sm hover:bg-[#f6f2ea] disabled:opacity-40 transition-colors shadow-2xs"
                                             >
                                                 +
                                             </button>
@@ -423,7 +423,7 @@ export function FilterBar({
                                     </div>
 
                                     {/* Suites Stepper */}
-                                    <div className="p-3.5 rounded-2xl bg-[#fcf9f4] border border-[#ded9ce] flex items-center justify-between">
+                                    <div className="p-3.5 -2xl bg-[#fcf9f4] border border-[#ded9ce] flex items-center justify-between">
                                         <div>
                                             <span className="font-serif text-sm font-semibold text-[#1f1e1d] block">
                                                 Master Suites / Villas
@@ -441,7 +441,7 @@ export function FilterBar({
                                                     const nextVal = Math.max(1, suites - 1);
                                                     setSuites(nextVal);
                                                 }}
-                                                className="w-8 h-8 rounded-xl bg-white border border-[#ded9ce] text-[#1f1e1d] flex items-center justify-center font-mono text-sm hover:bg-[#f6f2ea] disabled:opacity-40 transition-colors shadow-2xs"
+                                                className="w-8 h-8 -xl bg-white border border-[#ded9ce] text-[#1f1e1d] flex items-center justify-center font-mono text-sm hover:bg-[#f6f2ea] disabled:opacity-40 transition-colors shadow-2xs"
                                             >
                                                 −
                                             </button>
@@ -455,7 +455,7 @@ export function FilterBar({
                                                     const nextVal = Math.min(4, suites + 1);
                                                     setSuites(nextVal);
                                                 }}
-                                                className="w-8 h-8 rounded-xl bg-white border border-[#ded9ce] text-[#1f1e1d] flex items-center justify-center font-mono text-sm hover:bg-[#f6f2ea] disabled:opacity-40 transition-colors shadow-2xs"
+                                                className="w-8 h-8 -xl bg-white border border-[#ded9ce] text-[#1f1e1d] flex items-center justify-center font-mono text-sm hover:bg-[#f6f2ea] disabled:opacity-40 transition-colors shadow-2xs"
                                             >
                                                 +
                                             </button>
@@ -469,7 +469,7 @@ export function FilterBar({
                                                 setIsPartyPopoverOpen(false);
                                                 applyFilter({guests: adults, suites})
                                             }}
-                                            className="px-5 py-2.5 rounded-xl bg-[#1f1e1d] hover:bg-[#343230] text-white text-[10px] font-sans font-semibold uppercase tracking-[0.18em] transition-colors"
+                                            className="px-5 py-2.5 -xl bg-[#1f1e1d] hover:bg-[#343230] text-white text-[10px] font-sans font-semibold uppercase tracking-[0.18em] transition-colors"
                                         >
                                             Apply Party Composition
                                         </button>
@@ -498,7 +498,7 @@ export function FilterBar({
                                             onClick={function () {
                                                 handleCategorySelect(cat.id);
                                             }}
-                                            className={`px-4 py-2.5 rounded-xl font-sans text-[11px] font-semibold uppercase tracking-[0.16em] transition-all duration-200 flex items-center gap-2 shadow-2xs ${
+                                            className={`px-4 py-2.5 -xl font-sans text-[11px] font-semibold uppercase tracking-[0.16em] transition-all duration-200 flex items-center gap-2 shadow-2xs ${
                                                 isActive
                                                     ? 'bg-[#1f1e1d] text-white shadow-sm'
                                                     : 'bg-white hover:bg-[#faf7f0] text-[#3e3b37] border border-[#ded9ce]'
@@ -506,7 +506,7 @@ export function FilterBar({
                                         >
                                             <span>{cat.label}</span>
                                             <span
-                                                className={`text-[9px] font-mono px-1.5 py-0.5 rounded-md ${
+                                                className={`text-[9px] font-mono px-1.5 py-0.5 -md ${
                                                     isActive
                                                         ? 'bg-white/20 text-white'
                                                         : 'bg-[#f6f2ea] text-[#8e763b]'
@@ -536,7 +536,7 @@ export function FilterBar({
                                         setIsCalendarOpen(false);
                                         setIsPartyPopoverOpen(false);
                                     }}
-                                    className={`bg-white hover:bg-[#faf8f4] border rounded-xl px-4 py-2 text-left transition-all duration-200 flex items-center gap-3 shadow-2xs ${
+                                    className={`bg-white hover:bg-[#faf8f4] border -xl px-4 py-2 text-left transition-all duration-200 flex items-center gap-3 shadow-2xs ${
                                         isSortPopoverOpen
                                             ? 'border-[#8e763b] ring-1 ring-[#8e763b]/30'
                                             : 'border-[#ded9ce] hover:border-[#8e763b]/60'
@@ -567,7 +567,7 @@ export function FilterBar({
 
                                 {/* Dropdown Menu */}
                                 {isSortPopoverOpen && (
-                                    <div className="absolute right-0 mt-2 w-56 bg-white border border-[#ded9ce] rounded-2xl shadow-xl py-2 z-40 animate-in fade-in-50 zoom-in-95">
+                                    <div className="absolute right-0 mt-2 w-56 bg-white border border-[#ded9ce] -2xl shadow-xl py-2 z-40 animate-in fade-in-50 zoom-in-95">
                                         <div className="px-3.5 py-1.5 border-b border-[#f0ece3] text-[9px] font-mono uppercase tracking-widest text-[#8e8a82]">
                                             Ranking Doctrine
                                         </div>
@@ -605,7 +605,7 @@ export function FilterBar({
                     <div className="pt-3.5 border-t border-[#e4ded2] flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs font-sans text-[#78756d]">
                         {/* Live Results Counter */}
                         <div className="flex items-center gap-2">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#8e763b] animate-pulse" />
+                            <span className="w-1.5 h-1.5 -full bg-[#8e763b] animate-pulse" />
                             <span>
                                 Showing{' '}
                                 <strong className="font-serif font-semibold text-[#1f1e1d]">

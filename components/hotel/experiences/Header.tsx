@@ -48,8 +48,8 @@ export function ExperiencesHeaderSection({
                 {/* Gazette Monograph Header Block */}
                 <div className="flex flex-col items-center text-center max-w-4xl mx-auto space-y-6">
                     {/* Top Architectural Gazette Badge */}
-                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#f6f2ea] border border-[#ded9ce] text-[9px] sm:text-[10px] font-sans font-semibold uppercase tracking-[0.28em] text-[#8e763b] shadow-2xs">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#8e763b] animate-pulse" />
+                    <div className="inline-flex items-center gap-2 px-4 py-1.5 -full bg-[#f6f2ea] border border-[#ded9ce] text-[9px] sm:text-[10px] font-sans font-semibold uppercase tracking-[0.28em] text-[#8e763b] shadow-2xs">
+                        <span className="w-1.5 h-1.5 -full bg-[#8e763b] animate-pulse" />
                         <span>{editionEyebrow}</span>
                     </div>
 

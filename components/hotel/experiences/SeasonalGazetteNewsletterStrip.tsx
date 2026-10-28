@@ -58,7 +58,7 @@ export function SeasonalGazetteNewsletterStrip({
                 {/* Right Form Input Column (6 cols) */}
                 <div className="lg:col-span-6">
                     {isSubmitted ? (
-                        <div className="p-4 rounded-xl bg-white border border-[#ded9ce] text-center sm:text-left">
+                        <div className="p-4 -xl bg-white border border-[#ded9ce] text-center sm:text-left">
                             <span className="font-serif text-base font-semibold text-[#1f1e1d] block">
                                 Inscription Recorded
                             </span>
@@ -77,11 +77,11 @@ export function SeasonalGazetteNewsletterStrip({
                                         setEmail(e.target.value);
                                     }}
                                     placeholder={placeholderText}
-                                    className="flex-1 px-4 py-3.5 rounded-xl bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] transition-colors shadow-2xs placeholder-[#a4a098]"
+                                    className="flex-1 px-4 py-3.5 -xl bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] transition-colors shadow-2xs placeholder-[#a4a098]"
                                 />
                                 <button
                                     type="submit"
-                                    className="px-6 py-3.5 rounded-xl bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-[11px] font-semibold uppercase tracking-[0.2em] transition-all shadow-md shrink-0 active:translate-y-0.5"
+                                    className="px-6 py-3.5 -xl bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-[11px] font-semibold uppercase tracking-[0.2em] transition-all shadow-md shrink-0 active:translate-y-0.5"
                                 >
                                     {buttonLabel}
                                 </button>

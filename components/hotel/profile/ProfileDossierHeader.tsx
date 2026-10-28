@@ -159,7 +159,7 @@ export function ProfileDossierHeader({
                             </span>
                         </div>
 
-                        <div className="relative w-10 h-10 rounded-full overflow-hidden border border-[#bfa76f] bg-[#f6f2ea] shadow-xs shrink-0">
+                        <div className="relative w-10 h-10 -full overflow-hidden border border-[#bfa76f] bg-[#f6f2ea] shadow-xs shrink-0">
                             <Image
                                 src={avatarUrl}
                                 alt={avatarAlt}
@@ -181,12 +181,12 @@ export function ProfileDossierHeader({
                     <div className="space-y-3 max-w-2xl">
                         {/* Eyebrow Protocol Badges */}
                         <div className="flex flex-wrap items-center gap-2.5">
-                            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-[#f6f2ea] border border-[#ded9ce] text-[9px] font-mono uppercase tracking-[0.22em] text-[#6d6961]">
-                                <span className="w-1.5 h-1.5 rounded-full bg-[#8e763b]" />
+                            <span className="inline-flex items-center gap-2 px-3 py-1 -sm bg-[#f6f2ea] border border-[#ded9ce] text-[9px] font-mono uppercase tracking-[0.22em] text-[#6d6961]">
+                                <span className="w-1.5 h-1.5 -full bg-[#8e763b]" />
                                 <span>SOVEREIGN PATRON DOSSIER • FOLIO #{folioNumber}</span>
                             </span>
 
-                            <span className="px-2.5 py-1 rounded-sm bg-[#8e763b] text-white font-sans text-[9px] font-semibold uppercase tracking-[0.18em] shadow-2xs">
+                            <span className="px-2.5 py-1 -sm bg-[#8e763b] text-white font-sans text-[9px] font-semibold uppercase tracking-[0.18em] shadow-2xs">
                                 {tierBadge}
                             </span>
                         </div>
@@ -203,10 +203,10 @@ export function ProfileDossierHeader({
                     </div>
 
                     {/* Right: Assigned Personal Majordomo Host Card */}
-                    <div className="w-full lg:w-auto bg-white border border-[#ded9ce] rounded-2xl p-4 sm:p-5 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-4 shrink-0">
+                    <div className="w-full lg:w-auto bg-white border border-[#ded9ce] -2xl p-4 sm:p-5 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-4 shrink-0">
                         <div className="flex items-center gap-3.5">
                             {/* Majordomo Avatar */}
-                            <div className="relative w-12 h-12 rounded-full overflow-hidden border border-[#ded9ce] bg-[#f6f2ea] shadow-2xs shrink-0">
+                            <div className="relative w-12 h-12 -full overflow-hidden border border-[#ded9ce] bg-[#f6f2ea] shadow-2xs shrink-0">
                                 <Image
                                     src={majordomo.avatarUrl}
                                     alt={majordomo.avatarAlt}
@@ -218,7 +218,7 @@ export function ProfileDossierHeader({
 
                             <div className="space-y-0.5 min-w-0">
                                 <div className="flex items-center gap-1.5">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                                    <span className="w-1.5 h-1.5 -full bg-emerald-500 animate-pulse" />
                                     <span className="text-[9px] font-mono uppercase tracking-[0.18em] text-[#24633b] font-medium">
                                         {majordomo.statusText}
                                     </span>
@@ -236,7 +236,7 @@ export function ProfileDossierHeader({
                         <div className="flex items-center gap-2 pt-2 sm:pt-0 border-t sm:border-t-0 border-[#eeeae2]">
                             <a
                                 href={`tel:${majordomo.phoneTel}`}
-                                className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-[#f6f2ea] hover:bg-[#eeeae2] border border-[#ded9ce] text-[10px] font-sans font-semibold uppercase tracking-[0.16em] text-[#1f1e1d] transition-colors shadow-2xs"
+                                className="inline-flex items-center gap-1.5 px-3.5 py-2.5 -xl bg-[#f6f2ea] hover:bg-[#eeeae2] border border-[#ded9ce] text-[10px] font-sans font-semibold uppercase tracking-[0.16em] text-[#1f1e1d] transition-colors shadow-2xs"
                                 aria-label="Direct Telephone Line"
                             >
                                 <svg
@@ -256,7 +256,7 @@ export function ProfileDossierHeader({
                             <button
                                 type="button"
                                 onClick={onContactMajordomo}
-                                className="inline-flex items-center justify-center px-4 py-2.5 rounded-xl bg-[#1f1e1d] hover:bg-[#343230] text-white text-[10px] font-sans font-semibold uppercase tracking-[0.18em] transition-colors shadow-2xs"
+                                className="inline-flex items-center justify-center px-4 py-2.5 -xl bg-[#1f1e1d] hover:bg-[#343230] text-white text-[10px] font-sans font-semibold uppercase tracking-[0.18em] transition-colors shadow-2xs"
                             >
                                 DISPATCH
                             </button>
@@ -278,7 +278,7 @@ export function ProfileDossierHeader({
                                 onClick={function () {
                                     handleTabClick(tab.id);
                                 }}
-                                className={`px-4 sm:px-5 py-2.5 rounded-xl font-sans text-xs font-semibold uppercase tracking-[0.16em] transition-all whitespace-nowrap shadow-2xs flex items-center gap-2 ${
+                                className={`px-4 sm:px-5 py-2.5 -xl font-sans text-xs font-semibold uppercase tracking-[0.16em] transition-all whitespace-nowrap shadow-2xs flex items-center gap-2 ${
                                     isActive
                                         ? 'bg-[#1f1e1d] text-white shadow-sm'
                                         : 'bg-white hover:bg-[#faf8f5] text-[#4d4a45] border border-[#ded9ce]'
@@ -287,7 +287,7 @@ export function ProfileDossierHeader({
                                 <span>{tab.label}</span>
                                 {tab.badge && (
                                     <span
-                                        className={`px-1.5 py-0.5 rounded-xs text-[9px] font-mono tracking-wider ${
+                                        className={`px-1.5 py-0.5 -xs text-[9px] font-mono tracking-wider ${
                                             isActive
                                                 ? 'bg-[#8e763b] text-white'
                                                 : 'bg-[#f6f2ea] text-[#8e763b]'

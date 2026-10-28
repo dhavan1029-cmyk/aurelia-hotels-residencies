@@ -83,7 +83,7 @@ export function BespokeConciergeInquiryBanner({
 
     return (
         <section className={`w-full max-w-340 mx-auto px-4 sm:px-8 lg:px-12 py-10 sm:py-14 ${className}`}>
-            <div className="bg-[#191817] text-[#fcf9f4] border border-[#34322e] rounded-lg p-8 sm:p-12 lg:p-14 shadow-2xl relative overflow-hidden">
+            <div className="bg-[#191817] text-[#fcf9f4] border border-[#34322e] -lg p-8 sm:p-12 lg:p-14 shadow-2xl relative overflow-hidden">
                 {/* Subtle Geometric Background Pattern */}
                 <div
                     className="absolute inset-0 opacity-[0.03] pointer-events-none"
@@ -97,8 +97,8 @@ export function BespokeConciergeInquiryBanner({
                 <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
                     {/* Left Narrative Column (7 cols) */}
                     <div className="lg:col-span-7 space-y-6">
-                        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] sm:text-[10px] font-sans font-semibold uppercase tracking-[0.24em] text-[#bfa76f]">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#bfa76f] animate-pulse" />
+                        <div className="inline-flex items-center gap-2 px-3.5 py-1 -full bg-white/5 border border-white/10 text-[9px] sm:text-[10px] font-sans font-semibold uppercase tracking-[0.24em] text-[#bfa76f]">
+                            <span className="w-1.5 h-1.5 -full bg-[#bfa76f] animate-pulse" />
                             <span>{eyebrow}</span>
                         </div>
 
@@ -134,7 +134,7 @@ export function BespokeConciergeInquiryBanner({
                     </div>
 
                     {/* Right Action & Telephone Hotline Card (5 cols) */}
-                    <div className="lg:col-span-5 bg-[#22201e] border border-[#3e3a35] rounded-2xl p-6 sm:p-8 flex flex-col justify-between space-y-6 shadow-xl">
+                    <div className="lg:col-span-5 bg-[#22201e] border border-[#3e3a35] -2xl p-6 sm:p-8 flex flex-col justify-between space-y-6 shadow-xl">
                         <div>
                             <span className="block text-[9px] font-sans font-semibold uppercase tracking-[0.22em] text-[#bfa76f] mb-1">
                                 {supportNotice}
@@ -153,7 +153,7 @@ export function BespokeConciergeInquiryBanner({
                         <div className="space-y-3 pt-4 border-t border-white/10">
                             <button
                                 type="button"
-                                className="w-full inline-flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-[#bfa76f] hover:bg-[#aa935e] text-[#191817] font-sans text-[11px] font-semibold uppercase tracking-[0.2em] transition-all shadow-md active:translate-y-0.5 text-center"
+                                className="w-full inline-flex items-center justify-center gap-2 px-6 py-4 -xl bg-[#bfa76f] hover:bg-[#aa935e] text-[#191817] font-sans text-[11px] font-semibold uppercase tracking-[0.2em] transition-all shadow-md active:translate-y-0.5 text-center"
                             >
                                 <span>{primaryCtaLabel}</span>
                                 <span>→</span>
@@ -161,7 +161,7 @@ export function BespokeConciergeInquiryBanner({
 
                             <button
                                 type="button"
-                                className="w-full inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-transparent hover:bg-white/5 border border-white/20 text-white font-sans text-[10px] font-semibold uppercase tracking-[0.18em] transition-all text-center"
+                                className="w-full inline-flex items-center justify-center px-6 py-3.5 -xl bg-transparent hover:bg-white/5 border border-white/20 text-white font-sans text-[10px] font-semibold uppercase tracking-[0.18em] transition-all text-center"
                             >
                                 <span>{secondaryCtaLabel}</span>
                             </button>

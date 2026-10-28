@@ -150,12 +150,12 @@ export function SovereignVoucherCard({
 
     return (
         <article
-            className={`w-full max-w-360 mx-auto bg-white border border-[#e8e4dc] rounded-2xl sm:rounded-3xl shadow-[0_8px_32px_rgba(31,30,29,0.04)] overflow-hidden ${className}`}
+            className={`w-full max-w-360 mx-auto bg-white border border-[#e8e4dc] -2xl sm:-3xl shadow-[0_8px_32px_rgba(31,30,29,0.04)] overflow-hidden ${className}`}
         >
             {/* Top Folio Header Bar */}
             <div className="px-6 sm:px-10 py-5 bg-[#f6f2ea] border-b border-[#ded9ce] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#8e763b]" />
+                    <span className="w-2.5 h-2.5 -full bg-[#8e763b]" />
                     <div>
                         <span className="block text-[9px] font-sans font-semibold uppercase tracking-[0.24em] text-[#8e8a82]">
                             {folioHeaderEyebrow}
@@ -167,8 +167,8 @@ export function SovereignVoucherCard({
                 </div>
 
                 <div className="flex items-center gap-2 self-start sm:self-auto">
-                    <div className="px-3 py-1.5 rounded-lg bg-white border border-[#ded9ce] text-[10px] font-sans text-[#5c5952] flex items-center gap-2 shadow-2xs">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                    <div className="px-3 py-1.5 -lg bg-white border border-[#ded9ce] text-[10px] font-sans text-[#5c5952] flex items-center gap-2 shadow-2xs">
+                        <span className="w-1.5 h-1.5 -full bg-emerald-500" />
                         <span className="font-medium text-[#1f1e1d] uppercase tracking-wider">
                             {settlementBadgeText}
                         </span>
@@ -192,7 +192,7 @@ export function SovereignVoucherCard({
                             {stay.suiteTitle}
                         </h3>
                         <div className="flex items-center gap-2 mt-2">
-                            <span className="px-2.5 py-0.5 rounded bg-[#f6f2ea] border border-[#ded9ce] text-[10px] font-sans font-semibold text-[#8e763b] uppercase tracking-wider">
+                            <span className="px-2.5 py-0.5  bg-[#f6f2ea] border border-[#ded9ce] text-[10px] font-sans font-semibold text-[#8e763b] uppercase tracking-wider">
                                 {stay.suiteUnitBadge}
                             </span>
                             <span className="text-xs text-[#78756d] font-sans font-light">
@@ -207,7 +207,7 @@ export function SovereignVoucherCard({
                             STAY HORIZON
                         </span>
 
-                        <div className="p-3.5 rounded-sm bg-white border border-[#ded9ce] shadow-2xs space-y-1">
+                        <div className="p-3.5 -sm bg-white border border-[#ded9ce] shadow-2xs space-y-1">
                             <span className="text-[9px] font-sans uppercase tracking-wider text-[#8e8a82] block">
                                 ARRIVAL CHECK-IN
                             </span>
@@ -219,7 +219,7 @@ export function SovereignVoucherCard({
                             </span>
                         </div>
 
-                        <div className="p-3.5 rounded-sm bg-white border border-[#ded9ce] shadow-2xs space-y-1">
+                        <div className="p-3.5 -sm bg-white border border-[#ded9ce] shadow-2xs space-y-1">
                             <span className="text-[9px] font-sans uppercase tracking-wider text-[#8e8a82] block">
                                 DEPARTURE CHECK-OUT
                             </span>
@@ -279,8 +279,8 @@ export function SovereignVoucherCard({
                     </div>
 
                     {/* Assigned Majordomo Liaison Badge */}
-                    <div className="pt-4 border-t border-[#eeeae2] flex items-center gap-3 p-3.5 rounded-sm bg-white border shadow-2xs">
-                        <div className="relative w-10 h-10 rounded-full overflow-hidden bg-[#eeeae2] border border-[#dcdad5] shrink-0">
+                    <div className="pt-4 border-t border-[#eeeae2] flex items-center gap-3 p-3.5 -sm bg-white border shadow-2xs">
+                        <div className="relative w-10 h-10 -full overflow-hidden bg-[#eeeae2] border border-[#dcdad5] shrink-0">
                             {assignedHost.avatarUrl ? (
                                 <Image
                                     src={assignedHost.avatarUrl}
@@ -380,8 +380,8 @@ export function SovereignVoucherCard({
 
                     {/* Settlement Badges Strip */}
                     <div className="pt-4 border-t border-[#eeeae2] flex items-center justify-between">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-[#e9f5ee] border border-[#badfca] text-[#24633b] font-sans text-[10px] font-semibold uppercase tracking-wider">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#24633b]" />
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1  bg-[#e9f5ee] border border-[#badfca] text-[#24633b] font-sans text-[10px] font-semibold uppercase tracking-wider">
+                            <span className="w-1.5 h-1.5 -full bg-[#24633b]" />
                             <span>{accounting.paymentStatusBadge}</span>
                         </div>
 

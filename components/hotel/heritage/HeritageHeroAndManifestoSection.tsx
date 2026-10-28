@@ -154,12 +154,12 @@ export function HeritageHeroAndManifestoSection({
                     <div className="max-w-3xl space-y-6">
                         {/* Architectural Monograph Edition Badges */}
                         <div className="flex flex-wrap items-center gap-2.5">
-                            <span className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-black/50 backdrop-blur-md border border-white/20 text-[9px] sm:text-[10px] font-sans font-semibold uppercase tracking-[0.28em] text-[#bfa76f] shadow-sm">
-                                <span className="w-1.5 h-1.5 rounded-full bg-[#bfa76f] animate-pulse" />
+                            <span className="inline-flex items-center gap-2 px-3.5 py-1 -full bg-black/50 backdrop-blur-md border border-white/20 text-[9px] sm:text-[10px] font-sans font-semibold uppercase tracking-[0.28em] text-[#bfa76f] shadow-sm">
+                                <span className="w-1.5 h-1.5 -full bg-[#bfa76f] animate-pulse" />
                                 <span>{editionBadge}</span>
                             </span>
 
-                            <span className="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-[9px] sm:text-[10px] font-sans font-medium uppercase tracking-[0.22em] text-[#dcdad5]">
+                            <span className="px-3 py-1 -full bg-white/10 backdrop-blur-md border border-white/15 text-[9px] sm:text-[10px] font-sans font-medium uppercase tracking-[0.22em] text-[#dcdad5]">
                                 {sanctuaryRefPill}
                             </span>
                         </div>
@@ -187,7 +187,7 @@ export function HeritageHeroAndManifestoSection({
                                             key={idx}
                                             href={action.href}
                                             onClick={handleExploreCraft}
-                                            className="inline-flex items-center gap-2 px-7 py-4 rounded-xl bg-[#bfa76f] hover:bg-[#aa935e] text-[#191817] font-sans text-[11px] font-semibold uppercase tracking-[0.2em] transition-all shadow-lg active:translate-y-0.5 text-center group"
+                                            className="inline-flex items-center gap-2 px-7 py-4 -xl bg-[#bfa76f] hover:bg-[#aa935e] text-[#191817] font-sans text-[11px] font-semibold uppercase tracking-[0.2em] transition-all shadow-lg active:translate-y-0.5 text-center group"
                                         >
                                             <span>{action.label}</span>
                                             <span className="transform transition-transform duration-300 group-hover:translate-x-1">
@@ -202,7 +202,7 @@ export function HeritageHeroAndManifestoSection({
                                         key={idx}
                                         href={action.href}
                                         onClick={handleDownloadCharter}
-                                        className="inline-flex items-center gap-2 px-6 py-4 rounded-xl bg-white/10 hover:bg-white/15 border border-white/20 text-white font-sans text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.18em] transition-all backdrop-blur-md active:translate-y-0.5 text-center"
+                                        className="inline-flex items-center gap-2 px-6 py-4 -xl bg-white/10 hover:bg-white/15 border border-white/20 text-white font-sans text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.18em] transition-all backdrop-blur-md active:translate-y-0.5 text-center"
                                     >
                                         <span>{action.label}</span>
                                     </Link>
@@ -268,7 +268,7 @@ export function HeritageHeroAndManifestoSection({
                         return (
                             <div
                                 key={idx}
-                                className="bg-[#f6f2ea] border border-[#e8e4dc] rounded-2xl p-4 sm:p-5 flex flex-col justify-between shadow-2xs hover:shadow-xs transition-shadow"
+                                className="bg-[#f6f2ea] border border-[#e8e4dc] -2xl p-4 sm:p-5 flex flex-col justify-between shadow-2xs hover:shadow-xs transition-shadow"
                             >
                                 <span className="font-serif text-2xl sm:text-3xl font-normal text-[#1f1e1d] tracking-tight">
                                     {spec.metric}

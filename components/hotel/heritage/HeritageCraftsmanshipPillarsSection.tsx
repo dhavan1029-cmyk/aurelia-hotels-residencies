@@ -159,8 +159,8 @@ export function HeritageCraftsmanshipPillarsSection({
                 </div>
 
                 <div className="shrink-0 self-start lg:self-auto">
-                    <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#f6f2ea] border border-[#ded9ce] text-[9px] sm:text-[10px] font-sans font-semibold uppercase tracking-[0.2em] text-[#8e763b] shadow-2xs">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#8e763b] animate-pulse" />
+                    <span className="inline-flex items-center gap-2 px-3.5 py-1.5 -full bg-[#f6f2ea] border border-[#ded9ce] text-[9px] sm:text-[10px] font-sans font-semibold uppercase tracking-[0.2em] text-[#8e763b] shadow-2xs">
+                        <span className="w-1.5 h-1.5 -full bg-[#8e763b] animate-pulse" />
                         <span>{charterNotice}</span>
                     </span>
                 </div>
@@ -174,7 +174,7 @@ export function HeritageCraftsmanshipPillarsSection({
                     return (
                         <article
                             key={pillar.pillarNumber}
-                            className="bg-white border border-[#e8e4dc] rounded-lg overflow-hidden shadow-[0_4px_24px_rgba(31,30,29,0.03)] hover:shadow-[0_16px_40px_rgba(31,30,29,0.07)] hover:border-[#8e763b]/40 transition-all duration-500"
+                            className="bg-white border border-[#e8e4dc] -lg overflow-hidden shadow-[0_4px_24px_rgba(31,30,29,0.03)] hover:shadow-[0_16px_40px_rgba(31,30,29,0.07)] hover:border-[#8e763b]/40 transition-all duration-500"
                         >
                             <div className="grid grid-cols-1 lg:grid-cols-12 items-stretch">
                                 {/* Photographic Visual Column (5 Columns on Desktop) */}
@@ -194,10 +194,10 @@ export function HeritageCraftsmanshipPillarsSection({
 
                                     {/* Top Left Pillar Number Badge */}
                                     <div className="absolute top-4 left-4 z-10 flex items-center gap-2">
-                                        <span className="px-3 py-1 rounded-sm bg-black/60 backdrop-blur-md text-white font-sans text-[10px] font-semibold uppercase tracking-[0.22em] shadow-sm">
+                                        <span className="px-3 py-1 -sm bg-black/60 backdrop-blur-md text-white font-sans text-[10px] font-semibold uppercase tracking-[0.22em] shadow-sm">
                                             {pillar.romanNumeral}
                                         </span>
-                                        <span className="px-2.5 py-1 rounded-sm bg-[#8e763b] text-white font-sans text-[9px] font-semibold uppercase tracking-[0.18em] shadow-sm">
+                                        <span className="px-2.5 py-1 -sm bg-[#8e763b] text-white font-sans text-[9px] font-semibold uppercase tracking-[0.18em] shadow-sm">
                                             {pillar.tagline}
                                         </span>
                                     </div>
@@ -219,7 +219,7 @@ export function HeritageCraftsmanshipPillarsSection({
                                     <div>
                                         {/* Material Badge */}
                                         <div className="inline-flex items-center gap-2 pb-3 mb-4 border-b border-[#eeeae2] w-full">
-                                            <span className="w-1.5 h-1.5 rounded-full bg-[#8e763b]" />
+                                            <span className="w-1.5 h-1.5 -full bg-[#8e763b]" />
                                             <span className="text-[9px] sm:text-[10px] font-sans font-semibold uppercase tracking-[0.22em] text-[#8e763b]">
                                                 {pillar.materialsBadge}
                                             </span>
@@ -241,10 +241,10 @@ export function HeritageCraftsmanshipPillarsSection({
                                                 return (
                                                     <div
                                                         key={idx}
-                                                        className="p-3.5 sm:p-4 rounded-2xl bg-white border border-[#ded9ce] shadow-2xs flex flex-col justify-between space-y-2 hover:border-[#8e763b]/60 transition-colors"
+                                                        className="p-3.5 sm:p-4 -2xl bg-white border border-[#ded9ce] shadow-2xs flex flex-col justify-between space-y-2 hover:border-[#8e763b]/60 transition-colors"
                                                     >
                                                         <div className="flex items-center gap-2">
-                                                            <span className="w-1 h-1 rounded-full bg-[#8e763b]" />
+                                                            <span className="w-1 h-1 -full bg-[#8e763b]" />
                                                             <span className="font-serif text-xs font-semibold text-[#1f1e1d] tracking-tight">
                                                                 {pec.label}
                                                             </span>

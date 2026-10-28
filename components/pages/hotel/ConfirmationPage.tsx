@@ -71,7 +71,7 @@ export function ConfirmationPage({
 				{/* Return Navigation & Support Footer Callout */}
 				<div className="pt-8 border-t border-[#eeeae2] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-sans text-[#78756d]">
 					<div className="flex items-center gap-2">
-						<span className="w-2 h-2 rounded-full bg-[#8e763b]" />
+						<span className="w-2 h-2 -full bg-[#8e763b]" />
 						<span>
 							Aurelia Sanctuary Positano • All reservations secured under Sovereign Key Protocol.
 						</span>

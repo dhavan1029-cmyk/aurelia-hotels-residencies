@@ -100,8 +100,8 @@ export async function HomePage() {
                 <div className="relative z-10 w-full max-w-7xl mx-auto sm:px-8 lg:px-12 pt-8 pb-10 flex-1 flex flex-col justify-center">
                     <div className="max-w-3xl">
                         {/* Location Badge / Monograph Pill */}
-                        <div className="flex items-center w-fit gap-2.5 px-4 py-1.5 rounded-full bg-black/40 backdrop-blur-md border border-white/20 text-[#fcf9f4] shadow-sm m-auto mb-2 md:mx-0">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#bfa76f] animate-pulse" />
+                        <div className="flex items-center w-fit gap-2.5 px-4 py-1.5 -full bg-black/40 backdrop-blur-md border border-white/20 text-[#fcf9f4] shadow-sm m-auto mb-2 md:mx-0">
+                            <span className="w-1.5 h-1.5 -full bg-[#bfa76f] animate-pulse" />
                             <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.28em] font-sans font-medium text-white/90">
                                 Positano Cliffside Sanctuary • Amalfi Coast
                             </span>
@@ -122,7 +122,7 @@ export async function HomePage() {
                             {/* Primary Gold CTA */}
                             <Link
                                 href="/accommodations"
-                                className="inline-flex items-center gap-2 px-7 py-3.5 bg-[#bfa76f] hover:bg-[#a99159] text-white font-sans text-[11px] sm:text-[12px] font-semibold uppercase tracking-[0.2em] rounded-sm transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0"
+                                className="inline-flex items-center gap-2 px-7 py-3.5 bg-[#bfa76f] hover:bg-[#a99159] text-white font-sans text-[11px] sm:text-[12px] font-semibold uppercase tracking-[0.2em] -sm transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0"
                             >
                                 <span>Explore Signature Suites</span>
                                 <span className="text-sm font-normal">→</span>
@@ -203,7 +203,7 @@ export async function HomePage() {
                     <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 break-inside-avoid items-start">
                         {/* LEFT COLUMN: Large Featured Suite Card (7 Columns) */}
                         <div className="order-1 lg:col-span-8 lg:row-start-1">
-                            <SuiteCard {...masterSuite} variant="master-featured" />
+                            <SuiteCard {...masterSuite} variant="master-featured" bookingParams={{}}/>
                             
                         </div>
 
@@ -214,12 +214,13 @@ export async function HomePage() {
                                     key={suite.id}
                                     {...suite}
                                     variant="coastal-grid"
+                                    bookingParams={{}}
                                 />
                             ))}
                         </div>
 
                         {/* Dark Bespoke Inquiries Banner Card */}
-                        <div className="order-3 lg:col-span-8 lg:col-start-1 lg:row-start-2 bg-[#1f1e1d] text-[#fcf9f4] border border-[#383530] rounded-lg p-6 sm:p-7 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-lg lg:transform lg:-translate-y-40">
+                        <div className="order-3 lg:col-span-8 lg:col-start-1 lg:row-start-2 bg-[#1f1e1d] text-[#fcf9f4] border border-[#383530] -lg p-6 sm:p-7 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-lg lg:transform lg:-translate-y-40">
                             <div>
                                 <h4 className="font-serif text-xl sm:text-2xl font-normal text-white tracking-tight">
                                     Bespoke Multi-Week Stays
@@ -231,7 +232,7 @@ export async function HomePage() {
 
                             <a
                                 href="tel:+39089875000"
-                                className="px-5 py-3 rounded-sm bg-[#bfa76f] hover:bg-[#aa935e] text-white font-sans text-[11px] font-semibold uppercase tracking-[0.2em] whitespace-nowrap transition-all shadow-md self-stretch sm:self-auto text-center"
+                                className="px-5 py-3 -sm bg-[#bfa76f] hover:bg-[#aa935e] text-white font-sans text-[11px] font-semibold uppercase tracking-[0.2em] whitespace-nowrap transition-all shadow-md self-stretch sm:self-auto text-center"
                             >
                                 CALL CONCIERGE
                             </a>
@@ -244,14 +245,14 @@ export async function HomePage() {
             {/* Dining Venue Section */}
             <section className='px-6 md:px-0'>
                 <article
-                    className={`max-w-7xl mx:30 lg:mx-auto my-20 bg-white border border-[#e8e4dc] rounded-3xl p-8 sm:p-10 lg:p-12 shadow-[0_4px_30px_rgba(0,0,0,0.03)]`}
+                    className={`max-w-7xl mx:30 lg:mx-auto my-20 bg-white border border-[#e8e4dc] -3xl p-8 sm:p-10 lg:p-12 shadow-[0_4px_30px_rgba(0,0,0,0.03)]`}
                 >
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
                         {/* Left Content Column (6 cols on desktop) */}
                         <div className="lg:col-span-6 flex flex-col justify-between h-full">
                             <div>
                                 {/* Michelin Star & Chef Eyebrow Badge Pill */}
-                                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#f6f2ea] border border-[#ebe5d8] text-[#8e763b] text-[10px] sm:text-[11px] font-sans font-medium uppercase tracking-[0.22em] mb-6">
+                                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 -full bg-[#f6f2ea] border border-[#ebe5d8] text-[#8e763b] text-[10px] sm:text-[11px] font-sans font-medium uppercase tracking-[0.22em] mb-6">
                                     <svg
                                         className="w-3.5 h-3.5 text-[#bfa76f] shrink-0"
                                         viewBox="0 0 24 24"
@@ -299,7 +300,7 @@ export async function HomePage() {
                                 <Link
                                     href={'/experiences#dining-venue'}
                                     // onClick={onRequestTable}
-                                    className="inline-flex items-center justify-center px-7 py-3.5 bg-[#bfa76f] hover:bg-[#aa935e] text-white font-sans text-[11px] sm:text-[12px] font-semibold uppercase tracking-[0.2em] rounded-sm transition-all duration-300 shadow-sm active:translate-y-0.5 text-center"
+                                    className="inline-flex items-center justify-center px-7 py-3.5 bg-[#bfa76f] hover:bg-[#aa935e] text-white font-sans text-[11px] sm:text-[12px] font-semibold uppercase tracking-[0.2em] -sm transition-all duration-300 shadow-sm active:translate-y-0.5 text-center"
                                 >
                                     {'REQUEST DINING TABLE'}
                                 </Link>
@@ -312,7 +313,7 @@ export async function HomePage() {
                         {/* Right Dual Photography Column (6 cols on desktop) */}
                         <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 w-full">
                             {/* Primary Image: Sunset Open-Air Terrace */}
-                            <div className="relative aspect-4/5 sm:aspect-3/4 w-full rounded-lg overflow-hidden bg-[#eeeae2] shadow-sm">
+                            <div className="relative aspect-4/5 sm:aspect-3/4 w-full -lg overflow-hidden bg-[#eeeae2] shadow-sm">
                                 <Image
                                     src={'/limestone-villa.png'}
                                     alt={`Ristorante Il Belvedere open-air sunset dining terrace overlooking the Mediterranean`}
@@ -323,7 +324,7 @@ export async function HomePage() {
                             </div>
 
                             {/* Secondary Image: Sunlit Dining Chamber & Ocean View */}
-                            <div className="relative aspect-4/5 sm:aspect-3/4 w-full rounded-lg overflow-hidden bg-[#eeeae2] shadow-sm">
+                            <div className="relative aspect-4/5 sm:aspect-3/4 w-full -lg overflow-hidden bg-[#eeeae2] shadow-sm">
                                 <Image
                                     src={'/suite-402.png'}
                                     alt={`Ristorante Il Belvedere floor-to-ceiling panoramic ocean lounge`}
@@ -358,7 +359,7 @@ export async function HomePage() {
                             return (
                                 <div
                                     key={idx}
-                                    className="bg-white border border-[#e8e4dc] rounded-lg p-7 sm:p-8 flex flex-col justify-between shadow-[0_4px_24px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_32px_rgba(31,30,29,0.05)] transition-all duration-300"
+                                    className="bg-white border border-[#e8e4dc] -lg p-7 sm:p-8 flex flex-col justify-between shadow-[0_4px_24px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_32px_rgba(31,30,29,0.05)] transition-all duration-300"
                                 >
                                     <div>
                                         {/* 5-Star Rating Row */}
@@ -403,7 +404,7 @@ export async function HomePage() {
                     </div>
 
                     {/* Dark Monolithic Callout Banner Card */}
-                    <div className="mt-16 sm:mt-20 bg-[#161514] text-[#fcf9f4] border border-[#2d2b27] rounded-3xl p-8 sm:p-12 lg:p-14 shadow-2xl">
+                    <div className="mt-16 sm:mt-20 bg-[#161514] text-[#fcf9f4] border border-[#2d2b27] -3xl p-8 sm:p-12 lg:p-14 shadow-2xl">
                         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8 lg:gap-12">
                             {/* Left Content Area */}
                             <div className="max-w-2xl">
@@ -424,7 +425,7 @@ export async function HomePage() {
                                 <Link
                                     href={'/accommodations'}
                                     // onClick={onCheckAvailability}
-                                    className="inline-flex items-center justify-center px-10 py-4 bg-[#b28c51] hover:bg-[#9e7a42] text-white font-sans text-[11px] font-semibold uppercase tracking-[0.22em] rounded-sm transition-all duration-300 shadow-sm active:translate-y-0.5 text-center whitespace-nowrap"
+                                    className="inline-flex items-center justify-center px-10 py-4 bg-[#b28c51] hover:bg-[#9e7a42] text-white font-sans text-[11px] font-semibold uppercase tracking-[0.22em] -sm transition-all duration-300 shadow-sm active:translate-y-0.5 text-center whitespace-nowrap"
                                 >
                                     {'CHECK AVAILABILITY'}
                                 </Link>
@@ -433,7 +434,7 @@ export async function HomePage() {
                                 <Link
                                     href={'/experiences#concierge'}
                                     // onClick={onInquireConcierge}
-                                    className="inline-flex items-center justify-center px-10 py-4 bg-transparent hover:bg-white/5 border border-white/20 hover:border-white/40 text-white font-sans text-[11px] font-medium uppercase tracking-[0.22em] rounded-sm transition-all duration-300 active:translate-y-0.5 text-center whitespace-nowrap"
+                                    className="inline-flex items-center justify-center px-10 py-4 bg-transparent hover:bg-white/5 border border-white/20 hover:border-white/40 text-white font-sans text-[11px] font-medium uppercase tracking-[0.22em] -sm transition-all duration-300 active:translate-y-0.5 text-center whitespace-nowrap"
                                 >
                                     {'INQUIRE CONCIERGE'}
                                 </Link>

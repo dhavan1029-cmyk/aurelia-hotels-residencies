@@ -1,14 +1,13 @@
 
-import { AuthEditorialMasthead } from '@/components/hotel/auth/AuthEditorialMasthead';
-import { AuthLoginForm } from '@/components/hotel/auth/AuthLoginForm';
+import { AuthEditorialMasthead } from '@/components/hotel/auth/login/AuthEditorialMasthead';
+import { AuthLoginForm } from '@/components/hotel/auth/login/AuthLoginForm';
 import {
-    AuthMastheadData,
     authMastheadDefaultData,
-} from '@/components/hotel/auth/AuthEditorialMasthead';
+} from '@/components/hotel/auth/login/AuthEditorialMasthead';
 import {
-    AuthLoginFormData,
     authLoginFormDefaultData,
-} from '@/components/hotel/auth/AuthLoginForm';
+} from '@/components/hotel/auth/login/AuthLoginForm';
+import { AuthLoginFormData, AuthMastheadData } from '@/components/hotel/types/auth';
 
 export interface AuthLoginPageProps {
     mastheadData?: AuthMastheadData;

@@ -86,7 +86,7 @@ export function ConfirmationHeaderAndHero() {
         <section className={`w-full text-center`}>
             {/* Top Monogram Seal Insignia Pill */}
             <div className="flex justify-center mb-6">
-                <div className="w-12 h-12 rounded-2xl bg-[#f6f2ea] border border-[#ded9ce] flex items-center justify-center text-[#8e763b] shadow-xs">
+                <div className="w-12 h-12 -2xl bg-[#f6f2ea] border border-[#ded9ce] flex items-center justify-center text-[#8e763b] shadow-xs">
                     <svg
                         className="w-5 h-5"
                         viewBox="0 0 24 24"
@@ -103,8 +103,8 @@ export function ConfirmationHeaderAndHero() {
             </div>
 
             {/* Status Eyebrow with Pulsing Gold Indicator */}
-            <div className="inline-flex items-center gap-2 mb-3.5 px-3.5 py-1.5 rounded-full bg-[#f6f2ea] border border-[#ebe5d8]">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#8e763b] animate-pulse" />
+            <div className="inline-flex items-center gap-2 mb-3.5 px-3.5 py-1.5 -full bg-[#f6f2ea] border border-[#ebe5d8]">
+                <span className="w-1.5 h-1.5 -full bg-[#8e763b] animate-pulse" />
                 <span className="text-[9px] sm:text-[10px] font-sans font-semibold uppercase tracking-[0.24em] text-[#8e763b]">
                     {statusBadgeText}
                 </span>
@@ -128,7 +128,7 @@ export function ConfirmationHeaderAndHero() {
             </p>
 
             {/* Cinematic Panoramic Enclave Card */}
-            <div className="mt-8 sm:mt-10 max-w-340 mx-auto relative aspect-21/9 sm:aspect-16/7 w-full rounded-sm overflow-hidden shadow-[0_16px_48px_rgba(31,30,29,0.08)] bg-[#eeeae2] border border-[#e8e4dc]">
+            <div className="mt-8 sm:mt-10 max-w-340 mx-auto relative aspect-21/9 sm:aspect-16/7 w-full -sm overflow-hidden shadow-[0_16px_48px_rgba(31,30,29,0.08)] bg-[#eeeae2] border border-[#e8e4dc]">
                 <Image
                     src={panorama.heroImageUrl}
                     alt={panorama.heroImageAlt}
@@ -156,10 +156,10 @@ export function ConfirmationHeaderAndHero() {
 
                 {/* Bottom Right Suite & Marine Access Badges */}
                 <div className="absolute bottom-5 right-5 sm:bottom-7 sm:right-8 z-10 flex items-center gap-2">
-                    <span className="px-3 py-1.5 rounded-md bg-black/60 backdrop-blur-md border border-white/15 text-white font-sans text-[10px] font-semibold uppercase tracking-[0.18em]">
+                    <span className="px-3 py-1.5 -md bg-black/60 backdrop-blur-md border border-white/15 text-white font-sans text-[10px] font-semibold uppercase tracking-[0.18em]">
                         {panorama.suiteUnitBadge}
                     </span>
-                    <span className="px-3 py-1.5 rounded-md bg-[#8e763b]/90 backdrop-blur-md border border-[#bfa76f]/40 text-white font-sans text-[10px] font-semibold uppercase tracking-[0.18em]">
+                    <span className="px-3 py-1.5 -md bg-[#8e763b]/90 backdrop-blur-md border border-[#bfa76f]/40 text-white font-sans text-[10px] font-semibold uppercase tracking-[0.18em]">
                         {panorama.marineAccessBadge}
                     </span>
                 </div>
@@ -171,7 +171,7 @@ export function ConfirmationHeaderAndHero() {
                 <button
                     type="button"
                     onClick={handleAddToWallet}
-                    className="group inline-flex items-center gap-2.5 px-5 py-3 rounded-sm bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-[11px] font-semibold uppercase tracking-[0.18em] transition-all shadow-sm active:translate-y-0.5"
+                    className="group inline-flex items-center gap-2.5 px-5 py-3 -sm bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-[11px] font-semibold uppercase tracking-[0.18em] transition-all shadow-sm active:translate-y-0.5"
                 >
                     <svg
                         className="w-4 h-4 text-white"
@@ -187,7 +187,7 @@ export function ConfirmationHeaderAndHero() {
                 <button
                     type="button"
                     onClick={handleDownloadItineraryPdf}
-                    className="inline-flex items-center gap-2 px-5 py-3 rounded-sm bg-white hover:bg-[#f6f2ea] border border-[#ded9ce] text-[#1f1e1d] font-sans text-[11px] font-medium uppercase tracking-[0.18em] transition-all shadow-2xs active:translate-y-0.5"
+                    className="inline-flex items-center gap-2 px-5 py-3 -sm bg-white hover:bg-[#f6f2ea] border border-[#ded9ce] text-[#1f1e1d] font-sans text-[11px] font-medium uppercase tracking-[0.18em] transition-all shadow-2xs active:translate-y-0.5"
                 >
                     <svg
                         className="w-4 h-4 text-[#8e763b]"
@@ -209,7 +209,7 @@ export function ConfirmationHeaderAndHero() {
                 <button
                     type="button"
                     onClick={handleSyncCalendar}
-                    className="inline-flex items-center gap-2 px-5 py-3 rounded-sm bg-white hover:bg-[#f6f2ea] border border-[#ded9ce] text-[#1f1e1d] font-sans text-[11px] font-medium uppercase tracking-[0.18em] transition-all shadow-2xs active:translate-y-0.5"
+                    className="inline-flex items-center gap-2 px-5 py-3 -sm bg-white hover:bg-[#f6f2ea] border border-[#ded9ce] text-[#1f1e1d] font-sans text-[11px] font-medium uppercase tracking-[0.18em] transition-all shadow-2xs active:translate-y-0.5"
                 >
                     <svg
                         className="w-4 h-4 text-[#8e763b]"
@@ -232,7 +232,7 @@ export function ConfirmationHeaderAndHero() {
                 <button
                     type="button"
                     onClick={handlePrintFolio}
-                    className="inline-flex items-center gap-2 px-5 py-3 rounded-sm bg-white hover:bg-[#f6f2ea] border border-[#ded9ce] text-[#1f1e1d] font-sans text-[11px] font-medium uppercase tracking-[0.18em] transition-all shadow-2xs active:translate-y-0.5"
+                    className="inline-flex items-center gap-2 px-5 py-3 -sm bg-white hover:bg-[#f6f2ea] border border-[#ded9ce] text-[#1f1e1d] font-sans text-[11px] font-medium uppercase tracking-[0.18em] transition-all shadow-2xs active:translate-y-0.5"
                 >
                     <svg
                         className="w-4 h-4 text-[#8e763b]"

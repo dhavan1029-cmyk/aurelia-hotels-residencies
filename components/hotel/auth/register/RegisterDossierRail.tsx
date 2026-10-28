@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { RegisterDossierData, SovereignPrivilegeItem } from '../types/auth';
+import { RegisterDossierData, SovereignPrivilegeItem } from '../../types/auth';
 
 export const registerDossierDefaultData: RegisterDossierData = {
     dossierBadge: 'SANCTUARY DOSSIER • VOL. I',
@@ -145,11 +145,11 @@ export function RegisterDossierRail({
 
                     {/* Top Monograph & Coordinates Badges */}
                     <div className="hidden lg:flex absolute top-2.5 left-3 right-3 z-10 items-center justify-between gap-2">
-                        <span className="px-2 py-0.5 rounded-xs bg-black/60 backdrop-blur-md text-white font-sans text-[8px] font-semibold uppercase tracking-[0.2em] shadow-xs">
+                        <span className="px-2 py-0.5 -xs bg-black/60 backdrop-blur-md text-white font-sans text-[8px] font-semibold uppercase tracking-[0.2em] shadow-xs">
                             {dossierBadge}
                         </span>
 
-                        <span className="px-2 py-0.5 rounded-xs bg-[#8e763b] text-white font-mono text-[8px] font-medium tracking-wider shadow-xs">
+                        <span className="px-2 py-0.5 -xs bg-[#8e763b] text-white font-mono text-[8px] font-medium tracking-wider shadow-xs">
                             {coordinatesDisplay}
                         </span>
                     </div>
@@ -168,10 +168,10 @@ export function RegisterDossierRail({
             </article>
 
             {/* 2. THE SOVEREIGN FOLIO PRIVILEGES CARD */}
-            <article className="bg-[#fcf9f4] rounded-2xl p-3.5 sm:p-4 space-y-2.5 shrink-0 hidden lg:block">
+            <article className="bg-[#fcf9f4] -2xl p-3.5 sm:p-4 space-y-2.5 shrink-0 hidden lg:block">
                 <div className="pb-2">
                     <div className="flex items-center gap-1.5 mb-0.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#8e763b]" />
+                        <span className="w-1.5 h-1.5 -full bg-[#8e763b]" />
                         <span className="text-[8px] font-sans font-semibold uppercase tracking-[0.22em] text-[#8e763b]">
                             {privilegesSubheading}
                         </span>
@@ -187,9 +187,9 @@ export function RegisterDossierRail({
                         return (
                             <div
                                 key={priv.id}
-                                className="p-2 rounded-xl bg-white border border-[#ded9ce] shadow-2xs hover:border-[#8e763b]/60 transition-colors flex items-start gap-2.5"
+                                className="p-2 -xl bg-white border border-[#ded9ce] shadow-2xs hover:border-[#8e763b]/60 transition-colors flex items-start gap-2.5"
                             >
-                                <div className="p-1.5 rounded-lg bg-[#f6f2ea] border border-[#e8e4dc] shadow-2xs shrink-0 mt-0.5">
+                                <div className="p-1.5 -lg bg-[#f6f2ea] border border-[#e8e4dc] shadow-2xs shrink-0 mt-0.5">
                                     {renderPrivilegeIcon(priv.iconType)}
                                 </div>
 
@@ -228,7 +228,7 @@ export function RegisterDossierRail({
                 </blockquote>
 
                 <div className="hidden lg:flex pt-2 border-t border-[#ded9ce] items-center gap-2.5">
-                    <div className="relative w-7 h-7 rounded-full overflow-hidden border border-[#bfa76f] bg-[#eeeae2] shrink-0">
+                    <div className="relative w-7 h-7 -full overflow-hidden border border-[#bfa76f] bg-[#eeeae2] shrink-0">
                         <Image
                             src={endorsement.avatarUrl}
                             alt={endorsement.avatarAlt}

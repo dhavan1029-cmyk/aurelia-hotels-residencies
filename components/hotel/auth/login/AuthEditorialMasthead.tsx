@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { AuthMastheadData, SovereignPrivilegePill } from '../types/auth';
+import { AuthMastheadData, SovereignPrivilegePill } from '../../types/auth';
 
 
 export const authMastheadDefaultData: AuthMastheadData = {
@@ -55,8 +55,6 @@ export function AuthEditorialMasthead({
     className = '',
 }: AuthEditorialMastheadProps) {
     const {
-        brandName,
-        brandSub,
         enclavesPillText,
         quoteBadgeText,
         editorialQuote,
@@ -176,18 +174,18 @@ export function AuthEditorialMasthead({
                     <Image
                         src="/aurelia-logo-dark.png"
                         alt="Aurelia Hotels & Residences Logo"
-                        width={200} height={150}
+                        width={300} height={150}
                     />                
                 </Link>
 
-                <div className="w-fit inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/40 backdrop-blur-md border border-white/10 text-[9px] font-mono uppercase tracking-[0.18em] text-[#dcdad5]">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#bfa76f] animate-pulse" />
+                <div className="w-fit inline-flex items-center gap-2 px-3 py-1 -full bg-black/40 backdrop-blur-md border border-white/10 text-[9px] font-mono uppercase tracking-[0.18em] text-[#dcdad5]">
+                    <span className="w-1.5 h-1.5 -full bg-[#bfa76f] animate-pulse" />
                     <span>{enclavesPillText}</span>
                 </div>
             </div>
 
             {/* 3. CENTER MONOGRAPH: ACCENT BAR, MANIFESTO QUOTE & NARRATIVE */}
-            <div className="relative z-10 lg:py-14 max-w-xl space-y-2 my-4">
+            <div className="relative z-10 max-w-xl space-y-2 my-4">
                 <div className="flex items-center gap-2.5">
                     <span className="h-px w-8 bg-[#bfa76f]" />
                     <span className="text-[10px] font-sans font-semibold uppercase tracking-[0.28em] text-[#bfa76f]">
@@ -206,10 +204,10 @@ export function AuthEditorialMasthead({
 
             {/* 4. BOTTOM FLOATING PRIVILEGES CARD & ENCRYPTION PROTOCOL STRIP */}
             <div className="lg:block hidden relative z-10 w-full space-y-3.5">
-                <div className="bg-black/50 backdrop-blur-xl border border-white/15 rounded-2xl p-4 sm:p-5 shadow-2xl">
+                <div className="bg-black/50 backdrop-blur-xl border border-white/15 -2xl p-4 sm:p-5 shadow-2xl">
                     <div className="flex items-center justify-between pb-3 border-b border-white/10 mb-3.5">
                         <div className="flex items-center gap-2">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#bfa76f]" />
+                            <span className="w-1.5 h-1.5 -full bg-[#bfa76f]" />
                             <span className="text-[9px] sm:text-[10px] font-sans font-semibold uppercase tracking-[0.22em] text-[#bfa76f]">
                                 {patronPrivilegesHeader}
                             </span>
@@ -225,9 +223,9 @@ export function AuthEditorialMasthead({
                             return (
                                 <div
                                     key={priv.id}
-                                    className="p-2.5 rounded-xl bg-white/5 border border-white/10 flex items-start gap-2.5 transition-colors hover:bg-white/10"
+                                    className="p-2.5 -xl bg-white/5 border border-white/10 flex items-start gap-2.5 transition-colors hover:bg-white/10"
                                 >
-                                    <div className="p-1.5 rounded-lg bg-black/40 border border-white/10 text-[#bfa76f] shrink-0">
+                                    <div className="p-1.5 -lg bg-black/40 border border-white/10 text-[#bfa76f] shrink-0">
                                         {renderPrivilegeIcon(priv.iconType)}
                                     </div>
                                     <div className="min-w-0">

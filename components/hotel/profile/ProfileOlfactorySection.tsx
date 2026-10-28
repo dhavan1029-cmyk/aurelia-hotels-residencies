@@ -226,7 +226,7 @@ export function ProfileOlfactorySection({
 	return (
 		<section
 			id="olfactory-calibration"
-			className={`w-full bg-[#fcf9f4] border border-[#e8e4dc] rounded-3xl p-6 sm:p-9 lg:p-11 shadow-[0_4px_24px_rgba(31,30,29,0.03)] space-y-8 lg:space-y-10 ${className}`}
+			className={`w-full bg-[#fcf9f4] border border-[#e8e4dc] -3xl p-6 sm:p-9 lg:p-11 shadow-[0_4px_24px_rgba(31,30,29,0.03)] space-y-8 lg:space-y-10 ${className}`}
 		>
 			{/* ------------------------------------------------------------- */}
 			{/* 1. SECTION EDITORIAL HEADER & PROTOCOL STATUS BADGES */}
@@ -235,7 +235,7 @@ export function ProfileOlfactorySection({
 			<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-[#eeeae2]">
 				<div className="space-y-1.5">
 					<div className="flex items-center gap-2">
-						<span className="w-5 h-5 rounded-full bg-[#1f1e1d] text-white flex items-center justify-center font-mono text-[10px] font-semibold">
+						<span className="w-5 h-5 -full bg-[#1f1e1d] text-white flex items-center justify-center font-mono text-[10px] font-semibold">
 							{sectionNumber}
 						</span>
 
@@ -254,8 +254,8 @@ export function ProfileOlfactorySection({
 				</div>
 
 				<div className="self-start sm:self-auto shrink-0">
-					<span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#f6f2ea] border border-[#ded9ce] text-[9px] font-mono uppercase tracking-[0.2em] text-[#24633b] shadow-2xs">
-						<span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+					<span className="inline-flex items-center gap-2 px-3 py-1.5 -full bg-[#f6f2ea] border border-[#ded9ce] text-[9px] font-mono uppercase tracking-[0.2em] text-[#24633b] shadow-2xs">
+						<span className="w-1.5 h-1.5 -full bg-emerald-500 animate-pulse" />
 						<span>{statusBadge}</span>
 					</span>
 				</div>
@@ -265,11 +265,11 @@ export function ProfileOlfactorySection({
 			{/* 2. PRIMARY COMMISSIONED FORMULATION SHOWCASE CARD */}
 			{/* ------------------------------------------------------------- */}
 
-			<article className="bg-[#f6f2ea]/80 border border-[#ded9ce] rounded-2xl p-6 sm:p-8 space-y-6 shadow-2xs relative overflow-hidden">
+			<article className="bg-[#f6f2ea]/80 border border-[#ded9ce] -2xl p-6 sm:p-8 space-y-6 shadow-2xs relative overflow-hidden">
 				<div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
 					<div className="space-y-2">
 						<div className="flex items-center gap-2">
-							<span className="px-2.5 py-0.5 rounded-xs bg-[#1f1e1d] text-white text-[9px] font-mono uppercase tracking-[0.2em] shadow-2xs">
+							<span className="px-2.5 py-0.5 -xs bg-[#1f1e1d] text-white text-[9px] font-mono uppercase tracking-[0.2em] shadow-2xs">
 								{currentAroma.reserveCode}
 							</span>
 
@@ -292,7 +292,7 @@ export function ProfileOlfactorySection({
 						onClick={function () {
 							setIsSpecsOpen(!isSpecsOpen);
 						}}
-						className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white hover:bg-[#fcfaf7] border border-[#ded9ce] text-[10px] font-sans font-semibold uppercase tracking-[0.18em] text-[#1f1e1d] transition-colors shadow-2xs self-start sm:self-auto shrink-0"
+						className="inline-flex items-center gap-1.5 px-3.5 py-2 -xl bg-white hover:bg-[#fcfaf7] border border-[#ded9ce] text-[10px] font-sans font-semibold uppercase tracking-[0.18em] text-[#1f1e1d] transition-colors shadow-2xs self-start sm:self-auto shrink-0"
 					>
 						<span>
 							{isSpecsOpen ? 'CONCEAL FORMULA' : 'FORMULA SPECS'}
@@ -313,7 +313,7 @@ export function ProfileOlfactorySection({
 				>
 					{/* Top Note */}
 
-					<div className="p-3.5 rounded-xl bg-white border border-[#ded9ce] shadow-2xs space-y-1">
+					<div className="p-3.5 -xl bg-white border border-[#ded9ce] shadow-2xs space-y-1">
 						<span className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#8e763b] block">
 							TOP HEAD NOTES
 						</span>
@@ -325,7 +325,7 @@ export function ProfileOlfactorySection({
 
 					{/* Heart Note */}
 
-					<div className="p-3.5 rounded-xl bg-white border border-[#ded9ce] shadow-2xs space-y-1">
+					<div className="p-3.5 -xl bg-white border border-[#ded9ce] shadow-2xs space-y-1">
 						<span className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#8e763b] block">
 							HEART CORPOREAL
 						</span>
@@ -337,7 +337,7 @@ export function ProfileOlfactorySection({
 
 					{/* Base Note */}
 
-					<div className="p-3.5 rounded-xl bg-white border border-[#ded9ce] shadow-2xs space-y-1">
+					<div className="p-3.5 -xl bg-white border border-[#ded9ce] shadow-2xs space-y-1">
 						<span className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#8e763b] block">
 							BASE RESIN & STONE
 						</span>
@@ -380,7 +380,7 @@ export function ProfileOlfactorySection({
 								onClick={function () {
 									handleIntensityClick(tier.level);
 								}}
-								className={`p-4 rounded-2xl border transition-all duration-200 cursor-pointer flex flex-col justify-between space-y-3 ${
+								className={`p-4 -2xl border transition-all duration-200 cursor-pointer flex flex-col justify-between space-y-3 ${
 									isChosen
 										? 'bg-[#1f1e1d] text-white border-[#1f1e1d] shadow-md scale-[1.01]'
 										: 'bg-white hover:bg-[#faf7f0] border-[#ded9ce] text-[#1f1e1d]'
@@ -399,7 +399,7 @@ export function ProfileOlfactorySection({
 										</span>
 
 										<span
-											className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center text-[9px] ${
+											className={`w-3.5 h-3.5 -full border flex items-center justify-center text-[9px] ${
 												isChosen
 													? 'border-[#bfa76f] bg-[#bfa76f] text-[#1f1e1d]'
 													: 'border-[#ded9ce]'
@@ -467,7 +467,7 @@ export function ProfileOlfactorySection({
 						onClick={function () {
 							handleAromaClick(activeComposition.id);
 						}}
-						className={`p-4 sm:p-5 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between space-y-3 ${
+						className={`p-4 sm:p-5 -2xl border transition-all cursor-pointer flex flex-col justify-between space-y-3 ${
 							selectedAromaId === activeComposition.id
 								? 'bg-[#f7f2e7] border-[#8e763b] shadow-xs'
 								: 'bg-white hover:bg-[#faf8f5] border-[#ded9ce]'
@@ -480,14 +480,14 @@ export function ProfileOlfactorySection({
 								</span>
 
 								<span
-									className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center ${
+									className={`w-3.5 h-3.5 -full border flex items-center justify-center ${
 										selectedAromaId === activeComposition.id
 											? 'border-[#8e763b] bg-[#8e763b]'
 											: 'border-[#ded9ce]'
 									}`}
 								>
 									{selectedAromaId === activeComposition.id && (
-										<span className="w-1.5 h-1.5 rounded-full bg-white" />
+										<span className="w-1.5 h-1.5 -full bg-white" />
 									)}
 								</span>
 							</div>
@@ -518,7 +518,7 @@ export function ProfileOlfactorySection({
 								onClick={function () {
 									handleAromaClick(comp.id);
 								}}
-								className={`p-4 sm:p-5 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between space-y-3 ${
+								className={`p-4 sm:p-5 -2xl border transition-all cursor-pointer flex flex-col justify-between space-y-3 ${
 									isChosen
 										? 'bg-[#f7f2e7] border-[#8e763b] shadow-xs'
 										: 'bg-white hover:bg-[#faf8f5] border-[#ded9ce]'
@@ -531,14 +531,14 @@ export function ProfileOlfactorySection({
 										</span>
 
 										<span
-											className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center ${
+											className={`w-3.5 h-3.5 -full border flex items-center justify-center ${
 												isChosen
 													? 'border-[#8e763b] bg-[#8e763b]'
 													: 'border-[#ded9ce]'
 											}`}
 										>
 											{isChosen && (
-												<span className="w-1.5 h-1.5 rounded-full bg-white" />
+												<span className="w-1.5 h-1.5 -full bg-white" />
 											)}
 										</span>
 									</div>
@@ -571,10 +571,10 @@ export function ProfileOlfactorySection({
 			{/* 5. PRE-ARRIVAL ATOMIZATION SCHEDULE TICKER */}
 			{/* ------------------------------------------------------------- */}
 
-			<div className="bg-[#191817] text-[#fcf9f4] border border-[#34322e] rounded-2xl p-5 sm:p-6 shadow-xl flex flex-col lg:flex-row lg:items-center justify-between gap-5">
+			<div className="bg-[#191817] text-[#fcf9f4] border border-[#34322e] -2xl p-5 sm:p-6 shadow-xl flex flex-col lg:flex-row lg:items-center justify-between gap-5">
 				<div className="space-y-1.5 max-w-2xl">
 					<div className="flex items-center gap-2">
-						<span className="px-2.5 py-0.5 rounded-xs bg-[#8e763b] text-white font-mono text-[9px] font-semibold uppercase tracking-wider shadow-2xs">
+						<span className="px-2.5 py-0.5 -xs bg-[#8e763b] text-white font-mono text-[9px] font-semibold uppercase tracking-wider shadow-2xs">
 							{atomizationNotice.countdownDisplay}
 						</span>
 
@@ -603,7 +603,7 @@ export function ProfileOlfactorySection({
 					<button
 						type="button"
 						onClick={handleAtomizationToggle}
-						className={`px-4 py-2.5 rounded-xl font-sans text-[10px] font-semibold uppercase tracking-[0.18em] transition-all shadow-2xs ${
+						className={`px-4 py-2.5 -xl font-sans text-[10px] font-semibold uppercase tracking-[0.18em] transition-all shadow-2xs ${
 							atomizationActive
 								? 'bg-[#bfa76f] hover:bg-[#aa935e] text-[#191817]'
 								: 'bg-white/10 hover:bg-white/15 text-white border border-white/20'

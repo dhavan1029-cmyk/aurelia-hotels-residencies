@@ -51,7 +51,7 @@ export default function AdminSidebar({activePath} : AdminSidebarProps){
 
         <div className="pt-8 border-t border-[#343230] text-[11px] text-[#8e8a82]">
             <div className="flex items-center gap-2 mb-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                <span className="w-2 h-2 -full bg-emerald-500"></span>
                 <span className="text-[#fcf9f4]">G.M. Roberto C.</span>
             </div>
 
