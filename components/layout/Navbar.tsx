@@ -10,7 +10,7 @@ export function Navbar() {
     const pathname = usePathname()
 
     return (
-        <header className={`${(new Set(['/login', '/register', '/profile'])).has(pathname) ? 'hidden' : 'sticky'} top-0 z-40 w-full bg-[#fcf9f4]/90 backdrop-blur-md border-b border-[#e8e4dc]`}>
+        <header className={`${(new Set(['/login', '/register', '/profile', '/login/verify', '/register/welcome'])).has(pathname) ? 'hidden' : 'sticky'} top-0 z-40 w-full bg-[#fcf9f4]/90 backdrop-blur-md border-b border-[#e8e4dc]`}>
             <div className="max-w-7xl mx-auto h-20 flex items-center justify-between">
                {/* Brand Monogram & Wordmark */}
                 <Link href="/" className="flex flex-col items-center group text-center">

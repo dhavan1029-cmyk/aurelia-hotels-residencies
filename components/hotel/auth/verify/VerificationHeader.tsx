@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 export interface VerificationPageData {
     topBar: {
@@ -147,13 +148,7 @@ export function VerificationHeader({
                 {/* Brand Logo & Security Protocol Pill */}
                 <div className="flex items-center gap-4 sm:gap-6">
                     <Link href="/" className="flex flex-col group">
-                        <span className="font-serif text-2xl sm:text-[26px] font-normal tracking-[0.24em] text-[#1f1e1d] leading-none uppercase group-hover:text-[#8e763b] transition-colors">
-                            Aurelia
-                        </span>
-
-                        <span className="text-[8px] sm:text-[9px] font-sans font-semibold tracking-[0.34em] text-[#8e763b] mt-1 leading-none uppercase">
-                            HOTELS &amp; RESIDENCES
-                        </span>
+                        <Image src={'/aurelia-logo-light.png'} width={200} height={66} alt='AURELIA'></Image>
                     </Link>
 
                     <div className="hidden sm:inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#f6f2ea] border border-[#ded9ce] text-[9px] font-mono uppercase tracking-[0.18em] text-[#6d6961]">
