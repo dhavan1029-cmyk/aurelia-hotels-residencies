@@ -4,7 +4,7 @@ import { AccommodationBookingRail } from '@/components/hotel/accommodations/Acco
 import { PrivilegesAndPoliciesSection } from "@/components/hotel/accommodations/PrivilegesAndPolicies";
 import { AccommodationArchitecturalSiblingsSection } from "@/components/hotel/accommodations/ArchitecturalSiblingsSection";
 import { Footer } from "@/components/layout/Footer";
-import { prisma } from '@/lib/prisma'
+import { prisma } from '@/lib/config/prisma'
 import { AccommodationBookingContext, mapAccommodationDetails, mapAccommodationSiblings } from "@/lib/hotel/mappers/AccommodationDetailsMapper";
 import { notFound } from "next/navigation";
 

@@ -30,7 +30,7 @@ export interface VerificationPageData {
         descriptionPrefix: string;
         maskedEmail: string;
         maskedMobile: string;
-        initialCode: string[];
+        initialCode?: string[];
         resendTimeoutSeconds: number;
         passkeyButtonLabel: string;
         passkeySubLabel: string;
@@ -90,8 +90,7 @@ export const verificationDefaultData: VerificationPageData = {
             'A 6-digit cryptographic verification code has been dispatched to your confidential address: ',
         maskedEmail: 'k.****@sovereign-holdings.co.uk',
         maskedMobile: '+44 7911 ••••01',
-        initialCode: ['8', '8', '2', '9', '', ''],
-        resendTimeoutSeconds: 41,
+        resendTimeoutSeconds: 60 * 5,
         passkeyButtonLabel: 'Authenticate via Apple Sovereign ID',
         passkeySubLabel: 'Biometric Passkey • Secure Enclave FIDO2',
         submitButtonLabel: 'VERIFY & ENTER SANCTUARY',

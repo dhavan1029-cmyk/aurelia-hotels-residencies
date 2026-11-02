@@ -1,63 +1,48 @@
-
-'use client';
-
-import React, { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { CipherOtpInput } from './CipherOtpInput';
-import { BiometricPasskeyButton } from './BiometricPasskeyButton';
-import { ResendCountdownTimer } from './ResendCountdownTimer';
 import { VerificationPageData } from './VerificationHeader';
+import { VerificationForm } from './VerificationForm';
+import { redirect } from 'next/navigation';
+import { getPendingUser } from '@/lib/hotel/actions/auth';
 
 export interface VerificationFormSectionProps {
     data: VerificationPageData['verificationForm'];
     className?: string;
 }
 
-export function VerificationFormSection({
+export function maskEmail(email: string): string {
+    const [localPart, domain] = email.trim().split('@');
+
+    if (!localPart || !domain) {
+        return email;
+    }
+
+    const visibleCharacters = localPart.length <= 2 ? 1 : 2;
+    const maskedLocalPart =
+        localPart.slice(0, visibleCharacters) +
+        '*'.repeat(Math.max(localPart.length - visibleCharacters, 1));
+
+    return `${maskedLocalPart}@${domain}`;
+}
+
+export async function VerificationFormSection({
     data,
     className = '',
 }: VerificationFormSectionProps) {
-    const router = useRouter();
 
     const {
         phaseEyebrow,
         title,
         descriptionPrefix,
-        maskedEmail,
-        maskedMobile,
-        initialCode,
-        resendTimeoutSeconds,
-        passkeyButtonLabel,
-        passkeySubLabel,
-        submitButtonLabel,
         returnLinkText,
         returnLinkHref,
         lostKeyText,
         lostKeyHref,
-        conciergeHotlineDisplay,
-        conciergeHotlineTel,
         compliancePills,
     } = data;
 
-    const [cipherCode, setCipherCode] = useState<string>(
-        initialCode.join('')
-    );
-    const [isVerifying, setIsVerifying] = useState<boolean>(false);
-
-    function handleSubmit(e: React.FormEvent) {
-        e.preventDefault();
-
-        if (cipherCode.length < 6) return;
-
-        setIsVerifying(true);
-
-        setTimeout(() => {
-            router.push('/profile?verified=true');
-        }, 500);
-    }
-
-    const isComplete = cipherCode.length === 6;
+    const { email, attempts } = await getPendingUser()
+    
+    const maskedEmail = maskEmail(email)
 
     return (
         <section
@@ -79,62 +64,15 @@ export function VerificationFormSection({
                     <strong className="font-mono text-[#1f1e1d] font-semibold">
                         {maskedEmail}
                     </strong>{' '}
-                    and terminal mobile{' '}
+                    {/* and terminal mobile{' '}
                     <strong className="font-mono text-[#1f1e1d] font-semibold">
                         {maskedMobile}
-                    </strong>
-                    .
+                    </strong> */}
                 </p>
             </div>
 
             {/* 2. Form With Leaf Client Inputs */}
-            <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Micro Leaf: 6-Digit Ceramic OTP Grid */}
-                <CipherOtpInput
-                    initialDigits={initialCode}
-                    onCodeChange={(code) => setCipherCode(code)}
-                />
-
-                {/* Micro Leaf: Biometric WebAuthn / Face ID Trigger */}
-                <BiometricPasskeyButton
-                    label={passkeyButtonLabel}
-                    subLabel={passkeySubLabel}
-                    onSuccess={() =>
-                        router.push(
-                            '/profile?verified=true&biometric=fido2'
-                        )
-                    }
-                />
-
-                {/* Micro Leaf: Isolated 41-Second Resend Countdown */}
-                <ResendCountdownTimer
-                    initialSeconds={resendTimeoutSeconds}
-                    conciergeHotlineDisplay={conciergeHotlineDisplay}
-                    conciergeHotlineTel={conciergeHotlineTel}
-                    onResend={() => {
-                        console.log(
-                            'Dispatching fresh cryptographic token...'
-                        );
-                    }}
-                />
-
-                {/* Primary Submission CTA */}
-                <button
-                    type="submit"
-                    disabled={isVerifying || !isComplete}
-                    className="w-full inline-flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-xs font-semibold uppercase tracking-[0.24em] transition-all shadow-md active:translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed group"
-                >
-                    <span>
-                        {isVerifying
-                            ? 'VERIFYING SIGNATURE...'
-                            : submitButtonLabel}
-                    </span>
-
-                    <span className="transform transition-transform duration-300 group-hover:translate-x-1">
-                        →
-                    </span>
-                </button>
-            </form>
+            <VerificationForm data={data} attempts={attempts} />
 
             {/* 3. Navigation Recovery & Return Links */}
             <div className="flex items-center justify-between text-xs font-sans text-[#78756d] pt-2 border-t border-[#eeeae2]">

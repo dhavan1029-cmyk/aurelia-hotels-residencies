@@ -39,3 +39,8 @@ enum StaffRole {
   SOMMELIER
   SPA_DIRECTOR
 }
+
+enum AuthPurpose {
+  LOGIN
+  PASSWORD_RESET
+}

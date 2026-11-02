@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { ProfileDossierHeader } from '@/components/hotel/profile/ProfileDossierHeader';
 import { ProfileOlfactorySection } from '@/components/hotel/profile/ProfileOlfactorySection';
@@ -25,6 +25,7 @@ import {
 	profileLogisticsDefaultData,
 } from '@/components/hotel/profile/ProfileLogisticsRail';
 
+
 export interface ProfilePageProps {
 	dossierData?: PatronDossierInfo;
 	olfactoryData?: ProfileOlfactorySectionData;
@@ -33,13 +34,17 @@ export interface ProfilePageProps {
 	className?: string;
 }
 
-export function ProfilePage({
+export async function ProfilePage({
 	dossierData = profileDossierDefaultData,
 	olfactoryData = profileOlfactoryDefaultData,
 	sleepData = profileSleepDefaultData,
 	logisticsData = profileLogisticsDefaultData,
 	className = '',
 }: ProfilePageProps) {
+
+	// const cookieStore = await cookies()
+
+	console.log(document.cookie)
 
 	// setting year
 	const year = new Date().getFullYear();

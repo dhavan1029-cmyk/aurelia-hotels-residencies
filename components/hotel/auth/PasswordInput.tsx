@@ -22,7 +22,6 @@ export function PasswordInput({
                 id={id}
                 name={name}
                 type={showPassword ? 'text' : 'password'}
-                required
                 autoComplete="current-password"
                 placeholder={placeholder}
                 className="w-full pl-10 pr-14 py-3.5 -xl

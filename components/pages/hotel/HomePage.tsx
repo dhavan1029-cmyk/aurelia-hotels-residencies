@@ -4,7 +4,7 @@ import { Footer } from '../../layout/Footer';
 import { BookingBar } from '../../hotel/BookingBar';
 import { SuiteCard, SuiteCardProps } from '../../hotel/SuiteCard';
 
-import { prisma } from '@/lib/prisma';
+import { prisma } from '@/lib/config/prisma';
 import {
     mapAccommodationCategoriesToSuiteCards,
 } from '@/lib/hotel/mappers/accommodationsMapper';

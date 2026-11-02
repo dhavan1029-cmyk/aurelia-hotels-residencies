@@ -9,12 +9,12 @@ export interface CipherOtpInputProps {
 }
 
 export function CipherOtpInput({
-    initialDigits = ['8', '8', '2', '9', '', ''],
+    initialDigits = ['', '', '', '', '', ''],
     onCodeChange,
     className = '',
 }: CipherOtpInputProps) {
     const [digits, setDigits] = useState<string[]>(initialDigits);
-    const [activeIndex, setActiveIndex] = useState<number>(4);
+    const [activeIndex, setActiveIndex] = useState<number>(0);
     const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
 
     function handleDigitChange(index: number, value: string) {

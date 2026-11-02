@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma';
+import { prisma } from '@/lib/config/prisma';
 import { connection } from 'next/server';
 
 export default async function Page() {

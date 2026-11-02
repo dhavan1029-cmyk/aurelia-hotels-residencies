@@ -1,13 +1,9 @@
 
 import { AuthEditorialMasthead } from '@/components/hotel/auth/login/AuthEditorialMasthead';
 import { AuthLoginForm } from '@/components/hotel/auth/login/AuthLoginForm';
-import {
-    authMastheadDefaultData,
-} from '@/components/hotel/auth/login/AuthEditorialMasthead';
-import {
-    authLoginFormDefaultData,
-} from '@/components/hotel/auth/login/AuthLoginForm';
+
 import { AuthLoginFormData, AuthMastheadData } from '@/components/hotel/types/auth';
+import { twilioClient } from '@/lib/config/twilio';
 
 export interface AuthLoginPageProps {
     mastheadData?: AuthMastheadData;
@@ -15,11 +11,15 @@ export interface AuthLoginPageProps {
     className?: string;
 }
 
-export function AuthLoginPage({
-    mastheadData = authMastheadDefaultData,
-    formData = authLoginFormDefaultData,
+export async function AuthLoginPage({
     className = '',
 }: AuthLoginPageProps) {
+
+    // const ssm = await twilioClient.messages.create({
+    //     body: "This is the ship that made the Kessel Run in fourteen parsecs?",
+    //     from: "+15551234567",
+    //     to: '+919380937361',
+    // });
 
     return (
         <main
@@ -29,9 +29,7 @@ export function AuthLoginPage({
             {/* PHASE 1: Left Split Architectural Monograph Masthead (42% width) */}
             {/* ----------------------------------------------------------------- */}
             <div className="w-full lg:w-[42%] lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto shrink-0 shadow-xl z-10">
-                <AuthEditorialMasthead
-                    data={mastheadData}
-                />
+                <AuthEditorialMasthead />
             </div>
 
             {/* ----------------------------------------------------------------- */}

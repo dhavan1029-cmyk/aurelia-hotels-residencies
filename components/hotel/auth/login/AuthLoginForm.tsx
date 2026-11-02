@@ -1,11 +1,8 @@
 import Link from 'next/link';
-import { PasswordInput } from '../PasswordInput';
 import { AuthProviderButtons } from './AuthProviderButtons';
 import { InvitationTokenForm } from '../InvitationTokenForm';
-import { AuthSubmitButton } from './AuthSubmitButton';
 import { AuthLoginFormData } from '../../types/auth';
-
-
+import { AuthLoginCredentialsForm } from './AuthLoginCredentialsForm';
 
 export const authLoginFormDefaultData: AuthLoginFormData = {
     eyebrow: 'PATRON PORTAL & SOVEREIGN ACCESS',
@@ -23,7 +20,7 @@ export const authLoginFormDefaultData: AuthLoginFormData = {
     passwordPlaceholder: '••••••••••••••••',
     magicLinkText: 'Use Magic Link instead',
     rememberDeviceLabel: 'Remember this confidential terminal for 30 days',
-    forgotPasswordText: 'Forgot access credentials?',
+    forgotPasswordText: 'Forgot password?',
     submitButtonLabel: 'Authenticate & Enter Sanctuary',
     dividerText: 'OR AUTHENTICATE VIA SOVEREIGN PROVIDER',
     appleAuthLabel: 'Apple Sovereign ID',
@@ -48,6 +45,7 @@ export function AuthLoginForm({
     data = authLoginFormDefaultData,
     className = '',
 }: AuthLoginFormProps) {
+
     return (
         <section
             className={`w-full max-w-xl mx-auto flex flex-col justify-between
@@ -112,116 +110,7 @@ export function AuthLoginForm({
                 </nav>
 
                 {/* Login form */}
-                <form className="space-y-5">
-                    <div className="space-y-1.5">
-                        <label
-                            htmlFor="identifier"
-                            className="block text-[10px] font-sans
-                                       font-semibold uppercase
-                                       tracking-[0.18em] text-[#6d6961]"
-                        >
-                            {data.identifierLabel}
-                        </label>
-
-                        <div className="relative">
-                            <input
-                                id="identifier"
-                                name="identifier"
-                                type="text"
-                                required
-                                autoComplete="username"
-                                placeholder={data.identifierPlaceholder}
-                                className="w-full pl-10 pr-4 py-3.5 -xl
-                                           bg-white border border-[#ded9ce]
-                                           text-xs font-sans text-[#1f1e1d]
-                                           outline-none focus:border-[#8e763b]
-                                           transition-colors shadow-2xs
-                                           placeholder-[#a4a098]"
-                            />
-
-                            <svg
-                                aria-hidden="true"
-                                className="w-4 h-4 text-[#8e763b]
-                                           absolute left-3.5 top-1/2
-                                           -translate-y-1/2 pointer-events-none"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="1.8"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                            >
-                                <rect x="3" y="11" width="18" height="11" rx="2" />
-                                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                            </svg>
-                        </div>
-
-                        <p className="text-[10px] font-sans text-[#8e8a82]">
-                            {data.identifierHelpText}
-                        </p>
-                    </div>
-
-                    <div className="space-y-1.5">
-                        <div className="flex items-center justify-between">
-                            <label
-                                htmlFor="password"
-                                className="block text-[10px] font-sans
-                                           font-semibold uppercase
-                                           tracking-[0.18em]
-                                           text-[#6d6961]"
-                            >
-                                {data.passwordLabel}
-                            </label>
-
-                            <Link
-                                href="/register#magic-link"
-                                className="text-[10px] font-sans font-medium
-                                           text-[#8e763b] hover:text-[#1f1e1d]
-                                           underline transition-colors"
-                            >
-                                {data.magicLinkText}
-                            </Link>
-                        </div>
-
-                        <PasswordInput
-                            name="password"
-                            id="password"
-                            placeholder={data.passwordPlaceholder}
-                        />
-                    </div>
-
-                    <div className="flex flex-col sm:flex-row
-                                    sm:items-center justify-between
-                                    gap-2.5 pt-1 text-xs font-sans">
-                        <label className="flex items-center gap-2
-                                           cursor-pointer select-none">
-                            <input
-                                type="checkbox"
-                                name="remember"
-                                value="true"
-                                defaultChecked
-                                className="w-4 h-4  border-[#ded9ce]
-                                           text-[#8e763b] focus:ring-0
-                                           focus:ring-offset-0"
-                            />
-
-                            <span className="text-[11px] text-[#5c5952]
-                                             font-light">
-                                {data.rememberDeviceLabel}
-                            </span>
-                        </label>
-
-                        <Link
-                            href="/register#recovery"
-                            className="text-[11px] text-[#8e763b]
-                                       hover:text-[#1f1e1d] transition-colors"
-                        >
-                            {data.forgotPasswordText}
-                        </Link>
-                    </div>
-
-                    <AuthSubmitButton label={data.submitButtonLabel} />
-                </form>
+                <AuthLoginCredentialsForm data={data} />
 
                 {/* Alternative authentication providers */}
                 <div className="space-y-4">
