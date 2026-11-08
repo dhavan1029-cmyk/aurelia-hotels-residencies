@@ -22,7 +22,7 @@ import {
 
 import type { Prisma } from '@/app/generated/prisma/client';
 
-import type { AccommodationDetailsData } from '../types/accommodations';
+import type { AccommodationDetailsData } from '../types';
 
 import type {
     AccommodationGalleryData,
@@ -44,12 +44,11 @@ import { calculateNights } from '@/components/hotel/DateRangeCalendar';
 
 export type JsonObject = Record<string, unknown>;
 
-export type AccommodationCategoryWithRoomUnits =
-    Prisma.AccommodationCategoryGetPayload<{
-        include: {
-            roomUnits: true;
-        };
-    }>;
+export type AccommodationCategoryWithRoomUnits = Prisma.AccommodationCategoryGetPayload<{
+    include: {
+        roomUnits: true;
+    };
+}>;
 
 export type AccommodationRoomUnit =
     AccommodationCategoryWithRoomUnits['roomUnits'][number];
@@ -279,7 +278,7 @@ function mapGalleryData(
 
     return {
         sanctuaryEyebrow: roomUnit
-            ? `SANCTUARY ${roomUnit.unitCode}`
+            ? `${accommodation.category} ${roomUnit.unitCode}`
             : 'SANCTUARY',
         wingSubtitle: roomUnit?.wing ?? null,
         suiteTitle: makeSuiteTitle(accommodation, roomUnit),
@@ -621,9 +620,18 @@ export function mapAccommodationSiblings(
     accommodations: AccommodationCategoryWithRoomUnits[],
     currentAccommodationId?: string,
 ): SiblingAccommodationItem[] {
+// console.log({
+//     totalAccommodations: accommodations.length,
+//     currentAccommodationId,
+//     ids: accommodations.map((accommodation) => ({
+//         id: accommodation.id,
+//         name: accommodation.name,
+//     })),
+// });   
+
     const siblings: SiblingAccommodationItem[] = accommodations
         .filter(
-            (accommodation) =>
+            (accommodation) => 
                 accommodation.id !== currentAccommodationId,
         )
         .map((accommodation) => {

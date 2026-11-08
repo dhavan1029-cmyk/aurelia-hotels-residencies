@@ -5,7 +5,7 @@ import type {
     SuiteFeatureItem,
     SuitePrivilegeItem,
 } from '@/components/hotel/SuiteCard';
-import { JsonObject } from '../types/accommodations';
+import { JsonObject } from '../types';
 
 export interface AccommodationSuiteCards {
     masterSuite: SuiteCardProps;
@@ -187,6 +187,7 @@ export function mapAccommodationCategoryToSuiteCard(
             : 'Private Butler Included';
 
     return {
+        bookingParams: {},
         id: accommodation.id,
         slug: accommodation.slug,
         name: accommodation.name,

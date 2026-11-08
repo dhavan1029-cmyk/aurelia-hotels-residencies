@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -25,21 +25,22 @@ export interface MajordomoHostInfo {
 }
 
 export interface PatronDossierInfo {
-    honorific: string;
     fullName: string;
     folioNumber: string;
     membershipTier: string;
     tierBadge: string;
     provenanceNotice: string;
     avatarUrl: string;
-    avatarAlt: string;
+    avatarAlt?: string;
     majordomo: MajordomoHostInfo;
-    tabs: ProfileNavTab[];
-    activeTabId: ProfileNavTabId;
+    passport?: {
+        nationality?: string;
+        issuingCountry?: string;
+        passportNumberMasked?: string;
+    };
 }
 
 export const profileDossierDefaultData: PatronDossierInfo = {
-    honorific: 'Lady',
     fullName: 'Lady Katherine V. Beaumont',
     folioNumber: 'AUR-8911-S',
     membershipTier: 'SOVEREIGN PATRON • TIER I',
@@ -57,30 +58,111 @@ export const profileDossierDefaultData: PatronDossierInfo = {
         phoneTel: '+39089875111',
         avatarUrl: '/limestone-villa.png',
         avatarAlt: 'Portrait of assigned Senior Majordomo Matteo Bellini',
-    },
-    tabs: [
-        {
-            id: 'sensory-calibration',
-            label: 'Sensory & Room Calibration',
-        },
-        {
-            id: 'upcoming-stays',
-            label: 'Upcoming Stays & Itineraries',
-            count: 1,
-            badge: 'CONFIRMED',
-        },
-        {
-            id: 'cellar-allocations',
-            label: 'Private Cellar Allocations',
-            count: 6,
-        },
-        {
-            id: 'security-access',
-            label: 'Confidential Access & Security',
-        },
-    ],
-    activeTabId: 'sensory-calibration',
+    }
 };
+
+export interface MajordomoTierConfig {
+    badgePillText: string;
+    badgePillClass: string;
+    indicatorDotClass: string;
+    hostName: string;
+    hostRole: string;
+    locationNote: string;
+    phoneDisplay: string;
+    phoneTel: string;
+    avatarUrl: string;
+    avatarAlt: string;
+    actionLabel: string;
+    containerClass: string;
+    nameClass: string;
+    textMutedClass: string;
+    buttonClass: string;
+    callButtonClass: string;
+}
+
+export function getMajordomoTierConfig(
+    tier: 'EXPLORER' | 'SOVEREIGN_KEY' | 'IMPERIAL_HONORARY' | string,
+    majordomoData?: {
+        name?: string;
+        title?: string;
+        locationText?: string;
+        phoneDisplay?: string;
+        phoneTel?: string;
+        avatarUrl?: string;
+    }
+): MajordomoTierConfig {
+    const normalized = (tier || 'SOVEREIGN_KEY').toUpperCase();
+
+    // -------------------------------------------------------------------------
+    // TIER 0: IMPERIAL HONORARY (Diplomatic VIP / Sovereign Fellow)
+    // -------------------------------------------------------------------------
+    if (normalized.includes('IMPERIAL')) {
+        return {
+            badgePillText: 'GLOBAL CIP LINE 24/7 ACTIVE',
+            badgePillClass: 'bg-black/60 border border-[#bfa76f]/40 text-[#bfa76f]',
+            indicatorDotClass: 'bg-[#bfa76f] animate-ping',
+            hostName: majordomoData?.name || 'Roberto Castiglione',
+            hostRole: majordomoData?.title || 'Chief Executive Intendant & Master Sommelier',
+            locationNote: majordomoData?.locationText || 'Direct Sovereign Diplomatic Channel',
+            phoneDisplay: majordomoData?.phoneDisplay || '+39 089 875 999',
+            phoneTel: majordomoData?.phoneTel || '+39089875999',
+            avatarUrl: majordomoData?.avatarUrl || '/limestone-villa.png',
+            avatarAlt: 'Portrait of Chief Intendant Roberto Castiglione',
+            actionLabel: 'SIGNAL ATTACHE',
+            containerClass: 'bg-[#191817] text-white border border-[#3e3a34] shadow-xl',
+            nameClass: 'text-white font-normal',
+            textMutedClass: 'text-[#a4a098]',
+            buttonClass: 'bg-[#bfa76f] hover:bg-[#a89056] text-[#191817]',
+            callButtonClass: 'bg-white/10 hover:bg-white/15 border-white/20 text-white',
+        };
+    }
+
+    // -------------------------------------------------------------------------
+    // TIER III: RESIDENT PATRON • EXPLORER TIER (Shared Concierge Desk)
+    // -------------------------------------------------------------------------
+    if (normalized.includes('EXPLORER')) {
+        return {
+            badgePillText: 'DESK RELAY • STANDING BY',
+            badgePillClass: 'bg-[#f4efe6] border border-[#ded9ce] text-[#78756d]',
+            indicatorDotClass: 'bg-amber-500',
+            hostName: 'Positano Concierge Desk',
+            hostRole: 'Central Resident Guest Liaison',
+            locationNote: 'Main Colonnade Portico',
+            phoneDisplay: '+39 089 875 000',
+            phoneTel: '+39089875000',
+            avatarUrl: '/garden-pavillion.png',
+            avatarAlt: 'Aurelia Concierge Desk Insignia',
+            actionLabel: 'INQUIRE DESK',
+            containerClass: 'bg-[#fcfaf7] text-[#1f1e1d] border border-[#e2ddd3] shadow-2xs',
+            nameClass: 'text-[#1f1e1d] font-normal',
+            textMutedClass: 'text-[#78756d]',
+            buttonClass: 'bg-[#3b3834] hover:bg-[#1f1e1d] text-white',
+            callButtonClass: 'bg-white hover:bg-[#f6f2ea] border-[#ded9ce] text-[#1f1e1d]',
+        };
+    }
+
+    // -------------------------------------------------------------------------
+    // TIER I: SOVEREIGN KEY (Default Flagship Experience with Personal Majordomo)
+    // -------------------------------------------------------------------------
+    return {
+        badgePillText: 'PRIVATE LINE ACTIVE',
+        badgePillClass: 'bg-[#f6f2ea] border border-[#ded9ce] text-[#24633b]',
+        indicatorDotClass: 'bg-emerald-500 animate-pulse',
+        hostName: majordomoData?.name || 'Matteo Bellini',
+        hostRole: majordomoData?.title || 'Senior Majordomo & Sommelier',
+        locationNote: majordomoData?.locationText || 'Positano Cliffside Estate',
+        phoneDisplay: majordomoData?.phoneDisplay || '+39 089 875 111',
+        phoneTel: majordomoData?.phoneTel || '+39089875111',
+        avatarUrl: majordomoData?.avatarUrl || '/limestone-villa.png',
+        avatarAlt: `Portrait of Senior Majordomo ${majordomoData?.name || 'Matteo Bellini'}`,
+        actionLabel: 'DISPATCH',
+        containerClass: 'bg-white text-[#1f1e1d] border border-[#ded9ce] shadow-2xs',
+        nameClass: 'text-[#1f1e1d] font-semibold',
+        textMutedClass: 'text-[#78756d]',
+        buttonClass: 'bg-[#1f1e1d] hover:bg-[#343230] text-white',
+        callButtonClass: 'bg-[#f6f2ea] hover:bg-[#eeeae2] border-[#ded9ce] text-[#1f1e1d]',
+    };
+}
 
 export interface ProfileDossierHeaderProps {
     data?: PatronDossierInfo;
@@ -104,11 +186,31 @@ export function ProfileDossierHeader({
         avatarUrl,
         avatarAlt,
         majordomo,
-        tabs,
-        activeTabId,
     } = data;
 
-    const [currentTab, setCurrentTab] = useState<ProfileNavTabId>(activeTabId);
+    const tabs : ProfileNavTab[] = [
+        {
+            id: 'sensory-calibration',
+            label: 'Sensory & Room Calibration',
+        },
+        {
+            id: 'upcoming-stays',
+            label: 'Upcoming Stays & Itineraries',
+            count: 1,
+            badge: 'CONFIRMED',
+        },
+        {
+            id: 'cellar-allocations',
+            label: 'Private Cellar Allocations',
+            count: 6,
+        },
+        {
+            id: 'security-access',
+            label: 'Confidential Access & Security',
+        },
+    ]
+
+    const [currentTab, setCurrentTab] = useState<ProfileNavTabId>('sensory-calibration');
 
     function handleTabClick(tabId: ProfileNavTabId) {
         setCurrentTab(tabId);
@@ -159,10 +261,10 @@ export function ProfileDossierHeader({
                             </span>
                         </div>
 
-                        <div className="relative w-10 h-10 -full overflow-hidden border border-[#bfa76f] bg-[#f6f2ea] shadow-xs shrink-0">
+                        <div className="relative w-10 h-10 rounded-full overflow-hidden border border-[#bfa76f] bg-[#f6f2ea] shadow-xs shrink-0">
                             <Image
                                 src={avatarUrl}
-                                alt={avatarAlt}
+                                alt={avatarAlt || ''}
                                 fill
                                 sizes="40px"
                                 className="object-cover object-center"
@@ -181,12 +283,12 @@ export function ProfileDossierHeader({
                     <div className="space-y-3 max-w-2xl">
                         {/* Eyebrow Protocol Badges */}
                         <div className="flex flex-wrap items-center gap-2.5">
-                            <span className="inline-flex items-center gap-2 px-3 py-1 -sm bg-[#f6f2ea] border border-[#ded9ce] text-[9px] font-mono uppercase tracking-[0.22em] text-[#6d6961]">
-                                <span className="w-1.5 h-1.5 -full bg-[#8e763b]" />
+                            <span className="inline-flex items-center gap-2 px-3 py-1 bg-[#f6f2ea] border border-[#ded9ce] text-[9px] font-mono uppercase tracking-[0.22em] text-[#6d6961]">
+                                <span className="w-1.5 h-1.5 rounded-full bg-[#8e763b]" />
                                 <span>SOVEREIGN PATRON DOSSIER • FOLIO #{folioNumber}</span>
                             </span>
 
-                            <span className="px-2.5 py-1 -sm bg-[#8e763b] text-white font-sans text-[9px] font-semibold uppercase tracking-[0.18em] shadow-2xs">
+                            <span className="px-2.5 py-1 bg-[#8e763b] text-white font-sans text-[9px] font-semibold uppercase tracking-[0.18em] shadow-2xs">
                                 {tierBadge}
                             </span>
                         </div>
@@ -202,66 +304,77 @@ export function ProfileDossierHeader({
                         </p>
                     </div>
 
-                    {/* Right: Assigned Personal Majordomo Host Card */}
-                    <div className="w-full lg:w-auto bg-white border border-[#ded9ce] -2xl p-4 sm:p-5 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-4 shrink-0">
-                        <div className="flex items-center gap-3.5">
-                            {/* Majordomo Avatar */}
-                            <div className="relative w-12 h-12 -full overflow-hidden border border-[#ded9ce] bg-[#f6f2ea] shadow-2xs shrink-0">
-                                <Image
-                                    src={majordomo.avatarUrl}
-                                    alt={majordomo.avatarAlt}
-                                    fill
-                                    sizes="48px"
-                                    className="object-cover object-center"
-                                />
-                            </div>
-
-                            <div className="space-y-0.5 min-w-0">
-                                <div className="flex items-center gap-1.5">
-                                    <span className="w-1.5 h-1.5 -full bg-emerald-500 animate-pulse" />
-                                    <span className="text-[9px] font-mono uppercase tracking-[0.18em] text-[#24633b] font-medium">
-                                        {majordomo.statusText}
-                                    </span>
+                    {/* Right: Assigned Personal Majordomo Host Card (Tier-Aware) */}
+                    {(() => {
+                        const tierConfig = getMajordomoTierConfig(membershipTier, majordomo);
+                    
+                        return (
+                            <div
+                                className={`w-full lg:w-auto p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shrink-0 transition-colors ${tierConfig.containerClass}`}
+                            >
+                                <div className="flex items-center gap-3.5">
+                                    {/* Majordomo Avatar with Tier Border */}
+                                    <div className="relative w-12 h-12 overflow-hidden border border-[#bfa76f]/50 bg-[#f6f2ea] shadow-2xs shrink-0">
+                                        <Image
+                                            src={tierConfig.avatarUrl}
+                                            alt={tierConfig.avatarAlt}
+                                            fill
+                                            sizes="48px"
+                                            className="object-cover object-center"
+                                        />
+                                    </div>
+                        
+                                    <div className="space-y-0.5 min-w-0">
+                                        <div className="flex items-center gap-1.5">
+                                            <span className={`w-1.5 h-1.5 rounded-full ${tierConfig.indicatorDotClass}`} />
+                                            <span className="text-[9px] font-mono uppercase tracking-[0.18em] font-medium">
+                                                {tierConfig.badgePillText}
+                                            </span>
+                                        </div>
+                        
+                                        <h3 className={`font-serif text-base tracking-tight leading-tight ${tierConfig.nameClass}`}>
+                                            {tierConfig.hostName}
+                                        </h3>
+                        
+                                        <p className={`text-[11px] font-sans font-light leading-tight ${tierConfig.textMutedClass}`}>
+                                            • {tierConfig.hostRole} <br></br> • {tierConfig.locationNote}
+                                        </p>
+                                    </div>
                                 </div>
-                                <h3 className="font-serif text-base font-semibold text-[#1f1e1d] tracking-tight leading-tight">
-                                    {majordomo.name}
-                                </h3>
-                                <p className="text-[11px] text-[#78756d] font-sans font-light leading-tight">
-                                    {majordomo.title} • {majordomo.locationText}
-                                </p>
+                        
+                                {/* Quick Contact Hotline & Dispatch Button */}
+                                <div className="flex items-center gap-2 pt-2 sm:pt-0 border-t sm:border-t-0 border-current/10">
+                                    <a
+                                        href={`tel:${tierConfig.phoneTel}`}
+                                        className={`inline-flex items-center gap-1.5 px-3.5 py-2.5 border text-[10px] font-sans font-semibold uppercase tracking-[0.16em] transition-colors shadow-2xs ${tierConfig.callButtonClass}`}
+                                        aria-label="Direct Telephone Line"
+                                    >
+                                        <svg
+                                            className="w-3.5 h-3.5 text-[#8e763b]"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        >
+                                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                                        </svg>
+                                        <span>{tierConfig.phoneDisplay}</span>
+                                    </a>
+                        
+                                    <button
+                                        type="button"
+                                        onClick={onContactMajordomo}
+                                        className={`inline-flex items-center justify-center px-4 py-2.5 text-[10px] font-sans font-semibold uppercase tracking-[0.18em] transition-colors shadow-2xs ${tierConfig.buttonClass}`}
+                                    >
+                                        {tierConfig.actionLabel}
+                                    </button>
+                                </div>
                             </div>
-                        </div>
+                        );
+                    })()}
 
-                        {/* Quick Contact Hotline & Dispatch Button */}
-                        <div className="flex items-center gap-2 pt-2 sm:pt-0 border-t sm:border-t-0 border-[#eeeae2]">
-                            <a
-                                href={`tel:${majordomo.phoneTel}`}
-                                className="inline-flex items-center gap-1.5 px-3.5 py-2.5 -xl bg-[#f6f2ea] hover:bg-[#eeeae2] border border-[#ded9ce] text-[10px] font-sans font-semibold uppercase tracking-[0.16em] text-[#1f1e1d] transition-colors shadow-2xs"
-                                aria-label="Direct Telephone Line"
-                            >
-                                <svg
-                                    className="w-3.5 h-3.5 text-[#8e763b]"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                >
-                                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
-                                </svg>
-                                <span>{majordomo.phoneDisplay}</span>
-                            </a>
-
-                            <button
-                                type="button"
-                                onClick={onContactMajordomo}
-                                className="inline-flex items-center justify-center px-4 py-2.5 -xl bg-[#1f1e1d] hover:bg-[#343230] text-white text-[10px] font-sans font-semibold uppercase tracking-[0.18em] transition-colors shadow-2xs"
-                            >
-                                DISPATCH
-                            </button>
-                        </div>
-                    </div>
                 </div>
 
                 {/* ------------------------------------------------------------- */}
@@ -278,7 +391,7 @@ export function ProfileDossierHeader({
                                 onClick={function () {
                                     handleTabClick(tab.id);
                                 }}
-                                className={`px-4 sm:px-5 py-2.5 -xl font-sans text-xs font-semibold uppercase tracking-[0.16em] transition-all whitespace-nowrap shadow-2xs flex items-center gap-2 ${
+                                className={`px-4 sm:px-5 py-2.5 font-sans text-xs font-semibold uppercase tracking-[0.16em] transition-all whitespace-nowrap shadow-2xs flex items-center gap-2 ${
                                     isActive
                                         ? 'bg-[#1f1e1d] text-white shadow-sm'
                                         : 'bg-white hover:bg-[#faf8f5] text-[#4d4a45] border border-[#ded9ce]'
@@ -287,7 +400,7 @@ export function ProfileDossierHeader({
                                 <span>{tab.label}</span>
                                 {tab.badge && (
                                     <span
-                                        className={`px-1.5 py-0.5 -xs text-[9px] font-mono tracking-wider ${
+                                        className={`px-1.5 py-0.5 rounded-xs text-[9px] font-mono tracking-wider ${
                                             isActive
                                                 ? 'bg-[#8e763b] text-white'
                                                 : 'bg-[#f6f2ea] text-[#8e763b]'

@@ -14,7 +14,6 @@ import {
 import {
 	ProfileOlfactorySectionData,
 	OlfactoryIntensityLevel,
-	profileOlfactoryDefaultData,
 } from '@/components/hotel/profile/ProfileOlfactorySection';
 import {
 	ProfileSleepAndEpicureanData,
@@ -28,23 +27,21 @@ import {
 
 export interface ProfilePageProps {
 	dossierData?: PatronDossierInfo;
-	olfactoryData?: ProfileOlfactorySectionData;
+	olfactoryData: ProfileOlfactorySectionData;
 	sleepData?: ProfileSleepAndEpicureanData;
 	logisticsData?: ProfileLogisticsData;
 	className?: string;
 }
 
-export async function ProfilePage({
+export function ProfilePage({
 	dossierData = profileDossierDefaultData,
-	olfactoryData = profileOlfactoryDefaultData,
+	olfactoryData,
 	sleepData = profileSleepDefaultData,
 	logisticsData = profileLogisticsDefaultData,
 	className = '',
 }: ProfilePageProps) {
 
 	// const cookieStore = await cookies()
-
-	console.log(document.cookie)
 
 	// setting year
 	const year = new Date().getFullYear();
@@ -63,7 +60,7 @@ export async function ProfilePage({
 	const [atomizationActive, setAtomizationActive] =
 		useState<boolean>(true);
 	const [targetSleepTemp, setTargetSleepTemp] = useState<number>(
-		sleepData.initialTargetTemperatureCelsius
+		sleepData.initialTargetTemperatureCelsius || 19.5
 	);
 
 	// 3. Companion & Archive State
@@ -174,7 +171,6 @@ export async function ProfilePage({
 			<ProfileDossierHeader
 				data={{
 					...dossierData,
-					activeTabId: activeTab,
 				}}
 				onTabChange={handleTabChange}
 				onContactMajordomo={handleContactMajordomo}

@@ -16,9 +16,6 @@ interface PageProps {
 export async function AccommodationDetailsPage({slug, bookingParams} : PageProps){
     
     const accommodations = await prisma.accommodationCategory.findMany({
-        where: {
-            slug
-        },
         include: {
             roomUnits: true,
         },
@@ -38,6 +35,8 @@ export async function AccommodationDetailsPage({slug, bookingParams} : PageProps
 
 
     const siblings = mapAccommodationSiblings(accommodations, accommodation.id)
+
+    console.log(siblings)
 
     return <main className="bg-[#f5f0e8] min-h-screen text-[#1f1e1d]">
             {/* Phase 1: Header, Asymmetric Gallery & Spatial Specs */}

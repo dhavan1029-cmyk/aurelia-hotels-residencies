@@ -30,6 +30,8 @@ model Booking {
   qrCodeData            String?
   lineItems             BookingLineItem[]
   folio                 PaymentFolio?
+  assignedMajordomoId   String?
+  assignedMajordomo     StaffMember? @relation("BookingAssignedMajordomo", fields: [assignedMajordomoId], references: [id])
 
   createdAt             DateTime      @default(now())
   updatedAt             DateTime      @updatedAt

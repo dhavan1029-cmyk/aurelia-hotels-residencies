@@ -6,7 +6,26 @@ export default async function Page() {
 
   try {
     const accommodations =
-      await prisma.user.findMany({});
+      await prisma.guestProfile.findUnique({
+		where: {
+			id: 'prof-alexander-0402'
+		}, 
+    	include: {
+        user: {
+            include: {
+                primaryMajordomo: true,
+                bookings: {
+                    include: {
+                        sanctuary: true,
+                        accommodationCategory: true,
+                        roomUnit: true,
+                        folio: true
+                    }
+                }
+            }
+        }
+    }
+	})
 
     return (
       <pre>

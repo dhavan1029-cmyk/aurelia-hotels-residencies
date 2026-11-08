@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import { EpicureanInstructionModal, EpicureanModificationValues } from './EpicureanInstructionModal';
 
 export interface PillowConfiguration {
     id: string;
@@ -27,47 +28,20 @@ export interface EpicureanProvisionsItem {
     provenance: string;
     serviceProtocol: string;
     temperatureOrTimingDisplay: string;
-    iconType: 'cellar' | 'water' | 'coffee';
+    iconType: 'cellar' | 'water' | 'coffee' | 'tea';
     isCustomizable?: boolean;
 }
 
 export interface ProfileSleepAndEpicureanData {
-    // Section 02
-    section2Number: string;
-    section2Eyebrow: string;
-    section2StatusBadge: string;
-    section2Heading: string;
-    section2Description: string;
-    heroBedroomImageUrl: string;
-    heroBedroomImageAlt: string;
-    acousticIsolationNotice: string;
     initialTargetTemperatureCelsius: number;
     pillows: PillowConfiguration[];
+    preferredMatress: string,
     circadianAutomations: CircadianAutomationToggle[];
-
-    // Section 03
-    section3Number: string;
-    section3Eyebrow: string;
-    section3StatusBadge: string;
-    section3Heading: string;
-    section3Description: string;
     epicureanItems: EpicureanProvisionsItem[];
-    cellarConciergeNotice: string;
 }
 
 export const profileSleepDefaultData: ProfileSleepAndEpicureanData = {
-    section2Number: '02',
-    section2Eyebrow: 'NOCTURNAL MICROCLIMATE & BIO-RHYTHMS',
-    section2StatusBadge: 'CIRCADIAN AUTOMATION ACTIVE',
-    section2Heading: 'Circadian Sleep Architecture',
-    section2Description:
-        'Aurelia sleeping chambers are acoustically decoupled from marine vibrations and engineered with silent geothermal cooling to cultivate profound restorative delta-wave sleep.',
-    heroBedroomImageUrl: '/suite-402.png',
-    heroBedroomImageAlt:
-        'Luxury Mediterranean hotel suite bedroom, soft morning light filtering through sheer linen curtains, unbleached linen bed, calm minimalist travertine aesthetics',
-    acousticIsolationNotice:
-        'Acoustically dampened at under 14dB ambient noise. French washed organic flax dressed over hypoallergenic Siberian goose down core.',
-    initialTargetTemperatureCelsius: 19.5,
+    initialTargetTemperatureCelsius: 15,
     pillows: [
         {
             id: 'pillow-left',
@@ -102,18 +76,12 @@ export const profileSleepDefaultData: ProfileSleepAndEpicureanData = {
             specNote: 'Gradually shifts from 1800K candlelight to 3200K morning sunshine',
         },
     ],
-
-    section3Number: '03',
-    section3Eyebrow: 'CELLAR & BOTANICAL PROVISIONS',
-    section3StatusBadge: 'CHEF SOMMELIER STAGING',
-    section3Heading: 'In-Suite Epicurean Staging',
-    section3Description:
-        'Pre-arrival sommelier allocations and morning awakening rituals prepared by your personal majordomo prior to entering your sanctuary.',
+    preferredMatress: 'PLUSH_HYBRID_POCKET_SPRING',
     epicureanItems: [
         {
             id: 'arrival-vintage-ornellaia',
             categoryTag: 'ARRIVAL CELLAR ALLOCATION',
-            title: '2016 Tenuta dell\'Ornellaia Bolgheri Superiore',
+            title: "2016 Tenuta dell'Ornellaia Bolgheri Superiore",
             provenance: 'Tuscan Coast • Cellar Vault Reserve #AUR-2016-ORN',
             serviceProtocol:
                 'Decanted into mouth-blown Riedel Amadeo decanter precisely 90 minutes prior to coordinates arrival. Served at cellar equilibrium.',
@@ -144,12 +112,10 @@ export const profileSleepDefaultData: ProfileSleepAndEpicureanData = {
             isCustomizable: true,
         },
     ],
-    cellarConciergeNotice:
-        'Subterranean volcanic cellar containing 1,850 cataloged crus is available for private patron allocation through Senior Sommelier Matteo Bellini.',
 };
 
 export interface ProfileSleepAndEpicureanSectionProps {
-    data?: ProfileSleepAndEpicureanData;
+    data: ProfileSleepAndEpicureanData;
     className?: string;
     onUpdateSleepTemperature?: (tempCelsius: number) => void;
     onToggleCircadianAutomation?: (automationId: string, enabled: boolean) => void;
@@ -164,29 +130,45 @@ export function ProfileSleepAndEpicureanSection({
     onCustomizeEpicureanItem,
 }: ProfileSleepAndEpicureanSectionProps) {
     const {
-        section2Number,
-        section2Eyebrow,
-        section2StatusBadge,
-        section2Heading,
-        section2Description,
-        heroBedroomImageUrl,
-        heroBedroomImageAlt,
-        acousticIsolationNotice,
         initialTargetTemperatureCelsius,
-        pillows,
-        circadianAutomations,
-        section3Number,
-        section3Eyebrow,
-        section3StatusBadge,
-        section3Heading,
-        section3Description,
-        epicureanItems,
-        cellarConciergeNotice,
+        pillows = profileSleepDefaultData.pillows ?? [],
+        circadianAutomations = profileSleepDefaultData.circadianAutomations ?? [],
+        epicureanItems = profileSleepDefaultData.epicureanItems ?? [],
+        preferredMatress
     } = data;
 
     // Local State
-    const [sleepTemp, setSleepTemp] = useState<number>(initialTargetTemperatureCelsius);
+    const [sleepTemp, setSleepTemp] = useState<number>(initialTargetTemperatureCelsius || 19.5);
     const [automations, setAutomations] = useState(circadianAutomations);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [activeItem, setActiveItem] = useState<EpicureanProvisionsItem | null>(null);
+
+    // 2. Click handler for "MODIFY INSTRUCTION" button
+    function handleOpenModifier(itemId: string) {
+        const item = data.epicureanItems.find((i) => i.id === itemId);
+        if (item) {
+            setActiveItem({
+                id: item.id,
+                categoryTag: item.categoryTag,
+                title: item.title,
+                provenance: item.provenance,
+                serviceProtocol: item.serviceProtocol,
+                temperatureOrTimingDisplay: item.temperatureOrTimingDisplay,
+                iconType: item.iconType,
+            });
+            setIsModalOpen(true);
+        }
+    }
+
+    // 3. Callback when the guest saves their instruction
+    async function handleSaveInstructions(updated: EpicureanModificationValues) {
+        console.log('Dispatching updated protocol to Server Action:', updated);
+        
+        // Example: Call your Next.js Server Action
+        // await updateEpicureanInstructionAction(updated);
+        
+        setIsModalOpen(false);
+    }
 
     function handleTempChange(delta: number) {
         const nextTemp = Math.round((sleepTemp + delta) * 10) / 10;
@@ -262,6 +244,22 @@ export function ProfileSleepAndEpicureanSection({
                         <line x1="14" y1="1" x2="14" y2="4" />
                     </svg>
                 );
+            case 'tea':
+                return (
+                    <svg
+                        className="w-4 h-4 text-[#8e763b]"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    >
+                        <path d="M17 8h1a4 4 0 0 1 0 8h-1" />
+                        <path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z" />
+                        <path d="M6 2v3M10 2v3M14 2v3" />
+                    </svg>
+                );
             default:
                 return null;
         }
@@ -274,43 +272,43 @@ export function ProfileSleepAndEpicureanSection({
             {/* ============================================================= */}
             <section
                 id="sleep-architecture"
-                className="w-full bg-[#fcf9f4] border border-[#e8e4dc] 6 sm:p-9 lg:p-11 shadow-[0_4px_24px_rgba(31,30,29,0.03)] space-y-8 lg:space-y-10"
+                className="w-full bg-[#fcf9f4] border border-[#e8e4dc] p-6 sm:p-9 lg:p-11 shadow-[0_4px_24px_rgba(31,30,29,0.03)] space-y-8 lg:space-y-10"
             >
                 {/* 1. Header & Badges */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-[#eeeae2]">
                     <div className="space-y-1.5">
                         <div className="flex items-center gap-2">
-                            <span className="w-5 h-5 g-[#1f1e1d] text-white flex items-center justify-center font-mono text-[10px] font-semibold">
-                                {section2Number}
+                            <span className="w-5 h-5 rounded-full bg-[#1f1e1d] text-white flex items-center justify-center font-mono text-[10px] font-semibold">
+                                02
                             </span>
                             <span className="text-[10px] font-sans font-semibold uppercase tracking-[0.24em] text-[#8e763b]">
-                                {section2Eyebrow}
+                                NOCTURNAL MICROCLIMATE &amp; BIO-RHYTHMS
                             </span>
                         </div>
 
                         <h2 className="font-serif text-2xl sm:text-3xl lg:text-[34px] font-normal text-[#1f1e1d] tracking-tight leading-[1.12]">
-                            {section2Heading}
+                            Circadian Sleep Architecture
                         </h2>
 
                         <p className="text-xs sm:text-[13px] text-[#636058] font-sans font-light leading-relaxed max-w-2xl">
-                            {section2Description}
+                            Aurelia sleeping chambers are acoustically decoupled from marine vibrations and engineered with silent geothermal cooling to cultivate profound restorative delta-wave sleep.
                         </p>
                     </div>
 
                     <div className="self-start sm:self-auto shrink-0">
-                        <span className="inline-flex items-center gap-2 px-3 py-1.5 g-[#f6f2ea] border border-[#ded9ce] text-[9px] font-mono uppercase tracking-[0.2em] text-[#24633b] shadow-2xs">
-                            <span className="w-1.5 h-1.5 g-emerald-500 animate-pulse" />
-                            <span>{section2StatusBadge}</span>
+                        <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#f6f2ea] border border-[#ded9ce] text-[9px] font-mono uppercase tracking-[0.2em] text-[#24633b] shadow-2xs">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                            <span>CIRCADIAN AUTOMATION ACTIVE</span>
                         </span>
                     </div>
                 </div>
 
                 {/* 2. Photographic Bedroom Showcase & Acoustic Monograph */}
-                <article className="relative w-full erflow-hidden border border-[#ded9ce] bg-[#191817] shadow-lg group">
+                <article className="relative w-full overflow-hidden border border-[#ded9ce] bg-[#191817] shadow-lg group">
                     <div className="relative aspect-video sm:aspect-21/9 w-full overflow-hidden">
                         <Image
-                            src={heroBedroomImageUrl}
-                            alt={heroBedroomImageAlt}
+                            src={'/suite-402.png'}
+                            alt={'Luxury Mediterranean hotel suite bedroom, soft morning light filtering through sheer linen curtains, unbleached linen bed, calm minimalist travertine aesthetics'}
                             fill
                             sizes="(max-width: 1024px) 100vw, 65vw"
                             className="object-cover object-center transform transition-transform duration-700 ease-out group-hover:scale-105"
@@ -320,10 +318,10 @@ export function ProfileSleepAndEpicureanSection({
 
                         {/* Top Badges */}
                         <div className="absolute top-4 left-4 right-4 z-10 flex items-center justify-between">
-                            <span className="px-3 py-1 black/60 backdrop-blur-md text-white text-[9px] font-mono uppercase tracking-[0.2em]">
+                            <span className="px-3 py-1 bg-black/60 backdrop-blur-md text-white text-[9px] font-mono uppercase tracking-[0.2em]">
                                 ACOUSTIC DECOUPLING: &lt; 14 dB
                             </span>
-                            <span className="px-2.5 py-1 [#8e763b] text-white text-[9px] font-sans font-semibold uppercase tracking-[0.18em]">
+                            <span className="px-2.5 py-1 bg-[#8e763b] text-white text-[9px] font-sans font-semibold uppercase tracking-[0.18em]">
                                 GEOTHERMAL RADIANT CHILL
                             </span>
                         </div>
@@ -334,7 +332,7 @@ export function ProfileSleepAndEpicureanSection({
                                 NOCTURNAL ENVIRONMENT CALIBRATION
                             </span>
                             <p className="font-serif italic text-xs sm:text-sm font-light text-white/95 leading-relaxed max-w-2xl">
-                                {acousticIsolationNotice}
+                                Acoustically dampened at under 14dB ambient noise. French washed organic flax dressed over hypoallergenic Siberian goose down core.
                             </p>
                         </div>
                     </div>
@@ -343,7 +341,7 @@ export function ProfileSleepAndEpicureanSection({
                 {/* 3. Microclimate Temperature Stepper & Pillow Architecture */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                     {/* Temperature Stepper (5 cols) */}
-                    <div className="lg:col-span-5 bg-[#f6f2ea] border border-[#ded9ce] 5 sm:p-6 flex flex-col justify-between space-y-4 shadow-2xs">
+                    <div className="lg:col-span-5 bg-[#f6f2ea] border border-[#ded9ce] p-5 sm:p-6 flex flex-col justify-between space-y-4 shadow-2xs">
                         <div className="space-y-1">
                             <span className="text-[10px] font-sans font-semibold uppercase tracking-[0.22em] text-[#8e763b] block">
                                 TARGET SLEEP AMBIENT
@@ -356,9 +354,9 @@ export function ProfileSleepAndEpicureanSection({
                             </p>
                         </div>
 
-                        <div className="bg-white border border-[#ded9ce]  flex items-center justify-between shadow-2xs">
+                        <div className="bg-white border border-[#ded9ce] p-4 flex items-center justify-between shadow-2xs">
                             <div className="flex items-center gap-3">
-                                <span className="p-2 [#f6f2ea] border border-[#ded9ce] text-[#8e763b]">
+                                <span className="p-2 bg-[#f6f2ea] border border-[#ded9ce] text-[#8e763b]">
                                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                         <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z" />
                                     </svg>
@@ -379,7 +377,7 @@ export function ProfileSleepAndEpicureanSection({
                                     onClick={function () {
                                         handleTempChange(-0.5);
                                     }}
-                                    className="w-8 h-8 [#f6f2ea] hover:bg-[#eeeae2] border border-[#ded9ce] text-[#1f1e1d] flex items-center justify-center font-mono text-base font-semibold transition-colors"
+                                    className="w-8 h-8 bg-[#f6f2ea] hover:bg-[#eeeae2] border border-[#ded9ce] text-[#1f1e1d] flex items-center justify-center font-mono text-base font-semibold transition-colors"
                                     aria-label="Decrease Sleep Temperature"
                                 >
                                     −
@@ -389,7 +387,7 @@ export function ProfileSleepAndEpicureanSection({
                                     onClick={function () {
                                         handleTempChange(0.5);
                                     }}
-                                    className="w-8 h-8 [#f6f2ea] hover:bg-[#eeeae2] border border-[#ded9ce] text-[#1f1e1d] flex items-center justify-center font-mono text-base font-semibold transition-colors"
+                                    className="w-8 h-8 bg-[#f6f2ea] hover:bg-[#eeeae2] border border-[#ded9ce] text-[#1f1e1d] flex items-center justify-center font-mono text-base font-semibold transition-colors"
                                     aria-label="Increase Sleep Temperature"
                                 >
                                     +
@@ -399,13 +397,13 @@ export function ProfileSleepAndEpicureanSection({
                     </div>
 
                     {/* Pillow Architecture Dual Ensemble (7 cols) */}
-                    <div className="lg:col-span-7 bg-white border border-[#ded9ce] 5 sm:p-6 space-y-4 shadow-2xs">
+                    <div className="lg:col-span-7 bg-white border border-[#ded9ce] p-5 sm:p-6 space-y-4 shadow-2xs">
                         <div className="flex items-center justify-between pb-2 border-b border-[#eeeae2]">
                             <span className="text-[10px] font-sans font-semibold uppercase tracking-[0.22em] text-[#8e763b] block">
                                 BESPOKE PILLOW ENSEMBLE
                             </span>
                             <span className="text-[10px] font-mono text-[#8e8a82] uppercase">
-                                MATTRESS: NATURAL LATEX & COIR
+                                MATTRESS: {preferredMatress.replaceAll('_', ' ')}
                             </span>
                         </div>
 
@@ -414,10 +412,10 @@ export function ProfileSleepAndEpicureanSection({
                                 return (
                                     <div
                                         key={pillow.id}
-                                        className="p-3.5 [#faf8f5] border border-[#ded9ce] space-y-1.5 shadow-2xs"
+                                        className="p-3.5 bg-[#faf8f5] border border-[#ded9ce] space-y-1.5 shadow-2xs"
                                     >
                                         <div className="flex items-center justify-between">
-                                            <span className="px-2 py-0.5 [#1f1e1d] text-white text-[8px] font-mono uppercase tracking-wider">
+                                            <span className="px-2 py-0.5 bg-[#1f1e1d] text-white text-[8px] font-mono uppercase tracking-wider">
                                                 {pillow.position} CHAMBER
                                             </span>
                                             <span className="text-[9px] font-sans text-[#8e763b] font-semibold">
@@ -452,7 +450,7 @@ export function ProfileSleepAndEpicureanSection({
                                 onClick={function () {
                                     handleToggleAutomation(auto.id);
                                 }}
-                                className={`p-4 sm:p-5 rder transition-all cursor-pointer flex items-start justify-between gap-4 ${
+                                className={`p-4 sm:p-5 border transition-all cursor-pointer flex items-start justify-between gap-4 ${
                                     auto.enabled
                                         ? 'bg-[#f7f2e7] border-[#8e763b] shadow-xs'
                                         : 'bg-white border-[#ded9ce] hover:bg-[#faf8f5]'
@@ -461,7 +459,7 @@ export function ProfileSleepAndEpicureanSection({
                                 <div className="space-y-1 min-w-0">
                                     <div className="flex items-center gap-2">
                                         <span
-                                            className={`w-2 h-2 {
+                                            className={`w-2 h-2 rounded-full ${
                                                 auto.enabled ? 'bg-emerald-500 animate-pulse' : 'bg-[#ded9ce]'
                                             }`}
                                         />
@@ -481,12 +479,12 @@ export function ProfileSleepAndEpicureanSection({
 
                                 <div className="shrink-0 pt-0.5">
                                     <div
-                                        className={`w-9 h-5 -0.5 transition-colors ${
+                                        className={`w-9 h-5 rounded-full p-0.5 flex items-center transition-colors duration-300 ease-in-out cursor-pointer ${
                                             auto.enabled ? 'bg-[#8e763b]' : 'bg-[#ded9ce]'
                                         }`}
                                     >
                                         <div
-                                            className={`w-4 h-4 g-white transition-transform ${
+                                            className={`w-4 h-4 rounded-full bg-white shadow-xs transition-transform duration-300 ease-in-out ${
                                                 auto.enabled ? 'translate-x-4' : 'translate-x-0'
                                             }`}
                                         />
@@ -503,47 +501,47 @@ export function ProfileSleepAndEpicureanSection({
             {/* ============================================================= */}
             <section
                 id="epicurean-provisions"
-                className="w-full bg-[#fcf9f4] border border-[#e8e4dc] 6 sm:p-9 lg:p-11 shadow-[0_4px_24px_rgba(31,30,29,0.03)] space-y-8"
+                className="w-full bg-[#fcf9f4] border border-[#e8e4dc] p-6 sm:p-9 lg:p-11 shadow-[0_4px_24px_rgba(31,30,29,0.03)] space-y-8"
             >
                 {/* 1. Header & Badges */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-[#eeeae2]">
                     <div className="space-y-1.5">
                         <div className="flex items-center gap-2">
-                            <span className="w-5 h-5 g-[#1f1e1d] text-white flex items-center justify-center font-mono text-[10px] font-semibold">
-                                {section3Number}
+                            <span className="w-5 h-5 bg-[#1f1e1d] text-white flex items-center justify-center font-mono text-[10px] font-semibold">
+                                03
                             </span>
                             <span className="text-[10px] font-sans font-semibold uppercase tracking-[0.24em] text-[#8e763b]">
-                                {section3Eyebrow}
+                                CELLAR &amp; BOTANICAL PROVISIONS
                             </span>
                         </div>
 
                         <h2 className="font-serif text-2xl sm:text-3xl lg:text-[34px] font-normal text-[#1f1e1d] tracking-tight leading-[1.12]">
-                            {section3Heading}
+                            In-Suite Epicurean Staging
                         </h2>
 
                         <p className="text-xs sm:text-[13px] text-[#636058] font-sans font-light leading-relaxed max-w-2xl">
-                            {section3Description}
+                            Pre-arrival sommelier allocations and morning awakening rituals prepared by your personal majordomo prior to entering your sanctuary.
                         </p>
                     </div>
 
                     <div className="self-start sm:self-auto shrink-0">
-                        <span className="inline-flex items-center gap-2 px-3 py-1.5 g-[#f6f2ea] border border-[#ded9ce] text-[9px] font-mono uppercase tracking-[0.2em] text-[#8e763b] shadow-2xs">
-                            <span className="w-1.5 h-1.5 g-[#8e763b]" />
-                            <span>{section3StatusBadge}</span>
+                        <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#f6f2ea] border border-[#ded9ce] text-[9px] font-mono uppercase tracking-[0.2em] text-[#8e763b] shadow-2xs">
+                            <span className="w-1.5 h-1.5 bg-[#8e763b]" />
+                            <span>CHEF SOMMELIER STAGING</span>
                         </span>
                     </div>
                 </div>
 
-                {/* 2. 3 Epicurean Staging Cards */}
+                {/* 2. Epicurean Staging Cards */}
                 <div className="space-y-4">
                     {epicureanItems.map(function (item) {
                         return (
                             <article
                                 key={item.id}
-                                className="bg-white border border-[#ded9ce] 5 sm:p-6 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-5 hover:border-[#8e763b]/60 transition-colors"
+                                className="bg-white border border-[#ded9ce] p-5 sm:p-6 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-5 hover:border-[#8e763b]/60 transition-colors"
                             >
                                 <div className="flex items-start gap-4 min-w-0">
-                                    <div className="p-3 [#f6f2ea] border border-[#ded9ce] text-[#8e763b] shadow-2xs shrink-0 mt-0.5">
+                                    <div className="p-3 bg-[#f6f2ea] border border-[#ded9ce] text-[#8e763b] shadow-2xs shrink-0 mt-0.5">
                                         {renderEpicureanIcon(item.iconType)}
                                     </div>
 
@@ -569,7 +567,7 @@ export function ProfileSleepAndEpicureanSection({
                                 </div>
 
                                 <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-2 shrink-0 pt-3 sm:pt-0 border-t sm:border-t-0 border-[#eeeae2]">
-                                    <span className="px-3 py-1 [#f6f2ea] border border-[#ded9ce] text-[9px] font-mono uppercase tracking-wider text-[#1f1e1d] font-semibold">
+                                    <span className="px-3 py-1 bg-[#f6f2ea] border border-[#ded9ce] text-[9px] font-mono uppercase tracking-wider text-[#1f1e1d] font-semibold">
                                         {item.temperatureOrTimingDisplay}
                                     </span>
 
@@ -577,9 +575,7 @@ export function ProfileSleepAndEpicureanSection({
                                         <button
                                             type="button"
                                             onClick={function () {
-                                                if (onCustomizeEpicureanItem) {
-                                                    onCustomizeEpicureanItem(item.id);
-                                                }
+                                                handleOpenModifier(item.id);
                                             }}
                                             className="text-[10px] font-sans font-semibold uppercase tracking-[0.18em] text-[#8e763b] hover:text-[#1f1e1d] transition-colors underline"
                                         >
@@ -593,11 +589,11 @@ export function ProfileSleepAndEpicureanSection({
                 </div>
 
                 {/* 3. Subterranean Cellar Concierge Footnote */}
-                <div className="p-4 -[#f6f2ea] border border-[#ded9ce] flex items-center justify-between text-xs font-sans text-[#6e6b64]">
+                <div className="p-4 bg-[#f6f2ea] border border-[#ded9ce] flex items-center justify-between text-xs font-sans text-[#6e6b64]">
                     <div className="flex items-center gap-2.5">
                         <span className="text-base leading-none text-[#8e763b]">☆</span>
                         <p className="text-[11px] font-light leading-snug">
-                            {cellarConciergeNotice}
+                            Subterranean volcanic cellar containing 1,850 cataloged crus is available for private patron allocation through Senior Sommelier Matteo Bellini.
                         </p>
                     </div>
 
@@ -609,6 +605,19 @@ export function ProfileSleepAndEpicureanSection({
                     </a>
                 </div>
             </section>
+
+            {/* Modal mounted at root of section with zero re-mapping */}
+            <EpicureanInstructionModal
+                isOpen={isModalOpen}
+                onClose={function () {
+                    setIsModalOpen(false);
+                }}
+                item={activeItem}
+                sommelierName="Senior Sommelier Matteo Bellini"
+                onSaveInstructions={handleSaveInstructions}
+            />
+
         </div>
     );
 }
+
