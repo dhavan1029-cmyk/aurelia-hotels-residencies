@@ -1,11 +1,31 @@
-import { 
+import type { Prisma } from '@/app/generated/prisma/client';
+import type {
     HistoricalStayArchiveItem,
-    LogisticsDetailItem, 
-    NextSanctuaryReservation, 
-    ProfileLogisticsData, 
-    RegisteredCompanion 
-} from "@/components/hotel/profile/ProfileLogisticsRail";
-import { FullGuestProfileWithUserAndBookings } from "./profileDossierMapper";
+    LogisticsDetailItem,
+    NextSanctuaryReservation,
+    ProfileLogisticsData,
+    RegisteredCompanion,
+} from '@/components/hotel/profile/ProfileLogisticsRail';
+
+// ============================================================================
+// 1. PRIMARY INPUT PRISMA CONTRACT (USER AS ROOT ENTITY)
+// ============================================================================
+
+export type FullUserWithProfileAndBookings = Prisma.UserGetPayload<{
+    include: {
+        profile: true;
+        primaryMajordomo?: true;
+        bookings: {
+            include: {
+                sanctuary: true;
+                accommodationCategory: true;
+                roomUnit: true;
+                folio: true;
+                assignedMajordomo: true;
+            };
+        };
+    };
+}>;
 
 export interface ActiveBookingOverride {
     id?: string;
@@ -29,6 +49,10 @@ export interface LogisticsMapperOptions {
 }
 
 type JsonObject = Record<string, unknown>;
+
+// ============================================================================
+// 2. DEFENSIVE PARSING & DATE FORMATTING HELPERS
+// ============================================================================
 
 function parseJsonArray(val: unknown): unknown[] {
     if (Array.isArray(val)) return val;
@@ -79,11 +103,15 @@ function computeCountdownBadge(checkInDate: Date | string): string {
     return `IN ${diffDays} DAYS • ARRIVAL CONFIRMED`;
 }
 
+// ============================================================================
+// 3. MASTER LOGISTICS MAPPER FUNCTION (USER AS INPUT)
+// ============================================================================
+
 export function mapToProfileLogisticsData(
-    guestProfile: FullGuestProfileWithUserAndBookings,
+    user: FullUserWithProfileAndBookings,
     options: LogisticsMapperOptions = {}
 ): ProfileLogisticsData {
-    const user = guestProfile.user;
+    const profile = user.profile;
 
     // 1. Resolve Upcoming / Active Booking from relations or override
     const rawUpcomingBooking = user.bookings?.find(function (b) {
@@ -165,12 +193,12 @@ export function mapToProfileLogisticsData(
             dateRangeDisplay: formatDateRange(checkIn, checkOut),
             nightsCount: nights,
             logistics: logisticsItems,
-            itineraryHref: `/confirmation?bookingRef=${bookingRef}`,
+            itineraryHref: `/confirmation?bookingRef=${encodeURIComponent(bookingRef)}`,
         };
     }
 
-    // 3. Resolve Registered Companions (JSONB Parsing)
-    const rawCompanions = parseJsonArray(guestProfile.registeredCompanions);
+    // 3. Resolve Registered Companions from user.profile JSONB
+    const rawCompanions = parseJsonArray(profile?.registeredCompanions);
 
     const companions: RegisteredCompanion[] =
         rawCompanions.length > 0

@@ -1,51 +1,79 @@
+
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
 
 export interface ResendCountdownTimerProps {
     isExpired: boolean,
-    initialSeconds?: number;
+    expiresAt: string;
     conciergeHotlineDisplay?: string;
     conciergeHotlineTel?: string;
     onResend?: () => void | Promise<void>;
     className?: string;
 }
 
+function getRemainingSeconds(expiresAt: string): number {
+    const expirationTime = new Date(expiresAt).getTime();
+
+    if (!Number.isFinite(expirationTime)) {
+        return 0;
+    }
+
+    return Math.max(
+        0,
+        Math.ceil((expirationTime - Date.now()) / 1000)
+    );
+}
+
 export function ResendCountdownTimer({
     isExpired,
-    initialSeconds = 60 * 5,
+    expiresAt,
     conciergeHotlineDisplay = 'Dispatch verbal code via Concierge',
     conciergeHotlineTel = '+39089875000',
     onResend,
     className = '',
 }: ResendCountdownTimerProps) {
-    const [secondsLeft, setSecondsLeft] = useState(initialSeconds);
+    console.log(expiresAt)
+    const [secondsLeft, setSecondsLeft] = useState<number>(
+        () => getRemainingSeconds(expiresAt)
+    );
+
     const [isResending, setIsResending] = useState(false);
 
     useEffect(() => {
-        if (secondsLeft <= 0 || isExpired) return;
+        if (isExpired) return;
 
-        const timer = setInterval(() => {
-            setSecondsLeft((prev) => Math.max(prev - 1, 0));
-        }, 1000);
+        const updateTimer = () => {
+            setSecondsLeft(getRemainingSeconds(expiresAt));
+        };
 
-        return () => clearInterval(timer);
-    }, [secondsLeft, isExpired]);
+        updateTimer();
+
+        const timer = window.setInterval(updateTimer, 1000);
+
+        window.addEventListener('focus', updateTimer);
+        document.addEventListener('visibilitychange', updateTimer);
+
+        return () => {
+            window.clearInterval(timer);
+            window.removeEventListener('focus', updateTimer);
+            document.removeEventListener('visibilitychange', updateTimer);
+        };
+    }, [expiresAt, isExpired]);
 
     const handleManualResend = useCallback(async () => {
-        if (secondsLeft > 0 || isResending || !onResend) return;
+        if ((!isExpired && secondsLeft > 0) || isResending || !onResend) return;
 
         setIsResending(true);
 
         try {
             await onResend();
-            setSecondsLeft(initialSeconds);
         } catch (error) {
             console.error('Failed to resend OTP:', error);
         } finally {
             setIsResending(false);
         }
-    }, [secondsLeft, isResending, initialSeconds, onResend]);
+    }, [secondsLeft, isExpired, isResending, onResend]);
 
     const minutes = Math.floor(secondsLeft / 60);
     const seconds = secondsLeft % 60;
@@ -81,7 +109,7 @@ export function ResendCountdownTimer({
                         type="button"
                         onClick={handleManualResend}
                         disabled={isResending || !onResend}
-                        className="text-[#8e763b] hover:text-[#1f1e1d] font-semibold uppercase tracking-wider underline cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="text-[#8e763b] hover:text-[#1f1e1d] font-semibold uppercase tracking-wider underline cursor-pointer"
                     >
                         {isResending
                             ? 'Dispatching Fresh Token...'

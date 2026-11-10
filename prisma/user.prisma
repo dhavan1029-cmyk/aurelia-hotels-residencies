@@ -56,7 +56,7 @@ model GuestProfile {
 
     // Companions & Security Telemetry
     registeredCompanions          Json           @default("[]")
-    verbalConciergePin            String?        @default("8829")
+    verbalConciergePin            String         @default("8829")
     confidentialityLevel          String         @default("Level IV Swiss Banking Privacy Protocol")
 
     createdAt                     DateTime       @default(now())

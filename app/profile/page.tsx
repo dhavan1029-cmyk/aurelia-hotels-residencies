@@ -1,10 +1,10 @@
 import { ProfilePage } from '@/components/pages/hotel/ProfilePage';
-// import { mapProfileDatabaseRecord } from '@/lib/hotel/mappers/profileMapper';
-import { prisma } from '@/lib/config/prisma'
-import { mapDossierHeaderData } from '@/lib/hotel/mappers/profileDossierMapper';
+import { getAuthenticatedUser } from '@/lib/hotel/actions/auth';
+import { mapDossierHeaderData, mapProfileExtendedTabsData } from '@/lib/hotel/mappers/profileDossierMapper';
 import { mapToProfileLogisticsData } from '@/lib/hotel/mappers/profileLogisticsMapper';
 import { mapToProfileOlfactorySectionData } from '@/lib/hotel/mappers/profileOlfactoryMapper';
 import { mapToProfileSleepAndEpicureanData } from '@/lib/hotel/mappers/profileSleepAndEpicureanMapper';
+import { redirect } from 'next/navigation';
 
 export const metadata = {
 	title: 'Sovereign Patron Dossier & Sensory Calibrations | Aurelia Hotels & Residences',
@@ -14,29 +14,10 @@ export const metadata = {
 
 export default async function Page() {
 
-	const userData = await prisma.guestProfile.findUnique({
-		where: {
-			id: 'prof-claire-2210'
-		}, 
-    	include: {
-        user: {
-            include: {
-                primaryMajordomo: true,
-                bookings: {
-                    include: {
-                        sanctuary: true,
-                        accommodationCategory: true,
-                        roomUnit: true,
-                        folio: true
-                    }
-                }
-            }
-        }
-    }
-	})
+	const userData = await getAuthenticatedUser()
 
 	if (!userData) {
-	    throw new Error("Guest profile not found");
+	    redirect('/login')
 	}
 
 	// const {dossier, logistics, olfactory, sleep} = mapProfileDatabaseRecord(userData)
@@ -45,6 +26,7 @@ export default async function Page() {
 	const logistics = mapToProfileLogisticsData(userData)
 	const olfactory = mapToProfileOlfactorySectionData(userData)
 	const sleep = mapToProfileSleepAndEpicureanData(userData)
+	const extendedTabsData = mapProfileExtendedTabsData(userData)
 
 	return (
 		<ProfilePage 
@@ -52,6 +34,7 @@ export default async function Page() {
 			olfactoryData={olfactory}
 			sleepData={sleep}
 			logisticsData={logistics}
+			extendedTabsData={extendedTabsData}
 		/>
 	);
 }

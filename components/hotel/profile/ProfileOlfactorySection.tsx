@@ -122,7 +122,7 @@ export function ProfileOlfactorySection({
 	return (
 		<section
 			id="olfactory-calibration"
-			className={`w-full bg-[#fcf9f4] border border-[#e8e4dc] p-6 sm:p-9 lg:p-11 shadow-[0_4px_24px_rgba(31,30,29,0.03)] space-y-8 lg:space-y-10 ${className}`}
+			className={`w-full bg-white border border-[#e8e4dc] p-6 sm:p-9 lg:p-11 shadow-[0_4px_24px_rgba(31,30,29,0.03)] space-y-8 lg:space-y-10 ${className}`}
 		>
 			{/* ------------------------------------------------------------- */}
 			{/* 1. SECTION EDITORIAL HEADER & PROTOCOL STATUS BADGES */}

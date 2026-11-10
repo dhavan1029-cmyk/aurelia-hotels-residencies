@@ -3,36 +3,34 @@
 import React, { useRef, useState } from 'react';
 
 export interface CipherOtpInputProps {
-    initialDigits?: string[];
+    value: string;
     onCodeChange?: (code: string) => void;
     className?: string;
 }
 
 export function CipherOtpInput({
-    initialDigits = ['', '', '', '', '', ''],
+    value,
     onCodeChange,
     className = '',
 }: CipherOtpInputProps) {
-    const [digits, setDigits] = useState<string[]>(initialDigits);
+    const digits = Array.from({ length: 6 }, (_, index) => value[index] || '');
+
     const [activeIndex, setActiveIndex] = useState<number>(0);
     const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
 
-    function handleDigitChange(index: number, value: string) {
-        const cleaned = value.replace(/\D/g, '').slice(-1);
+    function handleDigitChange(index: number, inputValue: string) {
+        const cleaned = inputValue.replace(/\D/g, '').slice(-1);
         const updated = [...digits];
-        updated[index] = cleaned;
-        setDigits(updated);
 
-        if (onCodeChange) {
-            onCodeChange(updated.join(''));
-        }
+        updated[index] = cleaned;
+
+        if(onCodeChange) onCodeChange(updated.join(''));
 
         if (cleaned && index < 5) {
             inputRefs.current[index + 1]?.focus();
             setActiveIndex(index + 1);
         }
     }
-
     function handleKeyDown(index: number, e: React.KeyboardEvent<HTMLInputElement>) {
         if (e.key === 'Backspace' && !digits[index] && index > 0) {
             inputRefs.current[index - 1]?.focus();
@@ -48,20 +46,23 @@ export function CipherOtpInput({
 
     function handlePaste(e: React.ClipboardEvent) {
         e.preventDefault();
-        const pasted = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
+
+        const pasted = e.clipboardData
+            .getData('text')
+            .replace(/\D/g, '')
+            .slice(0, 6);
+
         if (!pasted) return;
 
-        const updated = [...digits];
-        for (let i = 0; i < 6; i++) {
-            updated[i] = pasted[i] || '';
-        }
-        setDigits(updated);
+        const updated = Array.from(
+            { length: 6 },
+            (_, index) => pasted[index] || ''
+        );
 
-        if (onCodeChange) {
-            onCodeChange(updated.join(''));
-        }
+        if(onCodeChange) onCodeChange(updated.join(''));
 
         const nextFocus = Math.min(pasted.length, 5);
+
         inputRefs.current[nextFocus]?.focus();
         setActiveIndex(nextFocus);
     }

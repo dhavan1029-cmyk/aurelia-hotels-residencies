@@ -148,7 +148,7 @@ export function NextSanctuaryCard({
     // =========================================================================
     if (!nextSanctuary) {
         return (
-            <article className="bg-[#fcf9f4] border border-[#e8e4dc] p-6 sm:p-7 shadow-[0_4px_24px_rgba(31,30,29,0.03)] space-y-5 select-none">
+            <article className="bg-white border border-[#e8e4dc] p-6 sm:p-7 shadow-[0_4px_24px_rgba(31,30,29,0.03)] space-y-5 select-none">
                 {/* Status Bar */}
                 <div className="flex items-center justify-between pb-3 border-b border-[#eeeae2]">
                     <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[#f6f2ea] border border-[#ded9ce] text-[9px] font-mono uppercase tracking-[0.18em] text-[#78756d]">
@@ -219,7 +219,7 @@ export function NextSanctuaryCard({
     // CASE B: ACTIVE UPCOMING SANCTUARY RESERVATION STATE
     // =========================================================================
     return (
-        <article className="bg-[#fcf9f4] border border-[#e8e4dc] p-6 sm:p-7 shadow-[0_4px_24px_rgba(31,30,29,0.03)] space-y-5">
+        <article className="bg-white border border-[#e8e4dc] p-6 sm:p-7 shadow-[0_4px_24px_rgba(31,30,29,0.03)] space-y-5">
             <div className="flex items-center justify-between pb-3 border-b border-[#eeeae2]">
                 <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[#f6f2ea] border border-[#ded9ce] text-[9px] font-mono uppercase tracking-[0.18em] text-[#24633b]">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
@@ -417,7 +417,7 @@ export function ProfileLogisticsRail({
 			{/* ============================================================= */}
 			{/* 2. REGISTERED SANCTUARY COMPANIONS CARD */}
 			{/* ============================================================= */}
-			<article className="bg-[#fcf9f4] border border-[#e8e4dc] p-6 sm:p-7 shadow-[0_4px_24px_rgba(31,30,29,0.03)] space-y-4">
+			<article className="bg-white border border-[#e8e4dc] p-6 sm:p-7 shadow-[0_4px_24px_rgba(31,30,29,0.03)] space-y-4">
 			    <div className="flex items-center justify-between pb-3 border-b border-[#eeeae2]">
 			        <div>
 			            <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#8e763b] block font-semibold">
@@ -538,7 +538,7 @@ export function ProfileLogisticsRail({
 			{/* 3. ENCRYPTED HISTORICAL ARCHIVE CARD */}
 			{/* ============================================================= */}
 
-			<article className="bg-[#fcf9f4] border border-[#e8e4dc] p-6 sm:p-7 shadow-[0_4px_24px_rgba(31,30,29,0.03)] space-y-4">
+			<article className="bg-white border border-[#e8e4dc] p-6 sm:p-7 shadow-[0_4px_24px_rgba(31,30,29,0.03)] space-y-4">
 				<div className="flex items-center justify-between pb-3 border-b border-[#eeeae2]">
 					<div>
 						<span className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#8e763b] block font-semibold">

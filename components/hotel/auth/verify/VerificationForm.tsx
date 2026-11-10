@@ -6,36 +6,35 @@ import { BiometricPasskeyButton } from './BiometricPasskeyButton';
 import { CipherOtpInput } from './CipherOtpInput';
 import { ResendCountdownTimer } from './ResendCountdownTimer';
 import { VerificationPageData } from './VerificationHeader';
-import { verifyOtp } from '@/lib/hotel/actions/auth';
+import { sendOtp, verifyOtp } from '@/lib/hotel/actions/auth';
 
 export interface VerificationFormProps {
     data: VerificationPageData['verificationForm'];
     attempts: number;
+    initialExpiresAt: string;
     className?: string;
 }
 
 export function VerificationForm({
     data,
+    initialExpiresAt,
     className = '',
 }: VerificationFormProps) {
     const {
-        initialCode,
-        resendTimeoutSeconds,
         passkeyButtonLabel,
         passkeySubLabel,
         submitButtonLabel,
         conciergeHotlineDisplay,
-        conciergeHotlineTel,
+        conciergeHotlineTel
     } = data;
 
     const router = useRouter();
 
-    const [cipherCode, setCipherCode] = useState<string>(
-        Array.isArray(initialCode) ? initialCode.join('') : ''
-    );
+    const [cipherCode, setCipherCode] = useState<string>('');
     const [isVerifying, setIsVerifying] = useState<boolean>(false);
     const [error, setError] = useState<string>('');
     const [isExpired, setIsExpired] = useState(false)
+    const [expiresAt, setExpiresAt] = useState(initialExpiresAt)
 
     async function executeVerification(codeToVerify: string) {
         if (codeToVerify.length < 6 || isVerifying) return;
@@ -47,6 +46,7 @@ export function VerificationForm({
             const res = await verifyOtp(codeToVerify);
 
             if (res.success) {
+                setCipherCode('')
                 router.push('/profile');
             } else {
                 if(res.expired){
@@ -127,6 +127,7 @@ export function VerificationForm({
                 </div>
 
                 <CipherOtpInput
+                    value={cipherCode}
                     onCodeChange={handleCodeChange}
                 />
             </div>
@@ -143,13 +144,21 @@ export function VerificationForm({
             {/* 4. RESEND COUNTDOWN & TELEPHONE DESK */}
             <ResendCountdownTimer
                 isExpired={isExpired}
-                initialSeconds={resendTimeoutSeconds}
+                expiresAt={expiresAt}
                 conciergeHotlineDisplay={conciergeHotlineDisplay}
                 conciergeHotlineTel={conciergeHotlineTel}
-                onResend={() => {
-                    setError('');
-                    console.log('Dispatching fresh cryptographic token...');
-                }}
+                // onResend={async () => {
+                //     const result = await sendOtp();
+                
+                //     if (!result.success) {
+                //         throw new Error(result.message);
+                //     }
+                
+                //     setExpiresAt(result.expiresAt);
+                //     setIsExpired(false);
+                //     setCipherCode('');
+                //     setError('');
+                // }}
             />
 
             {/* 5. PRIMARY SUBMISSION CTA BUTTON */}

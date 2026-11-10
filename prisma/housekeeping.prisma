@@ -17,19 +17,21 @@ model HousekeepingTask {
 }
 
 model StaffMember {
-  id            String      @id @default(cuid())
-  sanctuaryId   String
-  sanctuary     Sanctuary   @relation(fields: [sanctuaryId], references: [id], onDelete: Cascade)
-  name          String
-  role          StaffRole
-  email         String      @unique
-  phone         String
-  avatarUrl     String?
-  isActive      Boolean     @default(true)
-  assignedRooms RoomUnit[]
-  primaryForUser User? @relation("UserPrimaryMajordomo")
+  id                    String      @id @default(cuid())
+  sanctuaryId           String
+  sanctuary             Sanctuary   @relation(fields: [sanctuaryId], references: [id], onDelete: Cascade)
+  name                  String
+  role                  StaffRole
+  email                 String      @unique
+  phone                 String
+  avatarUrl             String?
+  isActive              Boolean     @default(true)
+  assignedRooms         RoomUnit[]
+  primaryForUser        User? @relation("UserPrimaryMajordomo")
+  assignedBookings      Booking[]     @relation("BookingAssignedMajordomo")
+
  
 
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime    @updatedAt
 }

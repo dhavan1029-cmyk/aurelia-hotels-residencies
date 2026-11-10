@@ -1,5 +1,31 @@
-import { OlfactoryIntensityLevel, PreArrivalAtomizationNotice, ProfileOlfactorySectionData, SignatureAromaComposition, VaporIntensityTier } from "@/components/hotel/profile/ProfileOlfactorySection";
-import { FullGuestProfileWithUserAndBookings } from "./profileDossierMapper";
+import type { Prisma } from '@/app/generated/prisma/client';
+import type {
+    OlfactoryIntensityLevel,
+    PreArrivalAtomizationNotice,
+    ProfileOlfactorySectionData,
+    SignatureAromaComposition,
+    VaporIntensityTier,
+} from '@/components/hotel/profile/ProfileOlfactorySection';
+
+// ============================================================================
+// 1. PRIMARY INPUT PRISMA CONTRACT (USER AS ROOT ENTITY)
+// ============================================================================
+
+export type FullUserWithProfileAndBookings = Prisma.UserGetPayload<{
+    include: {
+        profile: true;
+        primaryMajordomo?: true;
+        bookings: {
+            include: {
+                sanctuary: true;
+                accommodationCategory: true;
+                roomUnit: true;
+                folio: true;
+                assignedMajordomo: true;
+            };
+        };
+    };
+}>;
 
 export interface OlfactoryMapperOptions {
     /**
@@ -21,7 +47,7 @@ export interface OlfactoryMapperOptions {
 }
 
 // ============================================================================
-// 3. MASTER CANONICAL OLFACTORY CATALOG (ATELIER RESERVES)
+// 2. MASTER CANONICAL OLFACTORY CATALOG (ATELIER RESERVES)
 // ============================================================================
 
 export const CANONICAL_AROMA_COMPOSITIONS: Record<string, SignatureAromaComposition> = {
@@ -104,7 +130,7 @@ export const STANDARD_INTENSITY_TIERS: VaporIntensityTier[] = [
 ];
 
 // ============================================================================
-// 4. DEFENSIVE STRING & TIME HELPERS
+// 3. DEFENSIVE STRING & TIME HELPERS
 // ============================================================================
 
 function normalizeAromaCode(rawCode?: string | null): string {
@@ -147,38 +173,40 @@ function computeCountdownDisplay(targetTime?: Date | string | null, fallbackHour
     return `T - ${diffHours.toFixed(1)} HOURS`;
 }
 
-function optAromaIntensity(percent : number) : OlfactoryIntensityLevel {
-    let intensityLevel: OlfactoryIntensityLevel = 25
+function optAromaIntensity(percent?: number | null): OlfactoryIntensityLevel {
+    if (percent === null || percent === undefined) return 25;
 
-    if(percent <= 17.5) intensityLevel = 10
-    else if(percent > 17.5 && percent <= 37.5) intensityLevel = 25
-    else if(percent > 37.5 && percent <= 62.5) intensityLevel = 50
-    else intensityLevel = 75
-
-    return intensityLevel
+    if (percent <= 17.5) return 10;
+    if (percent > 17.5 && percent <= 37.5) return 25;
+    if (percent > 37.5 && percent <= 62.5) return 50;
+    return 75;
 }
 
 // ============================================================================
-// 5. MASTER OLFACTORY MAPPER FUNCTION
+// 4. MASTER OLFACTORY MAPPER FUNCTION (USER AS ROOT INPUT)
 // ============================================================================
 
 /**
- * Maps PostgreSQL / Prisma guestProfile and relational user/booking models
- * strictly into the target ProfileOlfactorySectionData interface contract.
+ * Maps database User (with included profile and bookings) directly into
+ * the target ProfileOlfactorySectionData interface contract.
  */
 export function mapToProfileOlfactorySectionData(
-    guestProfile: FullGuestProfileWithUserAndBookings,
+    user: FullUserWithProfileAndBookings,
     options: OlfactoryMapperOptions = {}
 ): ProfileOlfactorySectionData {
-    const user = guestProfile.user;
+    const profile = user.profile;
 
     // ------------------------------------------------------------------------
     // A. RESOLVE ACTIVE & ALTERNATIVE COMPOSITIONS
     // ------------------------------------------------------------------------
-    const selectedKey = normalizeAromaCode(guestProfile.roomAromaBlend);
+    const rawBlend = profile?.roomAromaBlend || 'AMALFI_NEROLI_BERGAMOT';
+    const selectedKey = normalizeAromaCode(rawBlend);
 
     // Active composition item
-    const baseActive = CANONICAL_AROMA_COMPOSITIONS[selectedKey] || CANONICAL_AROMA_COMPOSITIONS.AMALFI_NEROLI_BERGAMOT;
+    const baseActive =
+        CANONICAL_AROMA_COMPOSITIONS[selectedKey] ||
+        CANONICAL_AROMA_COMPOSITIONS.AMALFI_NEROLI_BERGAMOT;
+
     const activeComposition: SignatureAromaComposition = {
         ...baseActive,
         isPrimaryActive: true,
@@ -188,6 +216,7 @@ export function mapToProfileOlfactorySectionData(
     const alternativeKeys = Object.keys(CANONICAL_AROMA_COMPOSITIONS).filter(
         (key) => key !== selectedKey
     );
+
     const alternativeCompositions: SignatureAromaComposition[] = alternativeKeys.map((key) => ({
         ...CANONICAL_AROMA_COMPOSITIONS[key],
         isPrimaryActive: false,
@@ -208,15 +237,16 @@ export function mapToProfileOlfactorySectionData(
         options.arrivalLocation ||
         (activeBooking
             ? `${activeBooking.sanctuary?.name || 'Aurelia Sanctuary Positano'} • ${
-                  activeBooking.roomUnit?.unitCode || 'Suite 402'
+                  activeBooking.roomUnit?.unitCode ? `Suite ${activeBooking.roomUnit.unitCode}` : 'Suite 402'
               }`
             : 'Positano Cliffside Helipad & Villa Il Sogno Portico');
 
-    // Dynamic attendant name resolution
+    // Dynamic attendant name resolution: booking assigned staff > permanent majordomo > fallback
+    const attendantStaff = activeBooking?.assignedMajordomo || user.primaryMajordomo;
     const attendantName =
         options.attendantName ||
-        (user.primaryMajordomo
-            ? `Senior Majordomo ${user.primaryMajordomo.name}`
+        (attendantStaff
+            ? `Senior Majordomo ${attendantStaff.name}`
             : 'Senior Majordomo Matteo Bellini');
 
     // Dynamic countdown display
@@ -239,7 +269,8 @@ export function mapToProfileOlfactorySectionData(
     // ------------------------------------------------------------------------
     // C. ASSEMBLE MASTER ProfileOlfactorySectionData VIEWMODEL
     // ------------------------------------------------------------------------
-    const isAtomizationActive = guestProfile.atomizationProtocolActive ?? true;
+    const isAtomizationActive = profile?.atomizationProtocolActive ?? true;
+    const preferredIntensity = optAromaIntensity(profile?.aromaIntensityPercent);
 
     return {
         sectionNumber: '01',
@@ -254,6 +285,6 @@ export function mapToProfileOlfactorySectionData(
         intensityTiers: STANDARD_INTENSITY_TIERS,
         alternativeCompositions,
         atomizationNotice,
-        preferredIntensity: optAromaIntensity(guestProfile.aromaIntensityPercent)
+        preferredIntensity,
     };
 }

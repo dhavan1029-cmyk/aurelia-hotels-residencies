@@ -56,7 +56,7 @@ export function AuthLoginForm({
                 <header className="space-y-3">
                     <div className="flex items-center justify-between gap-4">
                         <div className="flex items-center gap-2">
-                            <span className="w-1.5 h-1.5 -full bg-[#8e763b]" />
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#8e763b]" />
                             <span className="text-[10px] font-sans font-semibold
                                              uppercase tracking-[0.28em]
                                              text-[#8e763b]">
@@ -65,11 +65,11 @@ export function AuthLoginForm({
                         </div>
 
                         <div className="inline-flex items-center gap-1.5
-                                        px-2.5 py-1 -full
+                                        px-2.5 py-1
                                         bg-[#f6f2ea] border border-[#ded9ce]
                                         text-[9px] font-mono uppercase
                                         tracking-[0.18em] text-[#24633b]">
-                            <span className="w-1.5 h-1.5 -full
+                            <span className="w-1.5 h-1.5 rounded-full
                                              bg-emerald-500 animate-pulse" />
                             {data.securityBadge}
                         </div>

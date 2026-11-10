@@ -23,13 +23,15 @@ import {
 	ProfileLogisticsData,
 	profileLogisticsDefaultData,
 } from '@/components/hotel/profile/ProfileLogisticsRail';
+import { ProfileExtendedTabsViewModel } from '@/lib/hotel/mappers/profileDossierMapper';
 
 
 export interface ProfilePageProps {
-	dossierData?: PatronDossierInfo;
+	dossierData: PatronDossierInfo;
 	olfactoryData: ProfileOlfactorySectionData;
-	sleepData?: ProfileSleepAndEpicureanData;
-	logisticsData?: ProfileLogisticsData;
+	sleepData: ProfileSleepAndEpicureanData;
+	logisticsData: ProfileLogisticsData;
+	extendedTabsData: ProfileExtendedTabsViewModel;
 	className?: string;
 }
 
@@ -38,10 +40,11 @@ export function ProfilePage({
 	olfactoryData,
 	sleepData = profileSleepDefaultData,
 	logisticsData = profileLogisticsDefaultData,
+	extendedTabsData,
 	className = '',
 }: ProfilePageProps) {
 
-	// const cookieStore = await cookies()
+	const { upcomingStay, cellarAllocations, securityData } = extendedTabsData
 
 	// setting year
 	const year = new Date().getFullYear();
@@ -236,190 +239,218 @@ export function ProfilePage({
 					</div>
 				)}
 
-				{/* TAB 2: UPCOMING STAYS & ITINERARIES VIEW */}
 				{activeTab === 'upcoming-stays' && (
-					<section className="bg-white border border-[#ded9ce] 8 sm:p-12 shadow-sm space-y-6">
-						<div className="border-b border-[#eeeae2] pb-4">
-							<span className="text-[10px] font-mono uppercase tracking-[0.22em] text-[#8e763b] font-semibold block">
-								ACTIVE SANCTUARY CONFIRMATION • 1 UPCOMING
-							</span>
-							<h2 className="font-serif text-3xl font-normal text-[#1f1e1d] mt-1">
-								Aurelia Sanctuary Positano — Villa Il Sogno
-							</h2>
-							<p className="text-xs text-[#78756d] font-sans font-light mt-1">
-								Master Ocean Suite 402 • Sept 28 — Oct 05,
-								2025 (7 Nights Horizon)
-							</p>
-						</div>
+            	    <section className="bg-white border border-[#ded9ce] p-6 sm:p-10 lg:p-12 shadow-sm space-y-6">
+            	        {upcomingStay ? (
+            	            <>
+            	                <div className="border-b border-[#eeeae2] pb-5">
+            	                    <span className="text-[10px] font-mono uppercase tracking-[0.22em] text-[#8e763b] font-semibold block">
+            	                        ACTIVE SANCTUARY CONFIRMATION • 1 UPCOMING
+            	                    </span>
+            	                    <h2 className="font-serif text-2xl sm:text-3xl font-normal text-[#1f1e1d] mt-1.5 tracking-tight">
+            	                        {upcomingStay.sanctuaryName}
+            	                    </h2>
+            	                    <p className="text-xs text-[#78756d] font-sans font-light mt-1">
+            	                        {upcomingStay.suiteTitle} {upcomingStay.unitCode ? `(${upcomingStay.unitCode})` : ''} • {upcomingStay.dateRangeDisplay} ({upcomingStay.nightsCountDisplay})
+            	                    </p>
+            	                </div>
+						
+            	                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs font-sans">
+            	                    <div className="p-4 bg-[#fcf9f4] border border-[#ded9ce] space-y-1 shadow-2xs">
+            	                        <span className="text-[9px] font-mono uppercase tracking-wider text-[#8e763b] block font-semibold">
+            	                            CHAUFFEUR & TRANSFER
+            	                        </span>
+            	                        <span className="font-serif text-sm font-semibold text-[#1f1e1d] block">
+            	                            {upcomingStay.chauffeurProtocol}
+            	                        </span>
+            	                        <p className="text-[11px] text-[#6d6961] font-light">
+            	                            Naples Marina &amp; Heliport Rendezvous
+            	                        </p>
+            	                    </div>
+						
+            	                    <div className="p-4 bg-[#fcf9f4] border border-[#ded9ce] space-y-1 shadow-2xs">
+            	                        <span className="text-[9px] font-mono uppercase tracking-wider text-[#8e763b] block font-semibold">
+            	                            SANCTUARY ACCESS
+            	                        </span>
+            	                        <span className="font-serif text-sm font-semibold text-[#1f1e1d] block">
+            	                            {upcomingStay.sanctuaryAccessMethod}
+            	                        </span>
+            	                        <p className="text-[11px] text-[#6d6961] font-light">
+            	                            Hardware &amp; Sea-Gate Slipway Clearance
+            	                        </p>
+            	                    </div>
+						
+            	                    <div className="p-4 bg-[#fcf9f4] border border-[#ded9ce] space-y-1 shadow-2xs">
+            	                        <span className="text-[9px] font-mono uppercase tracking-wider text-[#8e763b] block font-semibold">
+            	                            ATTENDING HOST
+            	                        </span>
+            	                        <span className="font-serif text-sm font-semibold text-[#1f1e1d] block">
+            	                            {upcomingStay.attendingHostName}
+            	                        </span>
+            	                        <p className="text-[11px] text-[#6d6961] font-light">
+            	                            {upcomingStay.attendingHostRole}
+            	                        </p>
+            	                    </div>
+            	                </div>
+						
+            	                <div className="pt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-t border-[#eeeae2]">
+            	                    <Link
+            	                        href={`/confirmation?bookingRef=${encodeURIComponent(upcomingStay.bookingReference)}`}
+            	                        className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-xs font-semibold uppercase tracking-[0.2em] transition-all shadow-md active:translate-y-0.5"
+            	                    >
+            	                        <span>VIEW MASTER DIGITAL ITINERARY PASS</span>
+            	                        <span>→</span>
+            	                    </Link>
+						
+            	                    <button
+            	                        type="button"
+            	                        onClick={function () {
+            	                            setActiveTab('sensory-calibration');
+            	                        }}
+            	                        className="text-xs font-sans text-[#8e763b] hover:text-[#1f1e1d] underline transition-colors self-start sm:self-auto"
+            	                    >
+            	                        ← Calibrate In-Suite Sensory Details
+            	                    </button>
+            	                </div>
+            	            </>
+            	        ) : (
+            	            /* Empty state when patron has no upcoming stay */
+            	            <div className="p-8 text-center space-y-4">
+            	                <span className="text-[10px] font-mono uppercase tracking-[0.24em] text-[#8e763b] font-semibold block">
+            	                    SOVEREIGN DOCKET CLEAR
+            	                </span>
+            	                <h3 className="font-serif text-2xl font-normal text-[#1f1e1d] tracking-tight">
+            	                    Awaiting Your Next Sanctuary Horizon
+            	                </h3>
+            	                <p className="text-xs text-[#6e6b64] font-sans font-light leading-relaxed max-w-md mx-auto">
+            	                    You currently hold no active sanctuary reservations. Explore unlisted oceanfront suites across Positano, St. Moritz, and Kyoto.
+            	                </p>
+            	                <div className="pt-2">
+            	                    <Link
+            	                        href="/suites"
+            	                        className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-xs font-semibold uppercase tracking-[0.2em] transition-all"
+            	                    >
+            	                        <span>Explore Curated Sanctuaries</span>
+            	                        <span>→</span>
+            	                    </Link>
+            	                </div>
+            	            </div>
+            	        )}
+            	    </section>
+            	)}
+	
+            	{/* ============================================================= */}
+            	{/* TAB 3: PRIVATE CELLAR ALLOCATIONS VIEW                        */}
+            	{/* ============================================================= */}
+            	{activeTab === 'cellar-allocations' && (
+            	    <section className="bg-white border border-[#ded9ce] p-6 sm:p-10 lg:p-12 shadow-sm space-y-6">
+            	        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 border-b border-[#eeeae2] pb-5">
+            	            <div>
+            	                <span className="text-[10px] font-mono uppercase tracking-[0.22em] text-[#8e763b] font-semibold block">
+            	                    SUBTERRANEAN VOLCANIC VAULT ALLOCATION • {cellarAllocations.length} CRUS HELD
+            	                </span>
+            	                <h2 className="font-serif text-2xl sm:text-3xl font-normal text-[#1f1e1d] mt-1.5 tracking-tight">
+            	                    Private Sommelier Cellar Reserves
+            	                </h2>
+            	                <p className="text-xs text-[#78756d] font-sans font-light mt-1">
+            	                    Vintages stored at invariant 14.5°C in volcanic ash vaults, reserved for your exclusive allocation.
+            	                </p>
+            	            </div>
+				
+            	            <span className="px-3 py-1 bg-[#f6f2ea] border border-[#ded9ce] text-[9px] font-mono uppercase tracking-wider text-[#8e763b] font-semibold shrink-0">
+            	                1,850 VAULT CRUS AVAILABLE
+            	            </span>
+            	        </div>
+				
+            	        <div className="space-y-3">
+            	            {cellarAllocations.map(function (wine) {
+            	                return (
+            	                    <div
+            	                        key={wine.id}
+            	                        className="p-4 bg-[#fcf9f4] border border-[#ded9ce] shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-[#8e763b]/60 transition-colors"
+            	                    >
+            	                        <div className="space-y-0.5">
+            	                            <h4 className="font-serif text-sm font-semibold text-[#1f1e1d]">
+            	                                {wine.cruName}
+            	                            </h4>
+            	                            <p className="text-[11px] text-[#78756d] font-sans font-light">
+            	                                {wine.quantityDisplay} • {wine.vaultLocation}
+            	                            </p>
+            	                        </div>
+								
+            	                        <div className="flex items-center gap-3 self-start sm:self-auto shrink-0">
+            	                            <span className="px-3 py-1 bg-white border border-[#ded9ce] text-[9px] font-mono uppercase text-[#8e763b] font-semibold">
+            	                                {wine.allocationStatus}
+            	                            </span>
+            	                        </div>
+            	                    </div>
+            	                );
+            	            })}
+            	        </div>
+						
+            	        <div className="pt-4 border-t border-[#eeeae2] flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-sans text-[#78756d]">
+            	            <span>Subterranean vault releases managed under Senior Sommelier Matteo Bellini.</span>
+            	            <a
+            	                href="tel:+39089875111"
+            	                className="text-[#8e763b] hover:text-[#1f1e1d] font-semibold uppercase tracking-wider underline text-[10px]"
+            	            >
+            	                Request Private Barrel Allocation →
+            	            </a>
+            	        </div>
+            	    </section>
+            	)}
+	
+            	{/* ============================================================= */}
+            	{/* TAB 4: CONFIDENTIAL ACCESS & SECURITY PROTOCOLS               */}
+            	{/* ============================================================= */}
+            	{activeTab === 'security-access' && (
+            	    <section className="bg-white border border-[#ded9ce] p-6 sm:p-10 lg:p-12 shadow-sm space-y-6">
+            	        <div className="border-b border-[#eeeae2] pb-5">
+            	            <span className="text-[10px] font-mono uppercase tracking-[0.22em] text-[#8e763b] font-semibold block">
+            	                {securityData.confidentialityLevel}
+            	            </span>
+            	            <h2 className="font-serif text-2xl sm:text-3xl font-normal text-[#1f1e1d] mt-1.5 tracking-tight">
+            	                Cryptographic Security &amp; Verbal Credentials
+            	            </h2>
+            	            <p className="text-xs text-[#78756d] font-sans font-light mt-1">
+            	                Manage high-assurance telephone verbal PINs and keyless hardware clearances.
+            	            </p>
+            	        </div>
+				
+            	        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-sans">
+            	            <div className="p-5 bg-[#fcf9f4] border border-[#ded9ce] space-y-2.5 shadow-2xs">
+            	                <span className="text-[9px] font-mono uppercase text-[#8e763b] block font-semibold tracking-wider">
+            	                    VERBAL CONCIERGE TELEPHONE PIN
+            	                </span>
+            	                <div className="font-mono text-2xl tracking-[0.35em] text-[#1f1e1d] font-bold">
+            	                    {securityData.verbalConciergePin.split('').join(' ')}
+            	                </div>
+            	                <p className="text-[11px] text-[#6e6b64] font-light leading-relaxed">
+            	                    Required when requesting authorized Riva charters, helicopter flight corridors, or cellar releases over confidential estate telephone lines.
+            	                </p>
+            	            </div>
+				
+            	            <div className="p-5 bg-[#fcf9f4] border border-[#ded9ce] space-y-2.5 shadow-2xs">
+            	                <span className="text-[9px] font-mono uppercase text-[#8e763b] block font-semibold tracking-wider">
+            	                    BIOMETRIC PASSKEY HARDWARE CLEARANCE
+            	                </span>
+            	                <div className="text-sm font-serif text-[#24633b] font-semibold flex items-center gap-1.5">
+            	                    <span className="w-1.5 h-1.5 rounded-full bg-[#24633b]" />
+            	                    <span>{securityData.passkeyStatusText}</span>
+            	                </div>
+            	                <p className="text-[11px] text-[#6e6b64] font-light leading-relaxed">
+            	                    Authenticated token: <code className="font-mono text-[#1f1e1d]">{securityData.passkeyHardwareToken}</code>. Bound to Apple Secure Enclave &amp; FIDO2 WebAuthn standards.
+            	                </p>
+            	            </div>
+            	        </div>
+				
+            	        <div className="p-4 bg-[#f6f2ea] border border-[#ded9ce] text-[11px] font-sans text-[#6e6b64] flex items-center gap-2">
+            	            <span className="text-[#8e763b] text-base leading-none">✦</span>
+            	            <span>All security records are encrypted with AES-256-GCM and governed by Swiss Federal Data Protection standards.</span>
+            	        </div>
+            	    </section>
+            	)}
 
-						<div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs font-sans">
-							<div className="p-4 -[#fcf9f4] border border-[#ded9ce] space-y-1">
-								<span className="text-[9px] font-mono uppercase text-[#8e763b] block">
-									CHAUFFEUR
-								</span>
-								<span className="font-semibold text-[#1f1e1d] block">
-									Maybach S680 Dispatch
-								</span>
-								<p className="text-[11px] text-[#6d6961]">
-									Naples Heliport Rendezvous
-								</p>
-							</div>
-
-							<div className="p-4 -[#fcf9f4] border border-[#ded9ce] space-y-1">
-								<span className="text-[9px] font-mono uppercase text-[#8e763b] block">
-									SANCTUARY ACCESS
-								</span>
-								<span className="font-semibold text-[#1f1e1d] block">
-									Keyless Sovereign Folio
-								</span>
-								<p className="text-[11px] text-[#6d6961]">
-									Biometric NFC Door Folio
-								</p>
-							</div>
-
-							<div className="p-4 -[#fcf9f4] border border-[#ded9ce] space-y-1">
-								<span className="text-[9px] font-mono uppercase text-[#8e763b] block">
-									ATTENDING HOST
-								</span>
-								<span className="font-semibold text-[#1f1e1d] block">
-									Matteo Bellini
-								</span>
-								<p className="text-[11px] text-[#6d6961]">
-									Senior Majordomo &amp; Sommelier
-								</p>
-							</div>
-						</div>
-
-						<div className="pt-4 flex items-center justify-between">
-							<Link
-								href="/confirmation?bookingRef=AUR-8911-POS"
-								className="inline-flex items-center gap-2 px-6 py-3.5 [#1f1e1d] hover:bg-[#343230] text-white font-sans text-xs font-semibold uppercase tracking-[0.2em] transition-colors"
-							>
-								<span>VIEW MASTER DIGITAL ITINERARY PASS</span>
-								<span>→</span>
-							</Link>
-
-							<button
-								type="button"
-								onClick={function () {
-									setActiveTab('sensory-calibration');
-								}}
-								className="text-xs font-sans text-[#8e763b] hover:text-[#1f1e1d] underline"
-							>
-								← Calibrate In-Suite Sensory Details
-							</button>
-						</div>
-					</section>
-				)}
-
-				{/* TAB 3: PRIVATE CELLAR ALLOCATIONS VIEW */}
-				{activeTab === 'cellar-allocations' && (
-					<section className="bg-white border border-[#ded9ce] 8 sm:p-12 shadow-sm space-y-6">
-						<div className="border-b border-[#eeeae2] pb-4">
-							<span className="text-[10px] font-mono uppercase tracking-[0.22em] text-[#8e763b] font-semibold block">
-								SUBTERRANEAN VOLCANIC VAULT ALLOCATION • 6 CRUS HELD
-							</span>
-							<h2 className="font-serif text-3xl font-normal text-[#1f1e1d] mt-1">
-								Private Sommelier Cellar Reserves
-							</h2>
-							<p className="text-xs text-[#78756d] font-sans font-light mt-1">
-								Vintages stored at invariant 14.5°C in volcanic
-								ash vaults, reserved for Lady Katherine V.
-								Beaumont.
-							</p>
-						</div>
-
-						<div className="space-y-3">
-							{[
-								{
-									cru: "2016 Tenuta dell'Ornellaia Bolgheri Superiore",
-									bottles: '2 Bottles',
-									vault: 'Vault Shelf #AUR-ORN-16',
-									status: 'STAGED FOR ARRIVAL',
-								},
-								{
-									cru: '2015 Domaine de la Romanée-Conti Échézeaux Grand Cru',
-									bottles: '1 Bottle',
-									vault: 'Vault Shelf #AUR-DRC-15',
-									status: 'HELD IN BOND',
-								},
-								{
-									cru: '2008 Dom Pérignon Rosé Vintage Brut',
-									bottles: '3 Bottles',
-									vault: 'Vault Shelf #AUR-DOM-08',
-									status: 'HELD IN BOND',
-								},
-							].map(function (wine, idx) {
-								return (
-									<div
-										key={idx}
-										className="p-4 -[#fcf9f4] border border-[#ded9ce] flex items-center justify-between text-xs font-sans"
-									>
-										<div className="space-y-0.5">
-											<h4 className="font-serif text-sm font-semibold text-[#1f1e1d]">
-												{wine.cru}
-											</h4>
-											<p className="text-[11px] text-[#78756d] font-light">
-												{wine.bottles} • {wine.vault}
-											</p>
-										</div>
-
-										<span className="px-3 py-1 [#f6f2ea] border border-[#ded9ce] text-[9px] font-mono uppercase text-[#8e763b] font-semibold">
-											{wine.status}
-										</span>
-									</div>
-								);
-							})}
-						</div>
-					</section>
-				)}
-
-				{/* TAB 4: CONFIDENTIAL ACCESS & SECURITY PROTOCOLS */}
-				{activeTab === 'security-access' && (
-					<section className="bg-white border border-[#ded9ce] 8 sm:p-12 shadow-sm space-y-6">
-						<div className="border-b border-[#eeeae2] pb-4">
-							<span className="text-[10px] font-mono uppercase tracking-[0.22em] text-[#8e763b] font-semibold block">
-								SWISS DATA CONFIDENTIALITY PROTOCOL LEVEL IV
-							</span>
-							<h2 className="font-serif text-3xl font-normal text-[#1f1e1d] mt-1">
-								Cryptographic Security &amp; Verbal Credentials
-							</h2>
-							<p className="text-xs text-[#78756d] font-sans font-light mt-1">
-								Manage high-assurance telephone verbal PINs and
-								keyless hardware clearances.
-							</p>
-						</div>
-
-						<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-sans">
-							<div className="p-5 -[#fcf9f4] border border-[#ded9ce] space-y-2">
-								<span className="text-[9px] font-mono uppercase text-[#8e763b] block font-semibold">
-									VERBAL CONCIERGE PIN
-								</span>
-								<div className="font-mono text-xl tracking-[0.25em] text-[#1f1e1d]">
-									8 8 2 9
-								</div>
-								<p className="text-[11px] text-[#6e6b64]">
-									Required for authorized Riva charters,
-									helicopter flight plans, and cellar
-									releases.
-								</p>
-							</div>
-
-							<div className="p-5 -[#fcf9f4] border border-[#ded9ce] space-y-2">
-								<span className="text-[9px] font-mono uppercase text-[#8e763b] block font-semibold">
-									BIOMETRIC PASSKEY STATUS
-								</span>
-								<div className="text-sm font-serif text-[#24633b] font-semibold">
-									✓ Apple Sovereign ID Active
-								</div>
-								<p className="text-[11px] text-[#6e6b64]">
-									Bound to Secure Enclave hardware token
-									#SE-8911-Beaumont.
-								</p>
-							</div>
-						</div>
-					</section>
-				)}
 			</div>
 
 			{/* ============================================================= */}

@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { VerificationPageData } from './VerificationHeader';
 import { VerificationForm } from './VerificationForm';
-import { redirect } from 'next/navigation';
 import { getPendingUser } from '@/lib/hotel/actions/auth';
 
 export interface VerificationFormSectionProps {
@@ -40,7 +39,7 @@ export async function VerificationFormSection({
         compliancePills,
     } = data;
 
-    const { email, attempts } = await getPendingUser()
+    const { email, attempts, expiresAt } = await getPendingUser()
     
     const maskedEmail = maskEmail(email)
 
@@ -72,7 +71,7 @@ export async function VerificationFormSection({
             </div>
 
             {/* 2. Form With Leaf Client Inputs */}
-            <VerificationForm data={data} attempts={attempts} />
+            <VerificationForm data={data} attempts={attempts} initialExpiresAt={expiresAt}/>
 
             {/* 3. Navigation Recovery & Return Links */}
             <div className="flex items-center justify-between text-xs font-sans text-[#78756d] pt-2 border-t border-[#eeeae2]">

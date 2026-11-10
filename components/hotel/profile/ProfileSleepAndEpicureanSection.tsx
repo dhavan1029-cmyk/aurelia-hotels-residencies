@@ -272,7 +272,7 @@ export function ProfileSleepAndEpicureanSection({
             {/* ============================================================= */}
             <section
                 id="sleep-architecture"
-                className="w-full bg-[#fcf9f4] border border-[#e8e4dc] p-6 sm:p-9 lg:p-11 shadow-[0_4px_24px_rgba(31,30,29,0.03)] space-y-8 lg:space-y-10"
+                className="w-full bg-white border border-[#e8e4dc] p-6 sm:p-9 lg:p-11 shadow-[0_4px_24px_rgba(31,30,29,0.03)] space-y-8 lg:space-y-10"
             >
                 {/* 1. Header & Badges */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-[#eeeae2]">
@@ -501,13 +501,13 @@ export function ProfileSleepAndEpicureanSection({
             {/* ============================================================= */}
             <section
                 id="epicurean-provisions"
-                className="w-full bg-[#fcf9f4] border border-[#e8e4dc] p-6 sm:p-9 lg:p-11 shadow-[0_4px_24px_rgba(31,30,29,0.03)] space-y-8"
+                className="w-full bg-white border border-[#e8e4dc] p-6 sm:p-9 lg:p-11 shadow-[0_4px_24px_rgba(31,30,29,0.03)] space-y-8"
             >
                 {/* 1. Header & Badges */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-[#eeeae2]">
                     <div className="space-y-1.5">
                         <div className="flex items-center gap-2">
-                            <span className="w-5 h-5 bg-[#1f1e1d] text-white flex items-center justify-center font-mono text-[10px] font-semibold">
+                            <span className="w-5 h-5 bg-[#1f1e1d] rounded-full text-white flex items-center justify-center font-mono text-[10px] font-semibold">
                                 03
                             </span>
                             <span className="text-[10px] font-sans font-semibold uppercase tracking-[0.24em] text-[#8e763b]">
@@ -526,7 +526,7 @@ export function ProfileSleepAndEpicureanSection({
 
                     <div className="self-start sm:self-auto shrink-0">
                         <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#f6f2ea] border border-[#ded9ce] text-[9px] font-mono uppercase tracking-[0.2em] text-[#8e763b] shadow-2xs">
-                            <span className="w-1.5 h-1.5 bg-[#8e763b]" />
+                            <span className="w-1.5 h-1.5 bg-[#8e763b] rounded-full" />
                             <span>CHEF SOMMELIER STAGING</span>
                         </span>
                     </div>

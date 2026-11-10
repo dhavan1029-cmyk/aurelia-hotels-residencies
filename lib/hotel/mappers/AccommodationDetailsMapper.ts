@@ -1,20 +1,6 @@
-
 import React from 'react';
-import type { LucideIcon } from 'lucide-react';
-
 import {
-    Shield,
-    Wine,
-    Ship,
     Waves,
-    Bath,
-    Sprout,
-    Flower2,
-    Thermometer,
-    Sparkles,
-    UserCheck,
-    Calendar,
-    Compass,
     Bed,
     Maximize2,
     Eye,
@@ -37,6 +23,8 @@ import type {
     SpatialMetric,
 } from '@/components/hotel/types/accommodations';
 import { calculateNights } from '@/components/hotel/DateRangeCalendar';
+
+import {asArray, asJsonObject, formatCategoryTitle, formatCurrencySymbol, getNumber, getString, isJsonObject, renderFeatureIcon, renderPrivilegeIcon} from '@/lib/utils/accommodationUtils'
 
 // ============================================================================
 // INPUT TYPES
@@ -65,115 +53,7 @@ export interface AccommodationMapperOptions {
     bookingContext?: AccommodationBookingContext;
 }
 
-// ============================================================================
-// TYPE GUARDS & SAFE JSON PARSING UTILITIES
-// ============================================================================
 
-function isJsonObject(value: unknown): value is JsonObject {
-    return (
-        value !== null &&
-        typeof value === 'object' &&
-        !Array.isArray(value)
-    );
-}
-
-function asJsonObject(value: unknown): JsonObject {
-    return isJsonObject(value) ? value : {};
-}
-
-function asArray(value: unknown): unknown[] {
-    return Array.isArray(value) ? value : [];
-}
-
-function getString(
-    object: JsonObject,
-    key: string,
-    fallback = '',
-): string {
-    const value = object[key];
-
-    return typeof value === 'string' ? value : fallback;
-}
-
-function getNumber(
-    object: JsonObject,
-    key: string,
-    fallback = 0,
-): number {
-    const value = object[key];
-
-    return typeof value === 'number' && Number.isFinite(value)
-        ? value
-        : fallback;
-}
-
-function formatCurrencySymbol(currency: string): string {
-    const symbols: Record<string, string> = {
-        EUR: '€',
-        USD: '$',
-        GBP: '£',
-        CHF: 'CHF',
-        JPY: '¥',
-    };
-
-    return symbols[currency] ?? currency;
-}
-
-function formatCategoryTitle(category: string): string {
-    return category
-        .replaceAll('_', ' ')
-        .toLowerCase()
-        .replace(/\b\w/g, (char) => char.toUpperCase());
-}
-
-// ============================================================================
-// ICON RESOLUTION REGISTRY
-// ============================================================================
-
-const iconMap: Record<string, LucideIcon> = {
-    shield: Shield,
-    cellar: Wine,
-    wine: Wine,
-    yacht: Ship,
-    ship: Ship,
-    pool: Waves,
-    waves: Waves,
-    bath: Bath,
-    tub: Bath,
-    orchard: Sprout,
-    sprout: Sprout,
-    flower: Flower2,
-    temperature: Thermometer,
-    sparkles: Sparkles,
-    majordomo: UserCheck,
-    calendar: Calendar,
-    compass: Compass,
-    bed: Bed,
-    maximize: Maximize2,
-    eye: Eye,
-};
-
-function renderFeatureIcon(iconKey: string): React.ReactNode {
-    const IconComponent = iconMap[iconKey.toLowerCase()] ?? Compass;
-
-    return React.createElement(IconComponent, {
-        size: 16,
-        strokeWidth: 1.6,
-        className: 'text-[#8e763b] shrink-0',
-        'aria-hidden': true,
-    });
-}
-
-function renderPrivilegeIcon(iconKey: string): React.ReactNode {
-    const IconComponent = iconMap[iconKey.toLowerCase()] ?? UserCheck;
-
-    return React.createElement(IconComponent, {
-        size: 20,
-        strokeWidth: 1.6,
-        className: 'text-[#8e763b] shrink-0',
-        'aria-hidden': true,
-    });
-}
 
 // ============================================================================
 // ROOM UNIT SELECTION
@@ -620,14 +500,6 @@ export function mapAccommodationSiblings(
     accommodations: AccommodationCategoryWithRoomUnits[],
     currentAccommodationId?: string,
 ): SiblingAccommodationItem[] {
-// console.log({
-//     totalAccommodations: accommodations.length,
-//     currentAccommodationId,
-//     ids: accommodations.map((accommodation) => ({
-//         id: accommodation.id,
-//         name: accommodation.name,
-//     })),
-// });   
 
     const siblings: SiblingAccommodationItem[] = accommodations
         .filter(

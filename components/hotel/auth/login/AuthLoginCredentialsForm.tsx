@@ -1,6 +1,5 @@
 'use client';
 
-// import { createClient } from '';
 import React, { useActionState, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { AuthSubmitButton } from './AuthSubmitButton';
@@ -124,7 +123,7 @@ export function AuthLoginCredentialsForm({
                         minLength={3}
                         value={identifier}
                         onChange={handleIdentifierChange}
-                        className={`w-full pl-10 pr-4 py-3.5 rounded-xl bg-white border text-xs font-sans text-[#1f1e1d] outline-none transition-colors shadow-2xs placeholder-[#a4a098] ${
+                        className={`w-full pl-10 pr-4 py-3.5 bg-white border text-xs font-sans text-[#1f1e1d] outline-none transition-colors shadow-2xs placeholder-[#a4a098] ${
                             hasServerError
                                 ? 'border-[#ecd5cf] focus:border-[#8c3126]'
                                 : 'border-[#ded9ce] focus:border-[#8e763b]'

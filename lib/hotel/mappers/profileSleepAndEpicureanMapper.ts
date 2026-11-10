@@ -1,6 +1,30 @@
-import { CircadianAutomationToggle, EpicureanProvisionsItem, PillowConfiguration, ProfileSleepAndEpicureanData } from "@/components/hotel/profile/ProfileSleepAndEpicureanSection";
-import { FullGuestProfileWithUserAndBookings } from "./profileDossierMapper";
+import type { Prisma } from '@/app/generated/prisma/client';
+import type {
+    CircadianAutomationToggle,
+    EpicureanProvisionsItem,
+    PillowConfiguration,
+    ProfileSleepAndEpicureanData,
+} from '@/components/hotel/profile/ProfileSleepAndEpicureanSection';
 
+// ============================================================================
+// 1. PRIMARY INPUT PRISMA CONTRACT (USER AS ROOT ENTITY)
+// ============================================================================
+
+export type FullUserWithProfileAndBookings = Prisma.UserGetPayload<{
+    include: {
+        profile: true;
+        primaryMajordomo?: true;
+        bookings: {
+            include: {
+                sanctuary: true;
+                accommodationCategory: true;
+                roomUnit: true;
+                folio: true;
+                assignedMajordomo: true;
+            };
+        };
+    };
+}>;
 
 export interface SleepAndEpicureanMapperOptions {
     /**
@@ -14,7 +38,7 @@ export interface SleepAndEpicureanMapperOptions {
 }
 
 // ============================================================================
-// 3. MASTER CANONICAL CATALOGS (PILLOWS, TEAS, PROVISIONS)
+// 2. MASTER CANONICAL CATALOGS (PILLOWS, TEAS, PROVISIONS)
 // ============================================================================
 
 export interface PillowCatalogItem {
@@ -71,7 +95,7 @@ export const CANONICAL_TEA_LABELS: Record<string, { title: string; notes: string
 };
 
 // ============================================================================
-// 4. DEFENSIVE NORMALIZERS
+// 3. DEFENSIVE NORMALIZERS
 // ============================================================================
 
 function normalizePillowCode(rawCode?: string | null, fallback: keyof typeof CANONICAL_PILLOW_CATALOG = 'ORGANIC_GOOSE_DOWN'): string {
@@ -98,33 +122,33 @@ function normalizeTeaCode(rawCode?: string | null): string {
 }
 
 // ============================================================================
-// 5. MASTER SLEEP & EPICUREAN MAPPER FUNCTION
+// 4. MASTER SLEEP & EPICUREAN MAPPER FUNCTION (USER AS ROOT INPUT)
 // ============================================================================
 
 /**
- * Maps PostgreSQL / Prisma guestProfile and relational user/majordomo models
+ * Maps database User (with included profile, bookings, and majordomo)
  * strictly into the target ProfileSleepAndEpicureanData interface contract.
  */
 export function mapToProfileSleepAndEpicureanData(
-    guestProfile: FullGuestProfileWithUserAndBookings,
+    user: FullUserWithProfileAndBookings,
     options: SleepAndEpicureanMapperOptions = {}
 ): ProfileSleepAndEpicureanData {
-    const user = guestProfile.user;
+    const profile = user.profile;
 
     // ------------------------------------------------------------------------
     // A. INITIAL TARGET SLEEP TEMPERATURE
     // ------------------------------------------------------------------------
     const initialTargetTemperatureCelsius =
-        guestProfile.idealRoomTemperatureCelsius !== null &&
-        guestProfile.idealRoomTemperatureCelsius !== undefined
-            ? Number(guestProfile.idealRoomTemperatureCelsius)
+        profile?.idealRoomTemperatureCelsius !== null &&
+        profile?.idealRoomTemperatureCelsius !== undefined
+            ? Number(profile.idealRoomTemperatureCelsius)
             : 19.5;
 
     // ------------------------------------------------------------------------
     // B. PILLOW CONFIGURATION (LEFT & RIGHT CHAMBERS)
     // ------------------------------------------------------------------------
-    const leftPillowKey = normalizePillowCode(guestProfile.preferredPillowLeft, 'ORGANIC_GOOSE_DOWN');
-    const rightPillowKey = normalizePillowCode(guestProfile.preferredPillowRight, 'BUCKWHEAT');
+    const leftPillowKey = normalizePillowCode(profile?.preferredPillowLeft, 'ORGANIC_GOOSE_DOWN');
+    const rightPillowKey = normalizePillowCode(profile?.preferredPillowRight, 'BUCKWHEAT');
 
     const leftCatalog = CANONICAL_PILLOW_CATALOG[leftPillowKey] || CANONICAL_PILLOW_CATALOG.ORGANIC_GOOSE_DOWN;
     const rightCatalog = CANONICAL_PILLOW_CATALOG[rightPillowKey] || CANONICAL_PILLOW_CATALOG.BUCKWHEAT;
@@ -151,10 +175,10 @@ export function mapToProfileSleepAndEpicureanData(
     // ------------------------------------------------------------------------
     // C. CIRCADIAN LIGHT & NOCTURNAL AUTOMATIONS
     // ------------------------------------------------------------------------
-    const isLouverActive = guestProfile.motorizedBlackoutLouverActive ?? true;
-    const isDawnActive = guestProfile.amberDawnSequenceActive ?? true;
-    const dimHour = guestProfile.circadianWarmEveningDimHour || '22:30';
-    const wakeHour = guestProfile.circadianWakeHour || '07:15';
+    const isLouverActive = profile?.motorizedBlackoutLouverActive ?? true;
+    const isDawnActive = profile?.amberDawnSequenceActive ?? true;
+    const dimHour = profile?.circadianWarmEveningDimHour || '22:30';
+    const wakeHour = profile?.circadianWakeHour || '07:15';
 
     const circadianAutomations: CircadianAutomationToggle[] = [
         {
@@ -181,18 +205,18 @@ export function mapToProfileSleepAndEpicureanData(
     // D. EPICUREAN PROVISIONS (CELLAR, WATER, COFFEE & OPTIONAL EVENING TEA)
     // ------------------------------------------------------------------------
     const wineTitle =
-        guestProfile.preferredChampagneOrCru ||
+        profile?.preferredChampagneOrCru ||
         "2016 Tenuta dell'Ornellaia Bolgheri Superiore";
 
     const waterTitle =
-        guestProfile.arrivalMineralWater ||
+        profile?.arrivalMineralWater ||
         'Suntory Minami-Alps Glacial & Lurisia Stille';
 
     const coffeeTitle =
-        guestProfile.morningBaristaRitual ||
+        profile?.morningBaristaRitual ||
         'Panama Geisha Natural Lot #04';
 
-    const baristaHour = guestProfile.baristaScheduleHour || '08:30';
+    const baristaHour = profile?.baristaScheduleHour || '08:30';
 
     const epicureanItems: EpicureanProvisionsItem[] = [
         {
@@ -231,7 +255,7 @@ export function mapToProfileSleepAndEpicureanData(
     ];
 
     // Optional Evening Turndown Tea Staging (if specified by guest preference)
-    const teaCode = normalizeTeaCode(guestProfile.turndownHerbalTea);
+    const teaCode = normalizeTeaCode(profile?.turndownHerbalTea);
     if (teaCode !== 'NONE' || options.includeEveningTeaStaging) {
         const teaMeta = CANONICAL_TEA_LABELS[teaCode] || CANONICAL_TEA_LABELS.WILD_CHAMOMILE;
         epicureanItems.push({
@@ -251,6 +275,6 @@ export function mapToProfileSleepAndEpicureanData(
         pillows,
         circadianAutomations,
         epicureanItems,
-        preferredMatress: guestProfile.preferredMattress
+        preferredMatress: profile?.preferredMattress || 'NATURAL_LATEX_COIR',
     };
 }

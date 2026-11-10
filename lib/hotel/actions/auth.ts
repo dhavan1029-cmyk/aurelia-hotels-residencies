@@ -5,6 +5,11 @@ import { Resend } from "resend";
 import { cookies } from "next/headers";
 import { prisma } from "@/lib/config/prisma";
 
+interface AuthenticatedUser {
+    userId: string, 
+    tokenHash: string
+}
+
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export interface SendOtpState {
@@ -19,6 +24,8 @@ export async function sendOtp(
     try {
         // 1. Extract and validate form data
         const identifier = formData.get("identifier");
+        const remember = formData.get('remember')
+        console.log('remember this user: ', remember)
 
         if (
             typeof identifier !== "string" ||
@@ -312,14 +319,14 @@ export async function createUserSession(userId: string) {
     });
 }
 
-export async function getPendingUser(): Promise<{email: string, status: boolean, attempts: number}> {
+export async function getPendingUser(): Promise<{email: string, status: boolean, attempts: number, expiresAt: string}> {
     const cookieStore = await cookies();
 
     const challengeId = cookieStore.get("aurelia-pending-otp")?.value;
 
     if (!challengeId) {
         return {
-            status: false, email: '', attempts: 0
+            status: false, email: '', attempts: 0, expiresAt: ''
         };
     }
 
@@ -337,7 +344,7 @@ export async function getPendingUser(): Promise<{email: string, status: boolean,
     if (!challenge) {
         cookieStore.delete("aurelia-pending-otp");
         return {
-            status: false, email: '', attempts: 0
+            status: false, email: '', attempts: 0, expiresAt: ''
         };;
     }
 
@@ -347,14 +354,103 @@ export async function getPendingUser(): Promise<{email: string, status: boolean,
     ) {
         cookieStore.delete("aurelia-pending-otp");
         return {
-            status: false, email: '', attempts: 0
+            status: false, email: '', attempts: 0, expiresAt: ''
         };;
     }
 
     return {
         status: true,
         email: challenge.identifier,
-        attempts: challenge.attempts
+        attempts: challenge.attempts,
+        expiresAt: challenge.expiresAt.toISOString()
     };
 }
 
+export async function getAuthenticatedUser() {
+    try {
+        const cookieStore = await cookies();
+        const sessionToken = cookieStore.get("aurelia-session")?.value;
+
+        if (!sessionToken) {
+            return null;
+        }
+
+        // 1. Hash the incoming raw token using SHA-256 (matches createUserSession)
+        const tokenHash = createHash("sha256")
+            .update(sessionToken)
+            .digest("hex");
+
+        // 2. Query the active session and populate user & luxury profile relations
+        const session = await prisma.userSession.findFirst({
+            where: {
+                tokenHash,
+                expiresAt: {
+                    gt: new Date(),
+                },
+            },
+            include: {
+                user: {
+                    include: {
+                        profile: true,
+                        primaryMajordomo: true,
+                        bookings: {
+                            where: {
+                                status: {
+                                    in: ["CONFIRMED", "CHECKED_IN"],
+                                },
+                            },
+                            include: {
+                                sanctuary: true,
+                                accommodationCategory: true,
+                                roomUnit: true,
+                                assignedMajordomo: true,
+                                folio: true
+                            },
+                            orderBy: {
+                                checkInDate: "asc",
+                            },
+                            take: 1,
+                        },
+                    },
+                },
+            },
+        });
+
+        // 3. Clean up expired or invalid session cookie
+        if (!session || !session.user) {
+            cookieStore.delete("aurelia-session");
+            return null;
+        }
+
+        return session.user;
+    } catch (error) {
+        console.error("getAuthenticatedUser error:", error);
+        return null;
+    }
+}
+
+export async function logoutUser() {
+    try {
+        const cookieStore = await cookies();
+        const sessionToken = cookieStore.get("aurelia-session")?.value;
+
+        if (sessionToken) {
+            const tokenHash = createHash("sha256")
+                .update(sessionToken)
+                .digest("hex");
+
+            await prisma.userSession.deleteMany({
+                where: {
+                    tokenHash,
+                },
+            });
+
+            cookieStore.delete("aurelia-session");
+        }
+
+        return { success: true };
+    } catch (error) {
+        console.error("logoutUser error:", error);
+        return { success: false };
+    }
+}
