@@ -25,7 +25,6 @@ export async function sendOtp(
         // 1. Extract and validate form data
         const identifier = formData.get("identifier");
         const remember = formData.get('remember')
-        console.log('remember this user: ', remember)
 
         if (
             typeof identifier !== "string" ||
@@ -61,7 +60,7 @@ export async function sendOtp(
         if (!user) {
             return {
                 success: false,
-                message: "Invalid credentials. Please check your details.",
+                message: "User not found",
             };
         }
 
@@ -98,6 +97,8 @@ export async function sendOtp(
                 tokenHash,
                 attempts: 0,
                 expiresAt,
+                remember: remember ? true : false,
+                metadata: {}
             },
         });
 
@@ -105,8 +106,8 @@ export async function sendOtp(
         const { error } = await resend.emails.send({
             from: process.env.EMAIL_FROM!,
             to: [user.email],
-            subject: "Your Aurelia verification code",
-            text: `Your Aurelia verification code is ${otp}. It expires in 5 minutes.`,
+            subject: 'Aurelia Sovereign Inscription — Your Verification Cipher',
+            text: `Welcome, ${user.title} ${user.lastName}.\n\nYour confidential 6-digit registration cipher is: ${otp}\n\nThis token will expire in 5 minutes. Enter this code to seal your Sovereign Patron Folio.\n\nWith unhurried regards,\nAurelia Hotels & Residences Curatorial Council`,
         });
 
         if (error) {
@@ -189,19 +190,15 @@ export async function verifyOtp(otp: string) {
 
         // Check whether the OTP has expired
         if (challenge.expiresAt <= new Date()) {
-            await prisma.otpChallenge.delete({
-                where: {
-                    id: challenge.id,
-                },
-            });
-
+            await prisma.otpChallenge.delete({ where: { id: challenge.id } });
             cookieStore.delete("aurelia-pending-otp");
-
             return {
+                expired: true,
                 success: false,
                 message: "This verification code has expired. Please log in again.",
             };
         }
+
 
         // Check the attempt limit
         if (challenge.attempts >= MAX_OTP_ATTEMPTS) {
@@ -270,14 +267,15 @@ export async function verifyOtp(otp: string) {
         cookieStore.delete("aurelia-pending-otp");
 
         // challenge.identifier contains the user ID.
-        const userId = challenge.userId;
+        const {userId, remember} = challenge;
 
-        await createUserSession(userId);
+        await createUserSession(userId, remember);
 
         return {
             success: true,
             message: "Verification successful.",
             userId,
+            sovereignKeyNumber: null
         };
     } catch (error) {
         console.error("verifyOtp error:", error);
@@ -289,7 +287,7 @@ export async function verifyOtp(otp: string) {
     }
 }
 
-export async function createUserSession(userId: string) {
+export async function createUserSession(userId: string, remember: boolean) {
     const sessionToken = randomBytes(32).toString("hex");
 
     const tokenHash = createHash("sha256")
@@ -297,7 +295,7 @@ export async function createUserSession(userId: string) {
         .digest("hex");
 
     const expiresAt = new Date(
-        Date.now() + 7 * 24 * 60 * 60 * 1000
+        Date.now() + (remember ? 30 : 7) * 24 * 60 * 60 * 1000
     );
 
     await prisma.userSession.create({

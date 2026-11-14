@@ -1,37 +1,75 @@
 import Image from 'next/image';
-import { RegisterDossierData, SovereignPrivilegeItem } from '../../types/auth';
+import Link from 'next/link';
 
-export const registerDossierDefaultData: RegisterDossierData = {
+// ============================================================================
+// 1. SELF-CONTAINED TYPE CONTRACTS
+// ============================================================================
+
+export interface SovereignPrivilegeItem {
+    id: string;
+    label: string;
+    description: string;
+    iconType: 'keyless' | 'cellar' | 'majordomo';
+}
+
+export interface PatronEndorsementData {
+    quote: string;
+    authorName: string;
+    folioCode: string;
+    avatarUrl: string;
+    avatarAlt: string;
+}
+
+export interface RegisterDossierData {
+    brandName: string;
+    brandSub: string;
+    dossierBadge: string;
+    enclaveLocation: string;
+    coordinatesDisplay: string;
+    manifestoQuote: string;
+    manifestoSubtext: string;
+    heroImageUrl: string;
+    heroImageAlt: string;
+    privilegesHeading: string;
+    privilegesSubheading: string;
+    privileges: SovereignPrivilegeItem[];
+    endorsement: PatronEndorsementData;
+    protocolNotice: string;
+}
+
+// ============================================================================
+// 2. CANONICAL DEFAULT DOSSIER DATA
+// ============================================================================
+
+export const REGISTER_DOSSIER_DATA: RegisterDossierData = {
+    brandName: 'Aurelia',
+    brandSub: 'HOTELS & RESIDENCES',
     dossierBadge: 'SANCTUARY DOSSIER • VOL. I',
-    enclaveLocation: 'Cliffside Villa Enclave • Positano',
+    enclaveLocation: 'CLIFFSIDE VILLA ENCLAVE • POSITANO',
     coordinatesDisplay: '40°37\'42"N • 14°29\'12"E',
-    manifestoQuote:
-        '“An initiation into unhurried time, discreet recognition, and bespoke sanctuaries worldwide.”',
+    manifestoQuote: '“An initiation into unhurried time, discreet recognition, and bespoke sanctuaries worldwide.”',
+    manifestoSubtext: 'A confidential patronage docket establishing priority allocations, private Riva tender slipways, and pre-arrival sensory suite calibrations across our global coastal and alpine enclaves.',
     heroImageUrl: '/limestone-villa.png',
-    heroImageAlt:
-        'Luxury Mediterranean cliffside stand-alone villa exterior, private infinity pool carved into sheer stone cliffs overlooking the sea at sunset',
-    privilegesHeading: 'The Sovereign Folio Privileges',
+    heroImageAlt: 'Luxury Mediterranean cliffside stand-alone villa exterior, private infinity pool carved into sheer stone cliffs overlooking the sea at sunset',
+    privilegesHeading: 'Sovereign Patron Privileges Active',
     privilegesSubheading: 'INALIENABLE RIGHTS OF ACTIVE PATRON MEMBERSHIP',
     privileges: [
         {
             id: 'keyless',
             label: 'Discreet Keyless Folio',
-            description:
-                'Guaranteed late afternoon departure and private sea-gate entry bypass across all sovereign enclaves.',
+            description: 'Guaranteed late afternoon departure & private sea-gate entry bypass.',
             iconType: 'keyless',
         },
         {
             id: 'cellar',
             label: 'Rare Cru Cellar Allocation',
-            description:
-                'Pre-arrival access to subterranean volcanic cellars and reserved allocations of rare Tuscan and Piedmontese crus.',
+            description: 'Subterranean volcanic vault allocations of rare Tuscan and Piedmontese crus.',
             iconType: 'cellar',
         },
         {
             id: 'majordomo',
             label: 'Allocated Personal Majordomo',
-            description:
-                'Dedicated 24/7 private concierge and majordomo direct line (+39 089 875 111) from coordinates dispatch through departure.',
+            description: 'Dedicated 24/7 private concierge and telephone line (+39 089 875 111).',
             iconType: 'majordomo',
         },
     ],
@@ -45,57 +83,68 @@ export const registerDossierDefaultData: RegisterDossierData = {
     protocolNotice: 'AURELIA DIPLOMATIC IMMUNITY PROTOCOL • MONOLITHIC CHARTER EST. 1928',
 };
 
+// ============================================================================
+// 3. PURE SERVER COMPONENT IMPLEMENTATION (0 KB Client Bundle)
+// ============================================================================
+
 export interface RegisterDossierRailProps {
-    data?: RegisterDossierData;
+    data?: Partial<RegisterDossierData>;
     className?: string;
 }
 
 export function RegisterDossierRail({
-    data = registerDossierDefaultData,
+    data = {},
     className = '',
 }: RegisterDossierRailProps) {
+    const mergedData: RegisterDossierData = {
+        ...REGISTER_DOSSIER_DATA,
+        ...data,
+    };
+
     const {
         dossierBadge,
         enclaveLocation,
         coordinatesDisplay,
         manifestoQuote,
+        manifestoSubtext,
         heroImageUrl,
         heroImageAlt,
         privilegesHeading,
-        privilegesSubheading,
         privileges,
         endorsement,
         protocolNotice,
-    } = data;
+    } = mergedData;
 
     function renderPrivilegeIcon(type: SovereignPrivilegeItem['iconType']) {
         switch (type) {
             case 'keyless':
                 return (
                     <svg
-                        className="w-3.5 h-3.5 text-[#8e763b]"
+                        className="w-4 h-4 text-[#bfa76f] shrink-0"
                         viewBox="0 0 24 24"
                         fill="none"
                         stroke="currentColor"
                         strokeWidth="1.8"
                         strokeLinecap="round"
                         strokeLinejoin="round"
+                        aria-hidden="true"
                     >
                         <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
                         <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                        <circle cx="12" cy="16" r="1" />
+                        <circle cx="12" cy="16" r="1.5" />
                     </svg>
                 );
             case 'cellar':
                 return (
                     <svg
-                        className="w-3.5 h-3.5 text-[#8e763b]"
+                        className="w-4 h-4 text-[#bfa76f] shrink-0"
                         viewBox="0 0 24 24"
                         fill="none"
                         stroke="currentColor"
                         strokeWidth="1.8"
                         strokeLinecap="round"
                         strokeLinejoin="round"
+                        aria-hidden="true"
                     >
                         <path d="M8 22h8" />
                         <path d="M12 11v11" />
@@ -105,13 +154,14 @@ export function RegisterDossierRail({
             case 'majordomo':
                 return (
                     <svg
-                        className="w-3.5 h-3.5 text-[#8e763b]"
+                        className="w-4 h-4 text-[#bfa76f] shrink-0"
                         viewBox="0 0 24 24"
                         fill="none"
                         stroke="currentColor"
                         strokeWidth="1.8"
                         strokeLinecap="round"
                         strokeLinejoin="round"
+                        aria-hidden="true"
                     >
                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                         <circle cx="12" cy="7" r="4" />
@@ -124,136 +174,148 @@ export function RegisterDossierRail({
     }
 
     return (
-        <aside
-            className={`w-full h-full max-h-dvh flex flex-col align-center justify-between text-[#1f1e1d] overflow-hidden ${className}`}
+        <div
+            className={`relative w-full h-full flex flex-col justify-between overflow-hidden bg-[#181716] text-[#fcf9f4] p-6 sm:p-8 lg:p-10 select-none ${className}`}
         >
-            {/* 1. SANCTUARY PHOTOGRAPHIC DOSSIER CARD */}
-            <article className="relative w-full overflow-hidden bg-[#191817] shadow-lg shrink-0 group">
-                <div className="relative h-55 w-full overflow-hidden">
+            {/* 1. Full-Bleed Photographic Background & Vignettes */}
+            <div className="absolute inset-0 z-0">
+                <Image
+                    src={heroImageUrl}
+                    alt={heroImageAlt}
+                    fill
+                    priority
+                    sizes="(max-width: 1024px) 100vw, 42vw"
+                    className="object-cover object-center transform scale-[1.01]"
+                />
+                <div className="absolute inset-0 bg-[#141312]/65 mix-blend-multiply pointer-events-none" />
+                <div className="absolute inset-0 bg-linear-to-t from-[#141312] via-[#141312]/75 to-[#141312]/45 pointer-events-none" />
+                <div className="absolute inset-0 bg-linear-to-r from-[#141312]/85 via-[#141312]/20 to-transparent pointer-events-none" />
+            </div>
+
+            {/* 2. Top Masthead: Brand Lockup & Coordinates */}
+            <div className="relative z-10 w-full flex items-center justify-between gap-3 shrink-0">
+                <Link
+                    href="/"
+                    className="flex flex-col group self-start"
+                >
                     <Image
-                        src={heroImageUrl}
-                        alt={heroImageAlt}
-                        fill
-                        priority
-                        sizes="(max-width: 1024px) 100vw, 38vw"
-                        className="object-cover object-center transform transition-transform duration-700 ease-out group-hover:scale-105"
-                    />
+                        src="/aurelia-logo-dark.png"
+                        alt="Aurelia Hotels & Residences Logo"
+                        width={300} height={150}
+                    />                
+                </Link>
 
-                    {/* Atmospheric Vignette & Contrast Gradients */}
-                    <div className="absolute inset-0 bg-black/40" />
-                    <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/40 to-black/20 pointer-events-none" />
-
-                    {/* Top Monograph & Coordinates Badges */}
-                    <div className="hidden lg:flex absolute top-2.5 left-3 right-3 z-10 items-center justify-between gap-2">
-                        <span className="px-2 py-0.5 -xs bg-black/60 backdrop-blur-md text-white font-sans text-[8px] font-semibold uppercase tracking-[0.2em] shadow-xs">
-                            {dossierBadge}
-                        </span>
-
-                        <span className="px-2 py-0.5 -xs bg-[#8e763b] text-white font-mono text-[8px] font-medium tracking-wider shadow-xs">
-                            {coordinatesDisplay}
-                        </span>
-                    </div>
-
-                    {/* Bottom Floating Monograph Narrative */}
-                    <div className="absolute bottom-2.5 left-3 right-3 z-10 text-white space-y-0.5">
-                        <span className="text-[8.5px] font-sans uppercase tracking-[0.2em] text-[#dcdad5] block leading-none">
-                            {enclaveLocation}
-                        </span>
-
-                        <blockquote className="font-serif italic font-light text-white/95 leading-snug tracking-tight line-clamp-2">
-                            {manifestoQuote}
-                        </blockquote>
-                    </div>
+                <div className="inline-flex items-center gap-2 px-2.5 py-1 bg-black/45 backdrop-blur-md border border-white/10 text-[8.5px] font-mono uppercase tracking-[0.18em] text-[#dcdad5] shadow-2xs">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#bfa76f] animate-pulse" />
+                    <span>{coordinatesDisplay}</span>
                 </div>
-            </article>
+            </div>
 
-            {/* 2. THE SOVEREIGN FOLIO PRIVILEGES CARD */}
-            <article className="bg-[#fcf9f4] -2xl p-3.5 sm:p-4 space-y-2.5 shrink-0 hidden lg:block">
-                <div className="pb-2">
-                    <div className="flex items-center gap-1.5 mb-0.5">
-                        <span className="w-1.5 h-1.5 -full bg-[#8e763b]" />
-                        <span className="text-[8px] font-sans font-semibold uppercase tracking-[0.22em] text-[#8e763b]">
-                            {privilegesSubheading}
-                        </span>
-                    </div>
-                    <h3 className="font-serif text-sm sm:text-base font-normal text-[#1f1e1d] tracking-tight leading-tight">
-                        {privilegesHeading}
-                    </h3>
+            {/* 3. Center Monograph: Manifesto Pull-Quote & Endorsement Capsule */}
+            <div className="relative z-10 my-auto py-4 sm:py-6 max-w-lg space-y-3.5">
+                <div className="flex items-center gap-2">
+                    <span className="h-px w-6 bg-[#bfa76f]" />
+                    <span className="text-[9px] font-sans font-semibold uppercase tracking-[0.24em] text-[#bfa76f]">
+                        {dossierBadge}
+                    </span>
                 </div>
 
-                {/* 3 Privileges Compact Stack */}
-                <div className="space-y-2">
-                    {privileges.map(function (priv) {
-                        return (
+                <blockquote className="font-serif italic text-xl sm:text-2xl lg:text-[26px] font-light text-white leading-tight tracking-tight">
+                    {manifestoQuote}
+                </blockquote>
+
+                <p className="text-[11px] sm:text-xs text-[#c7c3ba] font-sans font-light leading-relaxed line-clamp-2">
+                    {manifestoSubtext}
+                </p>
+
+                {/* Verified Resident Endorsement Capsule Card */}
+                <div className="p-3 bg-black/50 backdrop-blur-md border border-white/10 space-y-1.5 shadow-2xs">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-1 text-[#bfa76f]" aria-label="5 out of 5 stars">
+                            {Array.from({ length: 5 }).map((_, i) => (
+                                <svg key={i} className="w-2.5 h-2.5 fill-current" viewBox="0 0 24 24">
+                                    <path d="M12 2l2.4 7.4h7.6l-6 4.5 2.3 7.1-6.3-4.6-6.3 4.6 2.3-7.1-6-4.5h7.6z" />
+                                </svg>
+                            ))}
+                        </div>
+                        <span className="text-[7.5px] font-mono uppercase tracking-widest text-white/50">
+                            VERIFIED RESIDENT
+                        </span>
+                    </div>
+
+                    <p className="font-serif italic text-[11px] text-[#dcdad5] font-light leading-snug line-clamp-2">
+                        {endorsement.quote}
+                    </p>
+
+                    <div className="pt-1 border-t border-white/10 flex items-center gap-2">
+                        <div className="relative w-5 h-5 rounded-full overflow-hidden border border-[#bfa76f]/60 bg-white/5 shrink-0">
+                            <Image
+                                src={endorsement.avatarUrl}
+                                alt={endorsement.avatarAlt}
+                                fill
+                                sizes="20px"
+                                className="object-cover object-center"
+                            />
+                        </div>
+                        <div className="min-w-0">
+                            <span className="font-serif text-[10px] font-medium text-white block tracking-tight truncate leading-tight">
+                                {endorsement.authorName} • <span className="font-mono text-[#bfa76f] text-[7.5px]">{endorsement.folioCode}</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* 4. Bottom Floating Privileges Card & Sealed Notice */}
+            <div className="relative z-10 w-full space-y-2.5 shrink-0">
+                <div className="bg-black/60 backdrop-blur-xl border border-white/15 p-3.5 sm:p-4 shadow-xl space-y-2">
+                    <div className="flex items-center justify-between pb-1.5 border-b border-white/10">
+                        <div className="flex items-center gap-1.5">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#bfa76f] animate-pulse" />
+                            <span className="text-[8.5px] font-sans font-semibold uppercase tracking-[0.2em] text-[#bfa76f]">
+                                {privilegesHeading}
+                            </span>
+                        </div>
+                        <span className="text-[7.5px] font-mono text-white/40 uppercase tracking-widest">
+                            CONFIDENTIAL
+                        </span>
+                    </div>
+
+                    {/* 3 Privileges Compact Stack */}
+                    <div className="space-y-1.5">
+                        {privileges.map((priv) => (
                             <div
                                 key={priv.id}
-                                className="p-2 -xl bg-white border border-[#ded9ce] shadow-2xs hover:border-[#8e763b]/60 transition-colors flex items-start gap-2.5"
+                                className="p-2 bg-white/4 border border-white/10 flex items-start gap-2.5"
                             >
-                                <div className="p-1.5 -lg bg-[#f6f2ea] border border-[#e8e4dc] shadow-2xs shrink-0 mt-0.5">
+                                <div className="p-1 bg-black/40 border border-white/10 text-[#bfa76f] shrink-0 mt-0.5">
                                     {renderPrivilegeIcon(priv.iconType)}
                                 </div>
-
                                 <div className="min-w-0 space-y-0.5">
-                                    <h4 className="font-serif text-xs font-semibold text-[#1f1e1d] tracking-tight leading-none truncate">
+                                    <h4 className="font-serif text-[11px] font-medium text-white/95 tracking-tight leading-snug truncate">
                                         {priv.label}
                                     </h4>
-                                    <p className="text-[9.5px] text-[#6e6b64] font-sans font-light leading-snug line-clamp-2">
+                                    <p className="text-[9.5px] text-[#a4a098] font-sans font-light leading-snug line-clamp-1">
                                         {priv.description}
                                     </p>
                                 </div>
                             </div>
-                        );
-                    })}
-                </div>
-            </article>
-
-            {/* 3. PATRON ENDORSEMENT QUOTE PILL CARD */}
-            <article className="p-3 space-y-2 shrink-0 hidden lg:block">
-                <div className="flex items-center gap-1 text-[#8e763b]">
-                    {Array.from({ length: 5 }).map(function (_, starIdx) {
-                        return (
-                            <svg
-                                key={starIdx}
-                                className="w-2.5 h-2.5 fill-current"
-                                viewBox="0 0 24 24"
-                            >
-                                <path d="M12 2l2.4 7.4h7.6l-6 4.5 2.3 7.1-6.3-4.6-6.3 4.6 2.3-7.1-6-4.5h7.6z" />
-                            </svg>
-                        );
-                    })}
-                </div>
-
-                <blockquote className="font-serif italic text-[11px] text-[#2d2b27] font-light leading-snug line-clamp-2">
-                    {endorsement.quote}
-                </blockquote>
-
-                <div className="hidden lg:flex pt-2 border-t border-[#ded9ce] items-center gap-2.5">
-                    <div className="relative w-7 h-7 -full overflow-hidden border border-[#bfa76f] bg-[#eeeae2] shrink-0">
-                        <Image
-                            src={endorsement.avatarUrl}
-                            alt={endorsement.avatarAlt}
-                            fill
-                            sizes="28px"
-                            className="object-cover object-center"
-                        />
-                    </div>
-
-                    <div className="min-w-0">
-                        <span className="font-serif text-[11px] font-semibold text-[#1f1e1d] block tracking-tight leading-tight truncate">
-                            {endorsement.authorName}
-                        </span>
-                        <span className="text-[8px] font-mono text-[#8e8a82] uppercase tracking-wider block leading-tight truncate">
-                            {endorsement.folioCode}
-                        </span>
+                        ))}
                     </div>
                 </div>
-            </article>
 
-            {/* 4. MICRO PROTOCOL NOTIFICATION STRIP */}
-            <div className="hidden lg:flex px-1 pt-1 items-center justify-between text-[8px] font-mono uppercase tracking-widest text-[#8e8a82] shrink-0 leading-none">
-                <span className="truncate pr-2">{protocolNotice}</span>
-                <span className="text-[#8e763b] shrink-0">✦ SEALED</span>
+                {/* Diplomatic Protocol Footnote */}
+                <div className="flex items-center justify-between text-[7.5px] font-mono uppercase tracking-[0.18em] text-[#8e8a82] px-1">
+                    <span className="truncate pr-2">{protocolNotice}</span>
+                    <span className="inline-flex items-center gap-1 text-[#bfa76f] shrink-0 font-medium">
+                        <span className="w-1 h-1 rounded-full bg-emerald-500" />
+                        SEALED
+                    </span>
+                </div>
             </div>
-        </aside>
+        </div>
     );
+
 }
+
+export default RegisterDossierRail;

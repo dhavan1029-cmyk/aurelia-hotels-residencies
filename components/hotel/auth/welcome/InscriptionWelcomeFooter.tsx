@@ -1,24 +1,41 @@
-
-import React from 'react';
 import Link from 'next/link';
-import { InscriptionWelcomePageData } from './InscriptionWelcomeHeader';
+
+// ============================================================================
+// STATIC FOOTER UI CONSTANTS (PERMANENT LEGAL, FADP SECRECY & CONCIERGE HOTLINE)
+// ============================================================================
+
+export const INSCRIPTION_STATIC_FOOTER = {
+    copyrightNotice: 'AURELIA HOTELS & RESIDENCES S.P.A. © MMXXIV',
+    secrecyArticleText: 'PROTECTED UNDER SWISS FEDERAL DATA PROTECTION ACT (FADP)',
+    hotlineLabel: 'CONCIERGE DESK (+39 089 875 111)',
+    hotlineTel: '+39089875111',
+    privacyMandateHref: '/not-found',
+    termsOfResidenceHref: '/not-found',
+} as const;
 
 export interface InscriptionWelcomeFooterProps {
-    data: InscriptionWelcomePageData['footer'];
+    /** Optional custom container CSS classes */
     className?: string;
+    /** Optional overrides if customized */
+    copyrightNotice?: string;
+    secrecyArticleText?: string;
+    hotlineLabel?: string;
+    hotlineTel?: string;
 }
 
+/**
+ * InscriptionWelcomeFooter
+ *
+ * Immutable, self-contained protocol footer rendered at the bottom of `/register/welcome`.
+ * Completely decoupled from dynamic patron data — uses immutable brand constants with optional overrides.
+ */
 export function InscriptionWelcomeFooter({
-    data,
     className = '',
+    copyrightNotice = INSCRIPTION_STATIC_FOOTER.copyrightNotice,
+    secrecyArticleText = INSCRIPTION_STATIC_FOOTER.secrecyArticleText,
+    hotlineLabel = INSCRIPTION_STATIC_FOOTER.hotlineLabel,
+    hotlineTel = INSCRIPTION_STATIC_FOOTER.hotlineTel,
 }: InscriptionWelcomeFooterProps) {
-    const {
-        copyrightNotice,
-        secrecyArticleText,
-        hotlineLabel,
-        hotlineTel,
-    } = data;
-
     return (
         <footer
             aria-label="Sovereign Secrecy Disclosures & Protocol Footer"
@@ -31,9 +48,7 @@ export function InscriptionWelcomeFooter({
                         {copyrightNotice}
                     </span>
 
-                    <span className="hidden sm:inline text-[#ded9ce]">
-                        •
-                    </span>
+                    <span className="hidden sm:inline text-[#ded9ce]">•</span>
 
                     <span className="text-[#8e8a82] font-mono text-[9px]">
                         {secrecyArticleText}
@@ -43,14 +58,14 @@ export function InscriptionWelcomeFooter({
                 {/* 2. Privacy, Terms & Hotline Navigation */}
                 <div className="flex items-center gap-6 uppercase tracking-wider text-[9px] text-[#55524d]">
                     <Link
-                        href="/not-found"
+                        href={INSCRIPTION_STATIC_FOOTER.privacyMandateHref}
                         className="hover:text-[#1f1e1d] transition-colors"
                     >
                         PRIVACY MANDATE
                     </Link>
 
                     <Link
-                        href="/not-found"
+                        href={INSCRIPTION_STATIC_FOOTER.termsOfResidenceHref}
                         className="hover:text-[#1f1e1d] transition-colors"
                     >
                         TERMS OF RESIDENCE
@@ -67,3 +82,5 @@ export function InscriptionWelcomeFooter({
         </footer>
     );
 }
+
+export default InscriptionWelcomeFooter;

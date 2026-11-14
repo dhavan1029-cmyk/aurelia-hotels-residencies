@@ -1,23 +1,34 @@
 import Link from 'next/link';
-import { InscriptionWelcomePageData } from './InscriptionWelcomeHeader';
+
+
+export const INSCRIPTION_STATIC_WAYFINDING = {
+    primaryActionLabel: 'Enter Patron Dossier & Sensory Preferences',
+    primaryActionHref: '/profile',
+    secondaryActionLabel: 'Explore Curated Suites & Sanctuaries',
+    secondaryActionHref: '/accommodations',
+    conciergeAssuranceText: 'Direct telephone coordination available 24/7 via private majordomo line.',
+} as const;
+
 
 export interface InscriptionWayfindingBarProps {
-    data: InscriptionWelcomePageData['wayfinding'];
+    /** Optional custom CSS classes for the container */
     className?: string;
+    /** Optional overrides for action targets or phone label if customized */
+    primaryActionHref?: string;
+    secondaryActionHref?: string;
+    primaryActionLabel?: string;
+    secondaryActionLabel?: string;
+    conciergeAssuranceText?: string;
 }
 
 export function InscriptionWayfindingBar({
-    data,
     className = '',
+    primaryActionHref = INSCRIPTION_STATIC_WAYFINDING.primaryActionHref,
+    secondaryActionHref = INSCRIPTION_STATIC_WAYFINDING.secondaryActionHref,
+    primaryActionLabel = INSCRIPTION_STATIC_WAYFINDING.primaryActionLabel,
+    secondaryActionLabel = INSCRIPTION_STATIC_WAYFINDING.secondaryActionLabel,
+    conciergeAssuranceText = INSCRIPTION_STATIC_WAYFINDING.conciergeAssuranceText,
 }: InscriptionWayfindingBarProps) {
-    const {
-        primaryActionLabel,
-        primaryActionHref,
-        secondaryActionLabel,
-        secondaryActionHref,
-        conciergeAssuranceText,
-    } = data;
-
     return (
         <section
             aria-label="Sovereign Wayfinding Pathways"
@@ -27,7 +38,7 @@ export function InscriptionWayfindingBar({
             <div className="w-full flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-5">
                 <Link
                     href={primaryActionHref}
-                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-xl bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-xs font-semibold uppercase tracking-[0.22em] transition-all duration-300 shadow-md active:translate-y-0.5 group"
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-xs font-semibold uppercase tracking-[0.22em] transition-all duration-300 shadow-md active:translate-y-0.5 group"
                 >
                     <span>{primaryActionLabel}</span>
                     <span className="transform transition-transform duration-300 group-hover:translate-x-1">
@@ -37,7 +48,7 @@ export function InscriptionWayfindingBar({
 
                 <Link
                     href={secondaryActionHref}
-                    className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-4 rounded-xl bg-white hover:bg-[#faf7f0] border border-[#ded9ce] text-[#1f1e1d] font-sans text-xs font-semibold uppercase tracking-[0.18em] transition-colors shadow-2xs"
+                    className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-4 bg-white hover:bg-[#faf7f0] border border-[#ded9ce] text-[#1f1e1d] font-sans text-xs font-semibold uppercase tracking-[0.18em] transition-colors shadow-2xs"
                 >
                     <span>{secondaryActionLabel}</span>
                 </Link>
@@ -50,3 +61,5 @@ export function InscriptionWayfindingBar({
         </section>
     );
 }
+
+export default InscriptionWayfindingBar;

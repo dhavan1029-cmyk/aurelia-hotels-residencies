@@ -1,12 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { BiometricPasskeyButton } from './BiometricPasskeyButton';
 import { CipherOtpInput } from './CipherOtpInput';
 import { ResendCountdownTimer } from './ResendCountdownTimer';
 import { VerificationPageData } from './VerificationHeader';
 import { sendOtp, verifyOtp } from '@/lib/hotel/actions/auth';
+import { verifyRegisterOtpAction } from '@/lib/hotel/actions/register';
 
 export interface VerificationFormProps {
     data: VerificationPageData['verificationForm'];
@@ -25,16 +26,18 @@ export function VerificationForm({
         passkeySubLabel,
         submitButtonLabel,
         conciergeHotlineDisplay,
-        conciergeHotlineTel
+        conciergeHotlineTel,
     } = data;
 
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const isRegisterMode = searchParams.get('mode') === 'register';
 
     const [cipherCode, setCipherCode] = useState<string>('');
     const [isVerifying, setIsVerifying] = useState<boolean>(false);
     const [error, setError] = useState<string>('');
-    const [isExpired, setIsExpired] = useState(false)
-    const [expiresAt, setExpiresAt] = useState(initialExpiresAt)
+    const [isExpired, setIsExpired] = useState<boolean>(false);
+    const [expiresAt, setExpiresAt] = useState<string>(initialExpiresAt);
 
     async function executeVerification(codeToVerify: string) {
         if (codeToVerify.length < 6 || isVerifying) return;
@@ -43,15 +46,26 @@ export function VerificationForm({
         setError('');
 
         try {
-            const res = await verifyOtp(codeToVerify);
+            // Mode-sensitive dispatch: Registration vs. Login
+            const res = isRegisterMode
+                ? await verifyRegisterOtpAction(codeToVerify)
+                : await verifyOtp(codeToVerify);
 
             if (res.success) {
-                setCipherCode('')
-                router.push('/profile');
+                setCipherCode('');
+
+                if (isRegisterMode && res.sovereignKeyNumber) {
+                    // Registration success: redirect to the induction welcome screen
+                    const folioParam = encodeURIComponent(res.sovereignKeyNumber);
+                    router.push(`/register/welcome?folio=${folioParam}`);
+                } else {
+                    // Standard login success: redirect to guest profile
+                    router.push('/profile');
+                }
             } else {
-                if(res.expired){
-                    setIsExpired(true)
-                    setCipherCode('')
+                if (res.expired) {
+                    setIsExpired(true);
+                    setCipherCode('');
                 }
                 setError(
                     res.message ||
@@ -76,7 +90,7 @@ export function VerificationForm({
         if (error) {
             setError('');
         }
-        // Ergonomic auto-submit when all 6 digits are filled
+        // Ergonomic auto-submit when all 6 digits are typed or pasted
         if (code.length === 6) {
             executeVerification(code);
         }
@@ -106,7 +120,7 @@ export function VerificationForm({
                         <button
                             type="button"
                             onClick={() => setError('')}
-                            className="text-[11px] font-mono text-[#8c3126]/60 hover:text-[#8c3126] transition-colors p-0.5"
+                            className="text-[11px] font-mono text-[#8c3126]/60 hover:text-[#8c3126] transition-colors p-0.5 cursor-pointer"
                             aria-label="Dismiss error"
                         >
                             ✕
@@ -133,13 +147,15 @@ export function VerificationForm({
             </div>
 
             {/* 3. BIOMETRIC WEBAUTHN / FACE ID PASSKEY BUTTON */}
-            <BiometricPasskeyButton
-                label={passkeyButtonLabel}
-                subLabel={passkeySubLabel}
-                onSuccess={() =>
-                    router.push('/profile?verified=true&biometric=fido2')
-                }
-            />
+            {!isRegisterMode && (
+                <BiometricPasskeyButton
+                    label={passkeyButtonLabel}
+                    subLabel={passkeySubLabel}
+                    onSuccess={() =>
+                        router.push('/profile?verified=true&biometric=fido2')
+                    }
+                />
+            )}
 
             {/* 4. RESEND COUNTDOWN & TELEPHONE DESK */}
             <ResendCountdownTimer
@@ -148,16 +164,17 @@ export function VerificationForm({
                 conciergeHotlineDisplay={conciergeHotlineDisplay}
                 conciergeHotlineTel={conciergeHotlineTel}
                 // onResend={async () => {
+                //     setError('');
                 //     const result = await sendOtp();
-                
                 //     if (!result.success) {
+                //         setError(result.message || 'Failed to dispatch cipher.');
                 //         throw new Error(result.message);
                 //     }
-                
-                //     setExpiresAt(result.expiresAt);
+                //     if (result.expiresAt) {
+                //         setExpiresAt(result.expiresAt);
+                //     }
                 //     setIsExpired(false);
                 //     setCipherCode('');
-                //     setError('');
                 // }}
             />
 
@@ -165,7 +182,7 @@ export function VerificationForm({
             <button
                 type="submit"
                 disabled={isVerifying || !isComplete}
-                className="w-full inline-flex items-center justify-center gap-2.5 px-6 py-4 rounded-xl bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-xs font-semibold uppercase tracking-[0.24em] transition-all shadow-md active:translate-y-0.5 disabled:opacity-40 disabled:cursor-not-allowed group"
+                className="w-full inline-flex items-center justify-center gap-2.5 px-6 py-4 rounded-xl bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-xs font-semibold uppercase tracking-[0.24em] transition-all shadow-md active:translate-y-0.5 disabled:opacity-40 disabled:cursor-not-allowed group cursor-pointer"
             >
                 {isVerifying ? (
                     <>
@@ -174,7 +191,11 @@ export function VerificationForm({
                     </>
                 ) : (
                     <>
-                        <span>{submitButtonLabel || 'AUTHENTICATE & ENTER SANCTUARY'}</span>
+                        <span>
+                            {isRegisterMode
+                                ? 'RATIFY & SEAL SOVEREIGN FOLIO'
+                                : (submitButtonLabel || 'AUTHENTICATE & ENTER SANCTUARY')}
+                        </span>
                         <span className="transform transition-transform duration-300 group-hover:translate-x-1 font-normal">
                             →
                         </span>
@@ -199,4 +220,3 @@ export function VerificationForm({
         </form>
     );
 }
-

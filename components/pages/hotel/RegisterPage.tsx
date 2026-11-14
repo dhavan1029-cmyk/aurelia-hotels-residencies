@@ -1,75 +1,57 @@
 import Link from 'next/link';
 import { RegisterDossierRail } from '@/components/hotel/auth/register/RegisterDossierRail';
-import { RegisterEnrollmentForm } from '@/components/hotel/auth/register/RegisterEnrollmentForm';
+import { RegisterEnrollmentFormCoordinator } from '@/components/hotel/auth/register/RegisterEnrollmentFormCoordinator';
 
-import {
-    registerFormDefaultData,
-} from '@/components/hotel/auth/register/RegisterEnrollmentForm';
-import Image from 'next/image';
-import { RegisterDossierData, RegisterFormData } from '@/components/hotel/types/auth';
-
-export interface RegisterPageProps {
-    dossierData?: RegisterDossierData;
-    formData?: RegisterFormData;
-    className?: string;
-}
-
-export function RegisterPage({
-    formData = registerFormDefaultData,
-    className = '',
-}: RegisterPageProps) {
+export function RegisterPage() {
     return (
-        <main
-            className={`min-h-screen w-full bg-[#fcf9f4] text-[#1f1e1d] flex flex-col font-sans selection:bg-[#8e763b]/20 selection:text-[#1f1e1d] ${className}`}
-        >
-            {/* ----------------------------------------------------------------- */}
-            {/* 1. TOP PROTOCOL HEADER BAR                                        */}
-            {/* ----------------------------------------------------------------- */}
-            <header className="w-full bg-[#fcf9f4] border-b border-[#e8e4dc] sticky top-0 z-40 backdrop-blur-md">
-                <div className="max-w-360 mx-auto px-4 sm:px-8 lg:px-12 h-20 flex items-center justify-between gap-4">
-                    {/* Brand Monogram Lockup */}
-                    <Link href="/" className="flex flex-col group">
-                        <Image src='/aurelia-logo-light.png' alt='aurelia logo' width={240} height={90}></Image>
-                    </Link>
-
-                    {/* Center Protocol Badge (Hidden on Mobile) */}
-                    <div className="hidden md:inline-flex items-center gap-2.5 px-4 py-1.5 -full bg-[#f6f2ea] border border-[#ded9ce] text-[9px] font-mono uppercase tracking-[0.2em] text-[#6d6961]">
-                        <span className="w-1.5 h-1.5 -full bg-[#8e763b] animate-pulse" />
-                        <span>SOVEREIGN PATRONAGE ENCLAVE • TIER I APPLICATION</span>
-                    </div>
-
-                    {/* Right Return Navigation */}
-                    <Link
-                        href="/"
-                        className="inline-flex items-center gap-2 text-xs font-sans font-medium uppercase tracking-[0.18em] text-[#78756d] hover:text-[#1f1e1d] transition-colors"
-                    >
-                        <span>← Return to Sanctuary</span>
-                    </Link>
-                </div>
-
-                {/* Sub-strip Notice */}
-                <div className="w-full bg-[#f6f2ea] border-t border-[#ded9ce] py-2 px-4 sm:px-8 lg:px-12 text-[9px] font-mono uppercase tracking-[0.22em] text-[#8e8a82]">
-                    <div className="max-w-360 mx-auto flex flex-col sm:flex-row items-center justify-between gap-1">
-                        <span>INVITATION-ONLY OR PEER-SPONSORED ENCLAVE • EST. 1928</span>
-                        <span className="text-[#8e763b]">PROTECTED UNDER SWISS BANKING PRIVACY PROTOCOL</span>
-                    </div>
-                </div>
-            </header>
-
-            {/* ----------------------------------------------------------------- */}
-            {/* 2. MAIN SPLIT REGISTRATION WORKSPACE                              */}
-            {/* ----------------------------------------------------------------- */}
-            <div className="max-w-360 mx-auto w-full flex-1 flex flex-col lg:flex-row items-start">
-                {/* PHASE 1: Left Split Architectural Dossier & Privileges Rail (38% width) */}
-                <div className="w-full lg:w-[38%] lg:sticky lg:top-28 lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto border-b lg:border-b-0 lg:border-r border-[#e8e4dc]">
+        <main className="min-h-screen w-full bg-[#fcf9f4] text-[#1f1e1d] font-sans selection:bg-[#8e763b]/20 selection:text-[#1f1e1d] overflow-x-hidden">
+            {/* ------------------------------------------------------------- */}
+            {/* MAIN SPLIT REGISTRATION WORKSPACE                             */}
+            {/* ------------------------------------------------------------- */}
+            <div className="w-full flex flex-col lg:flex-row items-stretch">
+                {/* Left Split Architectural Dossier Rail (42% width - Fixed to screen height) */}
+                <aside 
+                    aria-label="Sovereign Dossier Rail"
+                    className="w-full lg:w-[42%] lg:h-screen lg:sticky lg:top-0 shrink-0 z-20 shadow-2xl border-r border-[#262422] overflow-hidden"
+                >
                     <RegisterDossierRail />
-                </div>
+                </aside>
 
-                {/* PHASE 2: Right Split Sovereign Patron Registration Form (62% width) */}
-                <div className="w-full lg:w-[62%] py-8 sm:py-12 px-4 sm:px-8">
-                    <RegisterEnrollmentForm
-                        data={formData}
-                    />
+                {/* Right Split Sovereign Patron Registration Form (58% width - Independently Scrollable) */}
+                <div className="w-full lg:w-[58%] lg:h-screen lg:overflow-y-auto flex flex-col justify-between">
+                    <div className="w-full max-w-3xl mx-auto py-8 sm:py-12 lg:py-16 px-4 sm:px-8 lg:px-14 flex-1 flex items-center justify-center">
+                        <RegisterEnrollmentFormCoordinator />
+                    </div>
+
+                    {/* Sovereign Protocol Footer */}
+                    <footer
+                        aria-label="Sovereign Protocol Footer"
+                        className="w-full bg-[#181716] text-[#dcdad5] border-t border-[#2e2c29] py-8 px-4 sm:px-8 lg:px-12 text-[10px] font-sans select-none"
+                    >
+                        <div className="max-w-3xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+                            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 text-center sm:text-left">
+                                <span className="text-[#8e763b] font-semibold tracking-widest uppercase">
+                                    AURELIA DIPLOMATIC IMMUNITY
+                                </span>
+                                <span className="hidden sm:inline text-white/20">•</span>
+                                <span className="text-white/60">
+                                    © 2026 Aurelia Hotels &amp; Residences S.p.A.
+                                </span>
+                            </div>
+
+                            <div className="flex items-center gap-5 uppercase tracking-wider text-[9px] text-[#a4a098]">
+                                <Link href="/not-found" className="hover:text-white transition-colors">
+                                    Privacy Mandate
+                                </Link>
+                                <Link href="/not-found" className="hover:text-white transition-colors">
+                                    Terms
+                                </Link>
+                                <a href="tel:+39089875111" className="text-[#8e763b] hover:text-white transition-colors">
+                                    Concierge (+39 089 875 111)
+                                </a>
+                            </div>
+                        </div>
+                    </footer>
                 </div>
             </div>
         </main>
@@ -77,3 +59,4 @@ export function RegisterPage({
 }
 
 export default RegisterPage;
+

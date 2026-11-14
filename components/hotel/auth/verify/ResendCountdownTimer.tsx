@@ -33,7 +33,6 @@ export function ResendCountdownTimer({
     onResend,
     className = '',
 }: ResendCountdownTimerProps) {
-    console.log(expiresAt)
     const [secondsLeft, setSecondsLeft] = useState<number>(
         () => getRemainingSeconds(expiresAt)
     );

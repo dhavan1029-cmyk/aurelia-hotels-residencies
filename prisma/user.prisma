@@ -1,89 +1,91 @@
 model User {
-  id                        String        @id @default(cuid())
-  email                     String        @unique
-  passwordHash              String?
-  phoneNumber               String        @unique
-  title                     String
-  firstName                 String
-  lastName                  String
-  avatarUrl                 String?
-  role                      UserRole      @default(GUEST)
-  sovereignTier             SovereignTier @default(EXPLORER)
-  sovereignKeyNumber        String        @unique
-  lifetimeStaysCount        Int           @default(0)
-  lifetimeSpendTotal        Float         @default(0.0)
-  profile                   GuestProfile?
-  primaryMajordomoStaffId   String? @unique
-  primaryMajordomo          StaffMember?  @relation("UserPrimaryMajordomo", fields: [primaryMajordomoStaffId], references: [id])
-  bookings                  Booking[]
-  sessions                  UserSession[]
-  createdAt                 DateTime      @default(now())
-  updatedAt                 DateTime      @updatedAt
+  id                      String        @id @default(cuid())
+  email                   String        @unique
+  passwordHash            String?
+  phoneNumber             String        @unique
+  title                   String
+  firstName               String
+  lastName                String
+  avatarUrl               String?
+  role                    UserRole      @default(GUEST)
+  sovereignTier           SovereignTier @default(EXPLORER)
+  sovereignKeyNumber      String        @unique
+  lifetimeStaysCount      Int           @default(0)
+  lifetimeSpendTotal      Float         @default(0.0)
+  profile                 GuestProfile?
+  primaryMajordomoStaffId String?       @unique
+  primaryMajordomo        StaffMember?  @relation("UserPrimaryMajordomo", fields: [primaryMajordomoStaffId], references: [id])
+  bookings                Booking[]
+  sessions                UserSession[]
+  createdAt               DateTime      @default(now())
+  updatedAt               DateTime      @updatedAt
 }
 
 model GuestProfile {
-    id                            String         @id @default(cuid())
-    userId                        String         @unique
-    user                          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    // Olfactory Architecture
-    roomAromaBlend                AromaBlend     @default(AMALFI_NEROLI_BERGAMOT)
-    aromaIntensityPercent         Int            @default(25)
-    atomizationProtocolActive     Boolean        @default(true)
+  // Olfactory Architecture
+  roomAromaBlend            AromaBlend @default(AMALFI_NEROLI_BERGAMOT)
+  aromaIntensityPercent     Int        @default(25)
+  atomizationProtocolActive Boolean    @default(true)
 
-    // Sleep & Bedding Architecture
-    preferredMattress             MattressType   @default(NATURAL_LATEX_COIR)
-    preferredPillowLeft           PillowType     @default(ORGANIC_GOOSE_DOWN)
-    preferredPillowRight          PillowType     @default(BUCKWHEAT)
-    idealRoomTemperatureCelsius  Float          @default(19.5)
+  // Sleep & Bedding Architecture
+  preferredMattress           MattressType @default(NATURAL_LATEX_COIR)
+  preferredPillowLeft         PillowType   @default(ORGANIC_GOOSE_DOWN)
+  preferredPillowRight        PillowType   @default(BUCKWHEAT)
+  idealRoomTemperatureCelsius Float        @default(19.5)
 
-    // Circadian Automations (2 Booleans for Lights Off & Alarm)
-    motorizedBlackoutLouverActive Boolean        @default(true)
-    amberDawnSequenceActive       Boolean        @default(true)
-    circadianWakeHour             String         @default("07:15")
-    circadianWarmEveningDimHour   String         @default("22:30")
+  // Circadian Automations (2 Booleans for Lights Off & Alarm)
+  motorizedBlackoutLouverActive Boolean @default(true)
+  amberDawnSequenceActive       Boolean @default(true)
+  circadianWakeHour             String  @default("07:15")
+  circadianWarmEveningDimHour   String  @default("22:30")
 
-    // Turndown & Bath Rituals
-    turndownHerbalTea             TurndownTea    @default(WILD_CHAMOMILE)
-    preferredSoakingSalts         SoakingSalts   @default(VOLCANIC_SULFUR_MINERAL)
+  // Turndown & Bath Rituals
+  turndownHerbalTea     TurndownTea  @default(WILD_CHAMOMILE)
+  preferredSoakingSalts SoakingSalts @default(VOLCANIC_SULFUR_MINERAL)
 
-    // In-Suite Epicurean Staging
-    preferredChampagneOrCru       String?        @default("2016 Tenuta dell'Ornellaia Bolgheri Superiore")
-    arrivalMineralWater           String?        @default("Suntory Minami-Alps Glacial & Lurisia Stille")
-    morningBaristaRitual          String?        @default("Panama Geisha Natural Lot #04")
-    baristaScheduleHour           String         @default("08:30")
-    dietaryRestrictions          String[]       @default(["None"])
+  // In-Suite Epicurean Staging
+  preferredChampagneOrCru String?  @default("2016 Tenuta dell'Ornellaia Bolgheri Superiore")
+  arrivalMineralWater     String?  @default("Suntory Minami-Alps Glacial & Lurisia Stille")
+  morningBaristaRitual    String?  @default("Panama Geisha Natural Lot #04")
+  baristaScheduleHour     String   @default("08:30")
+  dietaryRestrictions     String[] @default(["None"])
 
-    // Companions & Security Telemetry
-    registeredCompanions          Json           @default("[]")
-    verbalConciergePin            String         @default("8829")
-    confidentialityLevel          String         @default("Level IV Swiss Banking Privacy Protocol")
+  // Companions & Security Telemetry
+  registeredCompanions Json   @default("[]")
+  verbalConciergePin   String @default("8829")
+  confidentialityLevel String @default("Level IV Swiss Banking Privacy Protocol")
 
-    createdAt                     DateTime       @default(now())
-    updatedAt                     DateTime       @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-    @@index([userId])
+  @@index([userId])
 }
 
 model OtpChallenge {
-    id            String   @id @default(cuid())
-    identifier    String   
-    userId        String   
-    tokenHash     String   // bcrypt/argon2 or sha256 hash of the 6-digit OTP
-    attempts      Int      @default(0)
-    expiresAt     DateTime
-    createdAt     DateTime @default(now())
+  id         String   @id @default(cuid())
+  identifier String
+  userId     String
+  tokenHash  String // bcrypt/argon2 or sha256 hash of the 6-digit OTP
+  attempts   Int      @default(0)
+  remember   Boolean  @default(false)
+  metadata   Json
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
 }
 
 model UserSession {
-    id        String   @id @default(cuid())
-    userId    String
-    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    tokenHash String   @unique
-    expiresAt DateTime
-    createdAt DateTime @default(now())
+  tokenHash String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
 
-    @@index([userId])
-    @@index([expiresAt])
+  @@index([userId])
+  @@index([expiresAt])
 }

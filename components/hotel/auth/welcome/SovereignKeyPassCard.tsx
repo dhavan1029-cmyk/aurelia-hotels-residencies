@@ -1,17 +1,35 @@
 import { SovereignKeyPassDetails } from './InscriptionWelcomeHeader';
 import { WalletDownloadActions } from './WalletDownloadActions';
 
+// ============================================================================
+// STATIC KEYPASS BRAND UI LABELS
+// ============================================================================
+
+export const INSCRIPTION_STATIC_KEYPASS = {
+    cardIssuerBadge: 'AURELIA SOVEREIGN FOLIO KEY',
+    enclaveEmblemLetter: 'A',
+    nfcChipNotice: 'DISCREET NFC & BIOMETRIC HARDWARE ENCLAVE',
+    qrInstructionText: 'Touch to Smart Lock or Tender Sea Gate Slipway',
+} as const;
+
 export interface SovereignKeyPassCardProps {
+    /** Strictly dynamic key pass data from InscriptionWelcomePageData */
     data: SovereignKeyPassDetails;
     className?: string;
+    /** Optional label overrides */
+    cardIssuerBadge?: string;
+    nfcChipNotice?: string;
+    qrInstructionText?: string;
 }
 
 export function SovereignKeyPassCard({
     data,
     className = '',
+    cardIssuerBadge = INSCRIPTION_STATIC_KEYPASS.cardIssuerBadge,
+    nfcChipNotice = INSCRIPTION_STATIC_KEYPASS.nfcChipNotice,
+    qrInstructionText = INSCRIPTION_STATIC_KEYPASS.qrInstructionText,
 }: SovereignKeyPassCardProps) {
     const {
-        cardIssuerBadge,
         patronHonorific,
         patronFirstName,
         patronLastName,
@@ -19,8 +37,7 @@ export function SovereignKeyPassCard({
         membershipTierLabel,
         issuedDateDisplay,
         expiryDisplay,
-        nfcChipNotice,
-        qrInstructionText,
+        qrProtocolPayload,
     } = data;
 
     return (
@@ -190,7 +207,10 @@ export function SovereignKeyPassCard({
 
                     {/* High-Contrast 256-Bit Cryptographic QR Attestation Block (4 cols) */}
                     <div className="sm:col-span-4 flex flex-col items-center sm:items-end text-center sm:text-right">
-                        <div className="p-2.5 rounded-2xl bg-white border border-[#bfa76f] shadow-lg">
+                        <div
+                            title={qrProtocolPayload}
+                            className="p-2.5 rounded-2xl bg-white border border-[#bfa76f] shadow-lg"
+                        >
                             <svg
                                 className="w-28 h-28 sm:w-32 sm:h-32 text-[#161514]"
                                 viewBox="0 0 120 120"
@@ -296,14 +316,17 @@ export function SovereignKeyPassCard({
                     <div className="flex items-center justify-between text-[8px] sm:text-[9px] font-mono uppercase tracking-[0.2em] text-[#8e8a82]">
                         <span>{nfcChipNotice}</span>
 
-                        <span className="text-[#bfa76f]">
-                            ACTIVE ENCLAVE KEY
-                        </span>
+                        <span className="text-[#bfa76f]">ACTIVE ENCLAVE KEY</span>
                     </div>
 
-                    <WalletDownloadActions folioCode={folioCode} />
+                    <WalletDownloadActions
+                        folioCode={folioCode}
+                        protocolPayload={qrProtocolPayload}
+                    />
                 </div>
             </div>
         </article>
     );
 }
+
+export default SovereignKeyPassCard;

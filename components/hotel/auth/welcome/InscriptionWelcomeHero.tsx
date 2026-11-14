@@ -1,22 +1,45 @@
-import { InscriptionWelcomePageData } from "./InscriptionWelcomeHeader";
+
+export const INSCRIPTION_STATIC_HERO = {
+    inductionBadge: 'SOVEREIGN PATRONAGE RATIFIED • MCMXXIV',
+    headlinePrefix: 'Welcome to the Sovereign Circle,',
+    narrativeWelcome:
+        'Your sovereign patron folio has been inscribed into our confidential ledger under Swiss banking secrecy standards. From this moment onward, your presence is recognized across all global enclaves with intuitive discretion, personalized bedroom acoustics, and dedicated majordomo attendance.',
+    diplomaticClearancePill: 'SWISS FADP RATIFIED • 100% DISCREET',
+} as const;
 
 export interface InscriptionWelcomeHeroProps {
-    data: InscriptionWelcomePageData['hero'];
+    /** Strictly dynamic patron credentials from InscriptionWelcomePageData */
+    patronHonorific: string;
+    patronFirstName: string;
+    patronLastName?: string;
+    folioCode: string;
+    confidentialityLevel?: string;
+    /** Optional custom CSS classes */
     className?: string;
+    /** Optional narrative overrides */
+    narrativeWelcome?: string;
+    inductionBadge?: string;
 }
 
+/**
+ * InscriptionWelcomeHero
+ *
+ * Induction hero section displaying personalized patron greeting, ratified folio code,
+ * and immutable Swiss FADP secrecy telemetry badges.
+ */
 export function InscriptionWelcomeHero({
-    data,
+    patronHonorific,
+    patronFirstName,
+    patronLastName = '',
+    folioCode,
+    confidentialityLevel = 'LEVEL IV CONFIDENTIALITY',
     className = '',
+    narrativeWelcome = INSCRIPTION_STATIC_HERO.narrativeWelcome,
+    inductionBadge = INSCRIPTION_STATIC_HERO.inductionBadge,
 }: InscriptionWelcomeHeroProps) {
-    const {
-        inductionBadge,
-        headlineHonorific,
-        headlineName,
-        narrativeWelcome,
-        provenanceDossierRef,
-        diplomaticClearancePill,
-    } = data;
+    const fullNameDisplay = patronLastName
+        ? `${patronHonorific} ${patronFirstName} ${patronLastName}.`
+        : `${patronHonorific} ${patronFirstName}.`;
 
     return (
         <section
@@ -32,10 +55,10 @@ export function InscriptionWelcomeHero({
             {/* 2. Master Serif Induction Headline */}
             <div className="space-y-1 sm:space-y-2">
                 <span className="block font-serif text-2xl sm:text-4xl lg:text-[44px] font-normal text-[#1f1e1d] tracking-tight leading-[1.12]">
-                    {headlineHonorific}
+                    {INSCRIPTION_STATIC_HERO.headlinePrefix}
                 </span>
                 <h1 className="font-serif text-3xl sm:text-5xl lg:text-[56px] font-normal text-[#8e763b] tracking-tight leading-[1.08] italic">
-                    {headlineName}
+                    {fullNameDisplay}
                 </h1>
             </div>
 
@@ -48,7 +71,9 @@ export function InscriptionWelcomeHero({
             <div className="pt-2 flex flex-wrap items-center justify-center gap-3 sm:gap-6 text-[9.5px] sm:text-[10px] font-mono uppercase tracking-[0.2em] text-[#78756d]">
                 <div className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                    <span className="font-semibold text-[#1f1e1d]">{provenanceDossierRef}</span>
+                    <span className="font-semibold text-[#1f1e1d]">
+                        FOLIO #{folioCode} • {confidentialityLevel}
+                    </span>
                 </div>
 
                 <span className="hidden sm:inline text-[#ded9ce]">•</span>
@@ -64,9 +89,13 @@ export function InscriptionWelcomeHero({
                         <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
                         <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                     </svg>
-                    <span className="text-[#8e763b] font-medium">{diplomaticClearancePill}</span>
+                    <span className="text-[#8e763b] font-medium">
+                        {INSCRIPTION_STATIC_HERO.diplomaticClearancePill}
+                    </span>
                 </div>
             </div>
         </section>
     );
 }
+
+export default InscriptionWelcomeHero;
