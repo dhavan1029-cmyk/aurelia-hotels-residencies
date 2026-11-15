@@ -6,7 +6,7 @@ import { BiometricPasskeyButton } from './BiometricPasskeyButton';
 import { CipherOtpInput } from './CipherOtpInput';
 import { ResendCountdownTimer } from './ResendCountdownTimer';
 import { VerificationPageData } from './VerificationHeader';
-import { sendOtp, verifyOtp } from '@/lib/hotel/actions/auth';
+import { verifyOtp } from '@/lib/hotel/actions/auth';
 import { verifyRegisterOtpAction } from '@/lib/hotel/actions/register';
 
 export interface VerificationFormProps {
@@ -24,9 +24,7 @@ export function VerificationForm({
     const {
         passkeyButtonLabel,
         passkeySubLabel,
-        submitButtonLabel,
-        conciergeHotlineDisplay,
-        conciergeHotlineTel,
+        submitButtonLabel
     } = data;
 
     const router = useRouter();
@@ -53,7 +51,7 @@ export function VerificationForm({
 
             if (res.success) {
                 setCipherCode('');
-
+                setError('')
                 if (isRegisterMode && res.sovereignKeyNumber) {
                     // Registration success: redirect to the induction welcome screen
                     const folioParam = encodeURIComponent(res.sovereignKeyNumber);
@@ -159,24 +157,16 @@ export function VerificationForm({
 
             {/* 4. RESEND COUNTDOWN & TELEPHONE DESK */}
             <ResendCountdownTimer
-                isExpired={isExpired}
                 expiresAt={expiresAt}
-                conciergeHotlineDisplay={conciergeHotlineDisplay}
-                conciergeHotlineTel={conciergeHotlineTel}
-                // onResend={async () => {
-                //     setError('');
-                //     const result = await sendOtp();
-                //     if (!result.success) {
-                //         setError(result.message || 'Failed to dispatch cipher.');
-                //         throw new Error(result.message);
-                //     }
-                //     if (result.expiresAt) {
-                //         setExpiresAt(result.expiresAt);
-                //     }
-                //     setIsExpired(false);
-                //     setCipherCode('');
-                // }}
+                isExpired={isExpired}
+                onResendSuccess={(newExpiresAt) => {
+                    setExpiresAt(newExpiresAt);
+                    setIsExpired(false);
+                    setCipherCode('');
+                    setError('');
+                }}
             />
+
 
             {/* 5. PRIMARY SUBMISSION CTA BUTTON */}
             <button

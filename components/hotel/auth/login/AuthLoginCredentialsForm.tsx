@@ -32,7 +32,7 @@ export function AuthLoginCredentialsForm({
             const result = await sendOtp(prevState, formData);
 
             if (result.success) {
-                router.push('/verify?mode=login');
+                router.push('/verify?mode=login&initDispatch=true');
             }
 
             return result;

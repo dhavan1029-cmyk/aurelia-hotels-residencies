@@ -119,7 +119,9 @@ function verifyOtpCipher(otp: string, storedTokenHashHex: string, secret: string
     return timingSafeEqual(storedHash, submittedHash);
 }
 
-async function generateUniqueSovereignKey(): Promise<string> {
+export type sovereignTierType = 'EXP' | 'SVR' | 'IMP'
+
+async function generateUniqueSovereignKey(sovereignTier: sovereignTierType): Promise<string> {
     let key = '';
     let isUnique = false;
     let attempts = 0;
@@ -127,7 +129,7 @@ async function generateUniqueSovereignKey(): Promise<string> {
     while (!isUnique && attempts < 10) {
         attempts++;
         const randomSeq = Math.floor(1000 + Math.random() * 9000);
-        key = `AUR-${randomSeq}-S`;
+        key = `AUR-${randomSeq}-${sovereignTier}`;
 
         const existing = await prisma.user.findUnique({
             where: { sovereignKeyNumber: key },
@@ -504,7 +506,7 @@ export async function verifyRegisterOtpAction(
             };
         }
 
-        const sovereignKeyNumber = await generateUniqueSovereignKey();
+        const sovereignKeyNumber = await generateUniqueSovereignKey('EXP');
 
         let preferredChampagneOrCru = "2016 Tenuta dell'Ornellaia Bolgheri Superiore";
         if (draft.selectedCellarId === 'BURGUNDY_GRAND_CRU') {
@@ -517,8 +519,6 @@ export async function verifyRegisterOtpAction(
         if (Array.isArray(draft.selectedSanctuaryIds) && draft.selectedSanctuaryIds.length > 0) {
             sensoryDirectives.push(`Primary prospective enclaves: ${draft.selectedSanctuaryIds.join(', ')}`);
         }
-
-        console.log(draft.phoneNumber)
 
         // Atomic commit: User + remodeled GuestProfile
         const createdUser = await prisma.$transaction(async function (tx) {
@@ -618,22 +618,7 @@ export async function resendRegisterOtpAction(): Promise<ResendRegisterOtpResult
             };
         }
 
-        // Calculate rate-limiting cooldown safely without updatedAt column
-        const remainingSeconds = Math.floor(
-            (new Date(challenge.expiresAt).getTime() - Date.now()) / 1000
-        );
-        const totalDurationSeconds = OTP_EXPIRY_MINUTES * 60;
-        const elapsedSinceLastDispatch = totalDurationSeconds - remainingSeconds;
-
-        if (elapsedSinceLastDispatch < COOLDOWN_SECONDS && elapsedSinceLastDispatch >= 0) {
-            const cooldownRemaining = COOLDOWN_SECONDS - elapsedSinceLastDispatch;
-            return {
-                success: false,
-                cooldownSeconds: cooldownRemaining,
-                message: `Cipher was recently dispatched. Please wait ${cooldownRemaining}s before requesting a new token.`,
-            };
-        }
-
+        // Generate fresh 6-digit cryptographic OTP cipher unconditionally
         const rawOtp = randomInt(100000, 1000000).toString();
         const otpHashSecret = process.env.OTP_HASH_SECRET;
 
@@ -642,8 +627,10 @@ export async function resendRegisterOtpAction(): Promise<ResendRegisterOtpResult
         }
 
         const newHash = hashOtpCipher(rawOtp, otpHashSecret);
+        // Reset full expiration timer from right now
         const newExpiresAt = new Date(Date.now() + OTP_EXPIRY_MINUTES * 60 * 1000);
 
+        // Update docket: reset attempts to 0, refresh cipher hash and expiry timer
         await prisma.otpChallenge.update({
             where: { id: challenge.id },
             data: {
@@ -676,6 +663,7 @@ export async function resendRegisterOtpAction(): Promise<ResendRegisterOtpResult
             };
         }
 
+        // Re-arm the session cookie with the refreshed expiration timestamp
         cookieStore.set('aurelia-pending-otp', challenge.id, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
@@ -697,3 +685,5 @@ export async function resendRegisterOtpAction(): Promise<ResendRegisterOtpResult
         };
     }
 }
+
+

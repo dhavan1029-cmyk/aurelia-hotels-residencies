@@ -4,6 +4,7 @@ import { VerificationForm } from './VerificationForm';
 import { getPendingUser } from '@/lib/hotel/actions/auth';
 
 export interface VerificationFormSectionProps {
+    // searchParams: Promise<{mode: string, initDispatch: string}>,
     data: VerificationPageData['verificationForm'];
     className?: string;
 }
@@ -24,6 +25,7 @@ export function maskEmail(email: string): string {
 }
 
 export async function VerificationFormSection({
+    // searchParams,
     data,
     className = '',
 }: VerificationFormSectionProps) {
