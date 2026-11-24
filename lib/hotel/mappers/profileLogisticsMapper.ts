@@ -115,7 +115,7 @@ export function mapToProfileLogisticsData(
 
     // 1. Resolve Upcoming / Active Booking from relations or override
     const rawUpcomingBooking = user.bookings?.find(function (b) {
-        return b.status === 'CONFIRMED' || b.status === 'CHECKED_IN';
+        return new Set(['GUARANTEED', 'CHECKED_IN', 'CONFIRMED']).has(b.status);
     });
 
     const activeBooking: ActiveBookingOverride | null =

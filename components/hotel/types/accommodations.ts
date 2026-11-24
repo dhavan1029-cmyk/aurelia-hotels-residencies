@@ -45,7 +45,7 @@ export interface PrivilegesAndPoliciesData {
 export interface ArchitecturalFeature {
     icon: React.ReactNode;
     title: string;
-    description: string;
+    detail: string;
 }
 
 export interface FloorplanZone {

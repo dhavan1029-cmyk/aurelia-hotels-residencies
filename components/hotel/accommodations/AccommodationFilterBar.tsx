@@ -2,9 +2,9 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
-import DateRangeCalendar from '../DateRangeCalendar';
-import { calculateNights } from '../DateRangeCalendar';
+import DateRangeCalendar, { calculateNights } from '../DateRangeCalendar';
 import { SearchParamsValues } from '@/components/pages/hotel/Accommdations';
+// import type { SearchParamsValues } from '@/components/pages/hotel/Accommodations';
 
 export type SanctuaryCategory = 'all' | 'oceanfront' | 'villas' | 'garden';
 
@@ -28,10 +28,10 @@ export function FilterBar({
     totalAvailableCount = 3,
     className = '',
 }: FilterBarProps) {
-    const searchParams = useSearchParams()
-    const pathname = usePathname()
-    const router = useRouter()
-    
+    const searchParams = useSearchParams();
+    const pathname = usePathname();
+    const router = useRouter();
+
     // -------------------------------------------------------------
     // 1. Filter State Management
     // -------------------------------------------------------------
@@ -53,11 +53,11 @@ export function FilterBar({
     );
 
     const [category, setCategory] = useState<SanctuaryCategory>(
-        'all'
+        initFilters?.category  || 'all'
     );
 
     const [sortBy, setSortBy] = useState<string>(
-        'curated'
+        initFilters?.sortBy ?? 'curated'
     );
 
     const [isCalendarOpen, setIsCalendarOpen] = useState(false);
@@ -77,39 +77,48 @@ export function FilterBar({
     // 2. Synchronize Filter State with URL and Server Props
     // -------------------------------------------------------------
 
-    const queryString = searchParams.toString();
+    const queryString = searchParams ? searchParams.toString() : '';
 
-    useEffect(() => {
-        const params = new URLSearchParams(queryString);
+    useEffect(
+        function () {
+            const params = new URLSearchParams(queryString);
 
-        setCheckIn(
-            params.get('checkIn') ?? initFilters.checkIn ?? ''
-        );
+            setCheckIn(
+                params.get('checkIn') ?? initFilters.checkIn ?? ''
+            );
 
-        setCheckOut(
-            params.get('checkOut') ?? initFilters.checkOut ?? ''
-        );
+            setCheckOut(
+                params.get('checkOut') ?? initFilters.checkOut ?? ''
+            );
 
-        setAdults(
-            Number(params.get('guests') ?? initFilters.guests) || 2
-        );
+            setAdults(
+                Number(params.get('guests') ?? initFilters.guests) || 2
+            );
 
-        setSuites(
-            Number(params.get('suites') ?? initFilters.suites) || 1
-        );
+            setSuites(
+                Number(params.get('suites') ?? initFilters.suites) || 1
+            );
 
-        setCategory(
-            (params.get('category') as SanctuaryCategory) || 'all'
-        );
+            setCategory(
+                (params.get('category') as SanctuaryCategory) ||
+                    (initFilters.category as SanctuaryCategory) ||
+                    'all'
+            );
 
-        setSortBy(params.get('sortBy') ?? 'curated');
-    }, [
-        queryString,
-        initFilters.checkIn,
-        initFilters.checkOut,
-        initFilters.guests,
-        initFilters.suites,
-    ]);
+            setSortBy(
+                params.get('sortBy') ?? initFilters.sortBy ?? 'curated'
+            );
+        },
+        [
+            queryString,
+            initFilters.checkIn,
+            initFilters.checkOut,
+            initFilters.guests,
+            initFilters.suites,
+            initFilters.category,
+            initFilters.sortBy,
+        ]
+    );
 
     // Dismiss popovers when clicking outside
     useEffect(function () {
@@ -132,9 +141,8 @@ export function FilterBar({
         };
     }, []);
 
-    
-
     function formatDate(isoDate: string): string {
+        if (!isoDate || !isoDate.includes('-')) return '';
         const [year, month, day] = isoDate.split('-').map(Number);
 
         return new Date(year, month - 1, day).toLocaleDateString('en-US', {
@@ -144,31 +152,40 @@ export function FilterBar({
         });
     }
 
+    function applyFilter(options: FilterBarValues) {
+        const currentQuery = searchParams ? searchParams.toString() : '';
+        const params = new URLSearchParams(currentQuery);
+
+        Object.entries(options).forEach(function ([key, value]) {
+            if (value === undefined || value === '' || value === 'all') {
+                if (key === 'category' && value === 'all') {
+                    params.delete('category');
+                } else if (value === undefined || value === '') {
+                    params.delete(key);
+                } else {
+                    params.set(key, String(value));
+                }
+            } else {
+                params.set(key, String(value));
+            }
+        });
+
+        const query = params.toString();
+        const targetUrl = query ? `${pathname}?${query}` : pathname;
+        router.replace(targetUrl, { scroll: false });
+    }
+
     // Category Selector
     function handleCategorySelect(catId: SanctuaryCategory) {
         setCategory(catId);
+        applyFilter({ category: catId });
     }
 
     // Sort Selector
     function handleSortSelect(sortId: string) {
         setSortBy(sortId);
         setIsSortPopoverOpen(false);
-        applyFilter({sortBy: sortId})
-    }
-
-    function applyFilter(options: FilterBarValues) {
-        const params = new URLSearchParams(searchParams.toString());
-        Object.entries(options).forEach(([key, value]) => {
-            if (value === undefined || value === '') {
-                params.delete(key);
-            } else {
-                params.set(key, String(value));
-                console.log(key, value)
-            }
-        });
-    
-        const query = params.toString();
-        router.replace(`${pathname}?${query}`);
+        applyFilter({ sortBy: sortId });
     }
 
     const categories: Array<{ id: SanctuaryCategory; label: string; count: number }> = [
@@ -187,18 +204,14 @@ export function FilterBar({
 
     return (
         <section
-            className={`w-full py-6 px-4 sm:px-8 lg:px-12 text-[#1f1e1d] ${className}`}
+            className={`w-full py-6 px-4 sm:px-8 lg:px-12 text-[#1f1e1d] relative z-50 ${className}`}
         >
-            <div className="max-w-340 mx-auto space-y-4">
-                {/* ========================================================= */}
-                {/* MASTER FILTER CONSOLE CARD                                */}
-                {/* ========================================================= */}
-                <div className="border border-[#e4ded2] -3xl p-5 sm:p-7 space-y-6">
-                    {/* ----------------------------------------------------- */}
-                    {/* ROW 1: PRIMARY STAY HORIZON & PATRON SELECTION (2 COL) */}
-                    {/* ----------------------------------------------------- */}
+            <div className="max-w-7xl mx-auto space-y-4">
+                {/* MASTER FILTER CONSOLE CARD */}
+                <div className="border border-[#e4ded2] p-5 sm:p-7 space-y-6 bg-white/95 backdrop-blur-md shadow-[0_4px_24px_rgba(31,30,29,0.03)]">
+                    {/* ROW 1: PRIMARY STAY HORIZON & PATRON SELECTION */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {/* 1A. Stay Horizon Trigger & Embedded Popover */}
+                        {/* 1A. Stay Horizon Trigger & Calendar Popover */}
                         <div ref={dateRef} className="relative">
                             <label className="block text-[9px] font-mono font-semibold uppercase tracking-[0.24em] text-[#8e763b] mb-1.5 pl-1">
                                 01 • STAY HORIZON &amp; CALENDAR
@@ -210,16 +223,17 @@ export function FilterBar({
                                     setIsCalendarOpen(function (prev) {
                                         return !prev;
                                     });
+                                    setIsPartyPopoverOpen(false);
                                     setIsSortPopoverOpen(false);
                                 }}
-                                className={`w-full group bg-white hover:bg-[#faf7f0] border -2xl p-4 text-left transition-all duration-200 flex items-center justify-between gap-4 shadow-2xs ${
+                                className={`w-full group bg-white hover:bg-[#faf7f0] border p-4 text-left transition-all duration-200 flex items-center justify-between gap-4 shadow-2xs cursor-pointer ${
                                     isCalendarOpen
                                         ? 'border-[#8e763b] ring-2 ring-[#8e763b]/20 bg-[#faf7f0]'
                                         : 'border-[#ded9ce] hover:border-[#8e763b]/60'
                                 }`}
                             >
                                 <div className="flex items-center gap-3.5 min-w-0">
-                                    <div className="w-10 h-10 -xl bg-[#f6f2ea] border border-[#e5dfd3] text-[#8e763b] flex items-center justify-center shrink-0 group-hover:bg-white transition-colors">
+                                    <div className="w-10 h-10 bg-[#f6f2ea] border border-[#e5dfd3] text-[#8e763b] flex items-center justify-center shrink-0 group-hover:bg-white transition-colors">
                                         <svg
                                             className="w-4 h-4"
                                             viewBox="0 0 24 24"
@@ -243,9 +257,11 @@ export function FilterBar({
                                                     ? `${formatDate(checkIn)} – ${formatDate(checkOut)}`
                                                     : 'Select your stay dates'}
                                             </span>
-                                            <span className={`${nights ? '' : 'hidden'} px-2 py-0.5 -full bg-[#f6f2ea] border border-[#ded9ce] text-[9px] font-mono text-[#8e763b] font-medium shrink-0`}>
-                                                {nights} Nights
-                                            </span>
+                                            {nights > 0 && (
+                                                <span className="px-2 py-0.5 rounded-full bg-[#f6f2ea] border border-[#ded9ce] text-[9px] font-mono text-[#8e763b] font-medium shrink-0">
+                                                    {nights} Nights
+                                                </span>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -270,27 +286,37 @@ export function FilterBar({
 
                             {/* Calendar Popover */}
                             {isCalendarOpen && (
-                                <div className="absolute top-[calc(100%+8px)] left-0 lg:left-0 sm:-left-75 md:-left-100 z-50">
+                                <div className="absolute top-[calc(100%+8px)] left-0 lg:left-0 sm:-left-32 z-50">
                                     <DateRangeCalendar
                                         isOpen={isCalendarOpen}
-                                        onClose={() => setIsCalendarOpen(false)}
+                                        onClose={function () {
+                                            setIsCalendarOpen(false);
+                                        }}
                                         checkIn={checkIn}
                                         checkOut={checkOut}
-                                        onApplyDates={(range) => {
+                                        onApplyDates={function (range) {
                                             setCheckIn(range.checkIn);
                                             setCheckOut(range.checkOut);
-                                            applyFilter({checkIn: range.checkIn, checkOut: range.checkOut})
+                                            setIsCalendarOpen(false);
+                                            applyFilter({
+                                                checkIn: range.checkIn,
+                                                checkOut: range.checkOut,
+                                            });
                                         }}
-                                        onClearDates={() => {
+                                        onClearDates={function () {
                                             setCheckIn('');
                                             setCheckOut('');
+                                            applyFilter({
+                                                checkIn: '',
+                                                checkOut: '',
+                                            });
                                         }}
                                     />
                                 </div>
                             )}
                         </div>
 
-                        {/* 1B. Party & Suite Composition Trigger & Embedded Popover */}
+                        {/* 1B. Party & Suite Allocation Trigger & Embedded Popover */}
                         <div ref={partyRef} className="relative">
                             <label className="block text-[9px] font-mono font-semibold uppercase tracking-[0.24em] text-[#8e763b] mb-1.5 pl-1">
                                 02 • PATRON PARTY &amp; SUITE ALLOCATION
@@ -305,14 +331,14 @@ export function FilterBar({
                                     setIsCalendarOpen(false);
                                     setIsSortPopoverOpen(false);
                                 }}
-                                className={`w-full group bg-white hover:bg-[#faf7f0] border -2xl p-4 text-left transition-all duration-200 flex items-center justify-between gap-4 shadow-2xs ${
+                                className={`w-full group bg-white hover:bg-[#faf7f0] border p-4 text-left transition-all duration-200 flex items-center justify-between gap-4 shadow-2xs cursor-pointer ${
                                     isPartyPopoverOpen
                                         ? 'border-[#8e763b] ring-2 ring-[#8e763b]/20 bg-[#faf7f0]'
                                         : 'border-[#ded9ce] hover:border-[#8e763b]/60'
                                 }`}
                             >
                                 <div className="flex items-center gap-3.5 min-w-0">
-                                    <div className="w-10 h-10 -xl bg-[#f6f2ea] border border-[#e5dfd3] text-[#8e763b] flex items-center justify-center shrink-0 group-hover:bg-white transition-colors">
+                                    <div className="w-10 h-10 bg-[#f6f2ea] border border-[#e5dfd3] text-[#8e763b] flex items-center justify-center shrink-0 group-hover:bg-white transition-colors">
                                         <svg
                                             className="w-4 h-4"
                                             viewBox="0 0 24 24"
@@ -332,7 +358,8 @@ export function FilterBar({
                                     <div className="min-w-0">
                                         <div className="flex items-baseline gap-2">
                                             <span className="font-serif text-base sm:text-lg font-medium text-[#1f1e1d] truncate">
-                                                {adults} Patrons • {suites} {suites === 1 ? 'Master Suite' : 'Suites'}
+                                                {adults} {adults === 1 ? 'Patron' : 'Patrons'} • {suites}{' '}
+                                                {suites === 1 ? 'Master Suite' : 'Suites'}
                                             </span>
                                         </div>
                                         <p className="text-[11px] text-[#78756d] font-sans font-light mt-0.5 truncate">
@@ -361,7 +388,7 @@ export function FilterBar({
 
                             {/* Self-Contained Party Stepper Popover */}
                             {isPartyPopoverOpen && (
-                                <div className="absolute left-0 right-0 top-full mt-2 z-40 bg-white border border-[#ded9ce] -3xl p-5 sm:p-6 shadow-2xl space-y-4 animate-in fade-in-50 zoom-in-95">
+                                <div className="absolute left-0 right-0 top-full mt-2 z-40 bg-white border border-[#ded9ce] p-5 sm:p-6 shadow-2xl space-y-4 animate-in fade-in-50 zoom-in-95">
                                     <div className="flex items-center justify-between pb-3 border-b border-[#eeeae2]">
                                         <div>
                                             <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#8e763b] font-semibold block">
@@ -376,14 +403,14 @@ export function FilterBar({
                                             onClick={function () {
                                                 setIsPartyPopoverOpen(false);
                                             }}
-                                            className="p-1 -lg hover:bg-[#f6f2ea] text-[#8e8a82] hover:text-[#1f1e1d] text-xs"
+                                            className="p-1 hover:bg-[#f6f2ea] text-[#8e8a82] hover:text-[#1f1e1d] text-xs cursor-pointer"
                                         >
                                             ✕
                                         </button>
                                     </div>
 
                                     {/* Adults Stepper */}
-                                    <div className="p-3.5 -2xl bg-[#fcf9f4] border border-[#ded9ce] flex items-center justify-between">
+                                    <div className="p-3.5 bg-[#fcf9f4] border border-[#ded9ce] flex items-center justify-between">
                                         <div>
                                             <span className="font-serif text-sm font-semibold text-[#1f1e1d] block">
                                                 Adult Patrons
@@ -401,7 +428,7 @@ export function FilterBar({
                                                     const nextVal = Math.max(1, adults - 1);
                                                     setAdults(nextVal);
                                                 }}
-                                                className="w-8 h-8 -xl bg-white border border-[#ded9ce] text-[#1f1e1d] flex items-center justify-center font-mono text-sm hover:bg-[#f6f2ea] disabled:opacity-40 transition-colors shadow-2xs"
+                                                className="w-8 h-8 bg-white border border-[#ded9ce] text-[#1f1e1d] flex items-center justify-center font-mono text-sm hover:bg-[#f6f2ea] disabled:opacity-40 transition-colors shadow-2xs cursor-pointer"
                                             >
                                                 −
                                             </button>
@@ -415,7 +442,7 @@ export function FilterBar({
                                                     const nextVal = Math.min(8, adults + 1);
                                                     setAdults(nextVal);
                                                 }}
-                                                className="w-8 h-8 -xl bg-white border border-[#ded9ce] text-[#1f1e1d] flex items-center justify-center font-mono text-sm hover:bg-[#f6f2ea] disabled:opacity-40 transition-colors shadow-2xs"
+                                                className="w-8 h-8 bg-white border border-[#ded9ce] text-[#1f1e1d] flex items-center justify-center font-mono text-sm hover:bg-[#f6f2ea] disabled:opacity-40 transition-colors shadow-2xs cursor-pointer"
                                             >
                                                 +
                                             </button>
@@ -423,7 +450,7 @@ export function FilterBar({
                                     </div>
 
                                     {/* Suites Stepper */}
-                                    <div className="p-3.5 -2xl bg-[#fcf9f4] border border-[#ded9ce] flex items-center justify-between">
+                                    <div className="p-3.5 bg-[#fcf9f4] border border-[#ded9ce] flex items-center justify-between">
                                         <div>
                                             <span className="font-serif text-sm font-semibold text-[#1f1e1d] block">
                                                 Master Suites / Villas
@@ -441,7 +468,7 @@ export function FilterBar({
                                                     const nextVal = Math.max(1, suites - 1);
                                                     setSuites(nextVal);
                                                 }}
-                                                className="w-8 h-8 -xl bg-white border border-[#ded9ce] text-[#1f1e1d] flex items-center justify-center font-mono text-sm hover:bg-[#f6f2ea] disabled:opacity-40 transition-colors shadow-2xs"
+                                                className="w-8 h-8 bg-white border border-[#ded9ce] text-[#1f1e1d] flex items-center justify-center font-mono text-sm hover:bg-[#f6f2ea] disabled:opacity-40 transition-colors shadow-2xs cursor-pointer"
                                             >
                                                 −
                                             </button>
@@ -455,7 +482,7 @@ export function FilterBar({
                                                     const nextVal = Math.min(4, suites + 1);
                                                     setSuites(nextVal);
                                                 }}
-                                                className="w-8 h-8 -xl bg-white border border-[#ded9ce] text-[#1f1e1d] flex items-center justify-center font-mono text-sm hover:bg-[#f6f2ea] disabled:opacity-40 transition-colors shadow-2xs"
+                                                className="w-8 h-8 bg-white border border-[#ded9ce] text-[#1f1e1d] flex items-center justify-center font-mono text-sm hover:bg-[#f6f2ea] disabled:opacity-40 transition-colors shadow-2xs cursor-pointer"
                                             >
                                                 +
                                             </button>
@@ -467,9 +494,9 @@ export function FilterBar({
                                             type="button"
                                             onClick={function () {
                                                 setIsPartyPopoverOpen(false);
-                                                applyFilter({guests: adults, suites})
+                                                applyFilter({ guests: adults, suites });
                                             }}
-                                            className="px-5 py-2.5 -xl bg-[#1f1e1d] hover:bg-[#343230] text-white text-[10px] font-sans font-semibold uppercase tracking-[0.18em] transition-colors"
+                                            className="px-5 py-2.5 bg-[#1f1e1d] hover:bg-[#343230] text-white text-[10px] font-sans font-semibold uppercase tracking-[0.18em] transition-colors cursor-pointer"
                                         >
                                             Apply Party Composition
                                         </button>
@@ -479,11 +506,9 @@ export function FilterBar({
                         </div>
                     </div>
 
-                    {/* ----------------------------------------------------- */}
-                    {/* ROW 2: CATEGORY SEGMENTS & VIEW CONTROLS (WRAPPING)    */}
-                    {/* ----------------------------------------------------- */}
+                    {/* ROW 2: CATEGORY SEGMENTS & VIEW CONTROLS */}
                     <div className="pt-4 border-t border-[#e4ded2] flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                        {/* 2A. Category Filter Tabs (Clean Flex-Wrap — NO horizontal scrollbars) */}
+                        {/* 2A. Category Filter Tabs */}
                         <div className="space-y-1.5">
                             <span className="text-[9px] font-mono font-semibold uppercase tracking-[0.22em] text-[#8e8a82] block pl-1">
                                 SANCTUARY TYPOLOGY
@@ -498,7 +523,7 @@ export function FilterBar({
                                             onClick={function () {
                                                 handleCategorySelect(cat.id);
                                             }}
-                                            className={`px-4 py-2.5 -xl font-sans text-[11px] font-semibold uppercase tracking-[0.16em] transition-all duration-200 flex items-center gap-2 shadow-2xs ${
+                                            className={`px-4 py-2.5 font-sans text-[11px] font-semibold uppercase tracking-[0.16em] transition-all duration-200 flex items-center gap-2 shadow-2xs cursor-pointer ${
                                                 isActive
                                                     ? 'bg-[#1f1e1d] text-white shadow-sm'
                                                     : 'bg-white hover:bg-[#faf7f0] text-[#3e3b37] border border-[#ded9ce]'
@@ -506,7 +531,7 @@ export function FilterBar({
                                         >
                                             <span>{cat.label}</span>
                                             <span
-                                                className={`text-[9px] font-mono px-1.5 py-0.5 -md ${
+                                                className={`text-[9px] font-mono px-1.5 py-0.5 ${
                                                     isActive
                                                         ? 'bg-white/20 text-white'
                                                         : 'bg-[#f6f2ea] text-[#8e763b]'
@@ -520,9 +545,8 @@ export function FilterBar({
                             </div>
                         </div>
 
-                        {/* 2B. Sort Ranking Menu & Grid / List View Toggle */}
+                        {/* 2B. Sort Ranking Menu */}
                         <div className="flex flex-wrap sm:flex-nowrap items-end sm:items-center gap-3 pt-2 lg:pt-0 self-start lg:self-end">
-                            {/* Sort Popover */}
                             <div ref={sortRef} className="relative">
                                 <span className="text-[9px] font-mono font-semibold uppercase tracking-[0.22em] text-[#8e8a82] block mb-1 pl-1">
                                     CURATORIAL ORDER
@@ -536,7 +560,7 @@ export function FilterBar({
                                         setIsCalendarOpen(false);
                                         setIsPartyPopoverOpen(false);
                                     }}
-                                    className={`bg-white hover:bg-[#faf8f4] border -xl px-4 py-2 text-left transition-all duration-200 flex items-center gap-3 shadow-2xs ${
+                                    className={`bg-white hover:bg-[#faf8f4] border px-4 py-2 text-left transition-all duration-200 flex items-center gap-3 shadow-2xs cursor-pointer ${
                                         isSortPopoverOpen
                                             ? 'border-[#8e763b] ring-1 ring-[#8e763b]/30'
                                             : 'border-[#ded9ce] hover:border-[#8e763b]/60'
@@ -567,7 +591,7 @@ export function FilterBar({
 
                                 {/* Dropdown Menu */}
                                 {isSortPopoverOpen && (
-                                    <div className="absolute right-0 mt-2 w-56 bg-white border border-[#ded9ce] -2xl shadow-xl py-2 z-40 animate-in fade-in-50 zoom-in-95">
+                                    <div className="absolute right-0 mt-2 w-56 bg-white border border-[#ded9ce] shadow-xl py-2 z-40 animate-in fade-in-50 zoom-in-95">
                                         <div className="px-3.5 py-1.5 border-b border-[#f0ece3] text-[9px] font-mono uppercase tracking-widest text-[#8e8a82]">
                                             Ranking Doctrine
                                         </div>
@@ -580,7 +604,7 @@ export function FilterBar({
                                                     onClick={function () {
                                                         handleSortSelect(option.id);
                                                     }}
-                                                    className={`w-full text-left px-3.5 py-2.5 text-xs font-sans transition-colors flex items-center justify-between ${
+                                                    className={`w-full text-left px-3.5 py-2.5 text-xs font-sans transition-colors flex items-center justify-between cursor-pointer ${
                                                         isSelected
                                                             ? 'bg-[#f7f2e7] text-[#8e763b] font-semibold'
                                                             : 'text-[#2c2a26] hover:bg-[#faf8f5]'
@@ -599,13 +623,11 @@ export function FilterBar({
                         </div>
                     </div>
 
-                    {/* ----------------------------------------------------- */}
                     {/* ROW 3: MICRO STATUS & SOVEREIGN DIRECT GUARANTEE STRIP */}
-                    {/* ----------------------------------------------------- */}
                     <div className="pt-3.5 border-t border-[#e4ded2] flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs font-sans text-[#78756d]">
                         {/* Live Results Counter */}
                         <div className="flex items-center gap-2">
-                            <span className="w-1.5 h-1.5 -full bg-[#8e763b] animate-pulse" />
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#8e763b] animate-pulse" />
                             <span>
                                 Showing{' '}
                                 <strong className="font-serif font-semibold text-[#1f1e1d]">

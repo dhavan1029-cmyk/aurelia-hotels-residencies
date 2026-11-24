@@ -1,65 +1,94 @@
 model Booking {
-  id                    String                @id @default(cuid())
-  bookingReference      String                @unique // e.g. "AUR-2025-9014"
-  userId                String
-  user                  User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
-  sanctuaryId           String
-  sanctuary             Sanctuary             @relation(fields: [sanctuaryId], references: [id])
-  accommodationId       String
-  accommodationCategory AccommodationCategory @relation(fields: [accommodationId], references: [id])
-  roomUnitId            String?
-  roomUnit              RoomUnit?             @relation(fields: [roomUnitId], references: [id])
+  id                       String                @id @default(cuid())
+  bookingReference         String                @unique
+  userId                   String?
+  sanctuaryId              String
+  accommodationId          String
+  roomUnitId               String?
+  checkInDate              DateTime
+  checkOutDate             DateTime
+  numberOfNights           Int
+  adultsCount              Int                   @default(1)
+  childrenCount            Int                   @default(0)
+  specialRequests          String?
+  status                   BookingStatus         @default(PENDING_PAYMENT)
+  currency                 String                @default("EUR")
+  roomNightlyTotal         Float
+  experiencesTotal         Float                 @default(0.0)
+  taxesAndServiceTotal     Float
+  cityTaxTotal             Float
+  grandTotal               Float
+  depositPaid              Float                 @default(0.0)
+  balanceDueAtCheckIn      Float
+  qrCodeData               String?
+  createdAt                DateTime              @default(now())
+  updatedAt                DateTime              @updatedAt
+  assignedMajordomoId      String?
+  guestTitle               String?
+  guestFirstName           String?               @default("Patron")
+  guestLastName            String?               @default("Esteemed")
+  guestEmail               String?               @default("patron@aureliahotels.com")
+  guestPhone               String?               @default("+39089875111")
+  guestCountryIso          String?               @default("IT")
+  accompanyingGuestName    String?
+  selectedArrivalWindowId  String?               @default("window-standard")
+  transportDesignation     String?
+  dietaryAndCellarNuances  String?
+  selectedPillowId         String?               @default("bespoke-goose-down")
+  targetTemperatureCelsius Float?                @default(19.5)
+  sovereignDiscountTotal   Float?                @default(0.0)
+  voucherCodeApplied       String?
+  accommodationCategory    AccommodationCategory @relation(fields: [accommodationId], references: [id])
+  assignedMajordomo        StaffMember?          @relation("BookingAssignedMajordomo", fields: [assignedMajordomoId], references: [id], onUpdate: NoAction)
+  roomUnit                 RoomUnit?             @relation(fields: [roomUnitId], references: [id])
+  sanctuary                Sanctuary             @relation(fields: [sanctuaryId], references: [id])
+  user                     User?                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lineItems                BookingLineItem[]
+  folio                    PaymentFolio?
 
-  checkInDate     DateTime
-  checkOutDate    DateTime
-  numberOfNights  Int
-  adultsCount     Int      @default(1)
-  childrenCount   Int      @default(0)
-  specialRequests String?
-
-  status               BookingStatus @default(PENDING_PAYMENT)
-  currency             String        @default("EUR")
-  roomNightlyTotal     Float
-  experiencesTotal     Float         @default(0.0)
-  taxesAndServiceTotal Float
-  cityTaxTotal         Float
-  grandTotal           Float
-  depositPaid          Float         @default(0.0)
-  balanceDueAtCheckIn  Float
-
-  qrCodeData          String?
-  lineItems           BookingLineItem[]
-  folio               PaymentFolio?
-  assignedMajordomoId String?
-  assignedMajordomo   StaffMember?      @relation("BookingAssignedMajordomo", fields: [assignedMajordomoId], references: [id])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  @@index([userId])
+  @@index([sanctuaryId])
+  @@index([accommodationId])
+  @@index([checkInDate, checkOutDate])
+  @@index([status])
+  @@index([assignedMajordomoId])
 }
 
 model BookingLineItem {
-  id            String    @id @default(cuid())
-  bookingId     String
-  booking       Booking   @relation(fields: [bookingId], references: [id], onDelete: Cascade)
-  itemType      String // ROOM_STAY, EXPERIENCE_BOOKING, SPA_TREATMENT, ADD_ON
-  title         String
-  description   String?
-  quantity      Int       @default(1)
-  unitPrice     Float
-  currency      String    @default("EUR")
-  scheduledTime DateTime?
+  id              String      @id @default(cuid())
+  bookingId       String
+  itemType        String
+  title           String
+  description     String?
+  quantity        Int         @default(1)
+  unitPrice       Float
+  currency        String      @default("EUR")
+  scheduledTime   DateTime?
+  createdAt       DateTime    @default(now())
+  experienceId    String?
+  totalPrice      Float?      @default(0.0)
+  scheduledDate   DateTime?
+  durationMinutes Int?
+  booking         Booking     @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  experience      Experience? @relation(fields: [experienceId], references: [id])
 
-  createdAt DateTime @default(now())
+  @@index([bookingId])
+  @@index([experienceId])
 }
 
 model PaymentFolio {
-  id        String  @id @default(cuid())
-  bookingId String  @unique
-  booking   Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
-  status    String  @default("OPEN") // OPEN, SETTLED, REFUNDED
-  currency  String  @default("EUR")
-  payments  Json // Array of recorded transaction charges & methods
+  id                 String   @id @default(cuid())
+  bookingId          String   @unique
+  status             String   @default("OPEN")
+  currency           String   @default("EUR")
+  payments           Json
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  paymentMethodType  String?  @default("CARD_GUARANTEE")
+  cardBrand          String?
+  cardLast4          String?
+  gatewayReferenceId String?
+  booking            Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  @@index([status])
 }

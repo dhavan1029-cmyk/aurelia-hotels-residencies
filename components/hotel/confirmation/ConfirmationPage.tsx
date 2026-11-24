@@ -3,32 +3,32 @@ import Link from 'next/link';
 import { Footer } from '@/components/layout/Footer';
 
 // Phase 1: Header, Sanctuary Panorama & Digital Wallet Actions
-import { ConfirmationHeaderAndHero } from '@/components/hotel/checkout/ConfirmationHeaderAndHero';
+import { ConfirmationHeaderAndHero } from '@/components/hotel/confirmation/ConfirmationHeaderAndHero';
 import {
 	ConfirmationHeroData,
-} from '@/components/hotel/checkout/ConfirmationHeaderAndHero';
+} from '@/components/hotel/confirmation/ConfirmationHeaderAndHero';
 
 // Phase 2: Official Sovereign Residence Voucher Card
-import { SovereignVoucherCard } from '@/components/hotel/checkout/SovereignVoucherCard';
+import { SovereignVoucherCard } from '@/components/hotel/confirmation/SovereignVoucherCard';
 import {
 	SovereignVoucherCardData,
 	sovereignVoucherDefaultData,
-} from '@/components/hotel/checkout/SovereignVoucherCard';
+} from '@/components/hotel/confirmation/SovereignVoucherCard';
 
 // Phase 3: Tailor Your Arrival Experience (Sensory & Transfer Calibration)
 import {
 	ArrivalSensoryCalibrationSection,
-} from '@/components/hotel/checkout/ArrivalSensoryCalibrationSection';
+} from '@/components/hotel/confirmation/ArrivalSensoryCalibrationSection';
 import {
 	ArrivalCalibrationData,
-} from '@/components/hotel/checkout/ArrivalSensoryCalibrationSection';
+} from '@/components/hotel/confirmation/ArrivalSensoryCalibrationSection';
 
 // Phase 4: Geographic Coordinates, Transit Guide & Dedicated Concierge Desk
-import { ArrivalCoordinatesAndConciergeSection } from '@/components/hotel/checkout/ArrivalCoordinatesAndConciergeSection';
+import { ArrivalCoordinatesAndConciergeSection } from '@/components/hotel/confirmation/ArrivalCoordinatesAndConciergeSection';
 import {
 	ArrivalCoordinatesData,
 	arrivalCoordinatesDefaultData,
-} from '@/components/hotel/checkout/ArrivalCoordinatesAndConciergeSection';
+} from '@/components/hotel/confirmation/ArrivalCoordinatesAndConciergeSection';
 
 export interface ConfirmationPageProps {
 	heroData?: ConfirmationHeroData;
@@ -52,7 +52,6 @@ export function ConfirmationPage({
 		<div
 			className={`min-h-screen bg-[#fcf9f4] text-[#1f1e1d] flex flex-col font-sans selection:bg-[#8e763b]/20 selection:text-[#1f1e1d] ${className}`}
 		>
-
 
 			{/* Master Content Workspace */}
 			<main className="max-w-360 mx-auto px-4 sm:px-8 lg:px-12 py-10 sm:py-14 space-y-16 sm:space-y-20 w-full flex-1">

@@ -35,28 +35,28 @@ export function Footer() {
                     </span>
 
                     <Link
-                        href="/suites?sanctuary=positano"
+                        href="/accommodations?sanctuary=positano"
                         className="text-[#a39f97] hover:text-[#fcf9f4]"
                     >
                         Positano, Amalfi Coast
                     </Link>
 
                     <Link
-                        href="/suites?sanctuary=cap-d-antibes"
+                        href="/accommodations?sanctuary=cap-d-antibes"
                         className="text-[#a39f97] hover:text-[#fcf9f4]"
                     >
                         Cap d'Antibes, Côte d'Azur
                     </Link>
 
                     <Link
-                        href="/suites?sanctuary=st-moritz"
+                        href="/accommodations?sanctuary=st-moritz"
                         className="text-[#a39f97] hover:text-[#fcf9f4]"
                     >
                         St. Moritz, Engadin
                     </Link>
 
                     <Link
-                        href="/suites?sanctuary=kyoto"
+                        href="/accommodations?sanctuary=kyoto"
                         className="text-[#a39f97] hover:text-[#fcf9f4]"
                     >
                         Higashiyama, Kyoto
@@ -70,7 +70,7 @@ export function Footer() {
                     </span>
 
                     <Link
-                        href="/suites"
+                        href="/accommodations"
                         className="text-[#a39f97] hover:text-[#fcf9f4]"
                     >
                         Suites & Sovereign Villas

@@ -1,6 +1,6 @@
 /**
  * Aurelia Hotels & Residences — Strict Sovereign Phone Validation Engine
- * File: lib/validation/phoneValidator.ts
+ * File: lib/data/phoneValidator.ts
  *
  * Architecture:
  * 1. Global registry based on real ITU-T E.164 / national numbering plans.

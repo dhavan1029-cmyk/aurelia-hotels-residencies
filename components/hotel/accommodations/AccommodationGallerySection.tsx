@@ -59,13 +59,12 @@ export function AccommodationGallerySection({
 
     return (
         <section className={`w-full bg-[#fcf9f4] pt-6 sm:pt-8 pb-10 px-4 sm:px-8 lg:px-12 text-[#1f1e1d] ${className}`}>
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-5 max-w-340 mx-auto space-y-6 sm:space-y-8">
-
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-5 max-w-7xl mx-auto space-y-6 sm:space-y-8">
                 {/* Suite Category Eyebrow, Master Serif Title & Patron Accolades */}
                 <div className="col-span-12 flex flex-col lg:flex-row lg:items-end justify-between gap-4">
                     <div>
                         <div className="flex items-center gap-2 mb-2">
-                            <span className="px-2.5 py-0.5 -sm bg-[#f2ede4] border border-[#ded9ce] text-[10px] font-sans font-semibold uppercase tracking-[0.2em] text-[#8e763b]">
+                            <span className="px-2.5 py-0.5 bg-[#f2ede4] border border-[#ded9ce] text-[10px] font-sans font-semibold uppercase tracking-[0.2em] text-[#8e763b]">
                                 {sanctuaryEyebrow}
                             </span>
                             <span className="text-[10px] font-sans font-semibold uppercase tracking-[0.22em] text-[#8e8a82]">
@@ -77,8 +76,8 @@ export function AccommodationGallerySection({
                         </h1>
                     </div>
 
-                    {/* Patron Accolade Rating Strip */}
-                    <div className="flex items-center gap-3 text-xs font-sans text-[#5c5952] shrink-0 pt-2 lg:pt-0">
+                    {/* Patron Accolade Rating Strip & Action Triggers */}
+                    <div className="flex flex-wrap items-center gap-3 text-xs font-sans text-[#5c5952] shrink-0 pt-2 lg:pt-0">
                         <div className="flex items-center gap-1 text-[#8e763b]">
                             <svg className="w-4 h-4 fill-[#bfa76f] text-[#bfa76f]" viewBox="0 0 24 24">
                                 <path d="M12 2l2.4 7.4h7.6l-6 4.5 2.3 7.1-6.3-4.6-6.3 4.6 2.3-7.1-6-4.5h7.6z" />
@@ -93,13 +92,46 @@ export function AccommodationGallerySection({
                         <span className="text-[#8e763b] font-medium tracking-wide">
                             {patronReserveTier}
                         </span>
+
+                        {(onShareSanctuary || onSaveWishlist) && (
+                            <div className="flex items-center gap-2 pl-2 border-l border-[#ded9ce] ml-1">
+                                {onShareSanctuary && (
+                                    <button
+                                        type="button"
+                                        onClick={onShareSanctuary}
+                                        aria-label="Share Sanctuary Portfolio"
+                                        className="p-1.5 rounded-lg hover:bg-[#f2ede4] text-[#78756d] hover:text-[#1f1e1d] transition-colors cursor-pointer"
+                                    >
+                                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                                            <circle cx="18" cy="5" r="3" />
+                                            <circle cx="6" cy="12" r="3" />
+                                            <circle cx="18" cy="19" r="3" />
+                                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+                                        </svg>
+                                    </button>
+                                )}
+                                {onSaveWishlist && (
+                                    <button
+                                        type="button"
+                                        onClick={onSaveWishlist}
+                                        aria-label="Save to Sovereign Dossier Wishlist"
+                                        className="p-1.5 rounded-lg hover:bg-[#f2ede4] text-[#78756d] hover:text-[#1f1e1d] transition-colors cursor-pointer"
+                                    >
+                                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                                            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+                                        </svg>
+                                    </button>
+                                )}
+                            </div>
+                        )}
                     </div>
                 </div>
 
                 {/* High-Fidelity Asymmetric Gallery Grid */}
                 <div className="col-span-12 grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-5 h-auto lg:h-135">
                     {/* Primary Hero Column (8 Columns) */}
-                    <div className="lg:col-span-8 relative min-h-90 sm:min-h-110 lg:min-h-full -lg overflow-hidden bg-[#eeeae2] group">
+                    <div className="lg:col-span-8 relative min-h-90ism:min-h-110in-h-full overflow-hidden bg-[#eeeae2] group">
                         <Image
                             src={heroImage.url}
                             alt={heroImage.alt}
@@ -127,7 +159,7 @@ export function AccommodationGallerySection({
                                 <button
                                     type="button"
                                     onClick={onOpenGalleryModal}
-                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 -lg bg-black/60 backdrop-blur-md border border-white/20 text-[10px] font-sans font-medium uppercase tracking-[0.16em] hover:bg-black/80 transition-all self-start sm:self-auto"
+                                    className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-black/60 backdrop-blur-md border border-white/20 text-[10px] font-sans font-medium uppercase tracking-[0.16em] hover:bg-black/80 transition-all self-start sm:self-auto cursor-pointer"
                                 >
                                     <svg className="w-3.5 h-3.5 text-[#bfa76f]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                         <rect x="3" y="3" width="18" height="18" rx="2" />
@@ -143,7 +175,7 @@ export function AccommodationGallerySection({
                     {/* Secondary Stacked Photography Column (4 Columns) */}
                     <div className="lg:col-span-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4 lg:gap-5 h-full">
                         {/* Secondary Top: En-suite Travertine Bath */}
-                        <div className="relative min-h-55 lg:h-full -lg overflow-hidden bg-[#eeeae2] group">
+                        <div className="relative min-h-55 lg:h-full overflow-hidden bg-[#eeeae2] group">
                             <Image
                                 src={secondaryTopImage.url}
                                 alt={secondaryTopImage.alt}
@@ -155,7 +187,7 @@ export function AccommodationGallerySection({
 
                             <div className="absolute top-4 left-4 z-10">
                                 {secondaryTopImage.badge && (
-                                    <span className="px-2.5 py-1  bg-black/60 backdrop-blur-md text-[9px] font-sans font-semibold uppercase tracking-[0.18em] text-[#dcdad5]">
+                                    <span className="px-2.5 py-1 bg-black/60 backdrop-blur-md text-[9px] font-sans font-semibold uppercase tracking-[0.18em] text-[#dcdad5]">
                                         {secondaryTopImage.badge}
                                     </span>
                                 )}
@@ -168,8 +200,8 @@ export function AccommodationGallerySection({
                             </div>
                         </div>
 
-                        {/* Secondary Bottom: Basalt Plunge Deck with Explore Gallery Pill */}
-                        <div className="relative min-h-55 lg:h-full -lg overflow-hidden bg-[#eeeae2] group">
+                        {/* Secondary Bottom: Basalt Plunge Deck */}
+                        <div className="relative min-h-55 lg:h-full overflow-hidden bg-[#eeeae2] group">
                             <Image
                                 src={secondaryBottomImage.url}
                                 alt={secondaryBottomImage.alt}
@@ -181,7 +213,7 @@ export function AccommodationGallerySection({
 
                             <div className="absolute top-4 left-4 z-10">
                                 {secondaryBottomImage.badge && (
-                                    <span className="px-2.5 py-1  bg-black/60 backdrop-blur-md text-[9px] font-sans font-semibold uppercase tracking-[0.18em] text-[#bfa76f]">
+                                    <span className="px-2.5 py-1 rounded-md bg-black/60 backdrop-blur-md text-[9px] font-sans font-semibold uppercase tracking-[0.18em] text-[#bfa76f]">
                                         {secondaryBottomImage.badge}
                                     </span>
                                 )}
@@ -196,7 +228,7 @@ export function AccommodationGallerySection({
                                     <button
                                         type="button"
                                         onClick={onOpenGalleryModal}
-                                        className="inline-flex items-center gap-1.5 px-3 py-1.5 -lg bg-white/95 hover:bg-white text-[#1f1e1d] text-[10px] font-sans font-semibold uppercase tracking-[0.16em] transition-all shadow-md shrink-0"
+                                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white/95 hover:bg-white text-[#1f1e1d] text-[10px] font-sans font-semibold uppercase tracking-[0.16em] transition-all shadow-md shrink-0 cursor-pointer"
                                     >
                                         <span>{secondaryBottomImage.actionLabel}</span>
                                         <span className="text-xs">→</span>
@@ -206,11 +238,9 @@ export function AccommodationGallerySection({
                         </div>
                     </div>
                 </div>
-
             </div>
         </section>
     );
 }
 
-
-
+export default AccommodationGallerySection;

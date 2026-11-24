@@ -1,4 +1,4 @@
-import ConfirmationPage from "@/components/pages/hotel/ConfirmationPage";
+import ConfirmationPage from "@/components/hotel/confirmation/ConfirmationPage";
 
 
 export default function Page(){

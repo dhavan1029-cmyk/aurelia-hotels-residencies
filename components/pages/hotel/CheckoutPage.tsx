@@ -1,28 +1,39 @@
-
+import type { AccommodationBookingContext } from '@/lib/hotel/mappers/AccommodationDetailsMapper';
+import type { ConfirmReservationPayload, ConfirmReservationResult } from '@/lib/hotel/actions/checkout';
+import CheckoutHeader, { checkoutHeaderDefaultData } from '@/components/hotel/checkout/Header';
+import CheckoutInteractive, { CheckoutInteractiveInitialData } from '@/components/hotel/checkout/CheckoutInteractive';
 import { Footer } from '@/components/layout/Footer';
 
-// Phase 1: Header & Residential Protocol Strip
-import { CheckoutHeader } from '@/components/hotel/checkout/Header';
-
-// Phase 2, 3 and 4
-import { CheckoutInteractive } from '@/components/hotel/checkout/CheckoutInteractive';
-
-import { AccommodationBookingContext } from '@/lib/hotel/mappers/AccommodationDetailsMapper'; 
-
-interface PageProps {
-    bookingParams: AccommodationBookingContext
+export interface CheckoutPageProps {
+    bookingParams?: AccommodationBookingContext;
+    initialData?: CheckoutInteractiveInitialData;
+    /** Server action bound from the Next.js Server Component */
+    onConfirmReservation?: (payload: ConfirmReservationPayload) => Promise<ConfirmReservationResult>;
 }
 
-export function CheckoutPage({ bookingParams } : PageProps) {
-    
-    return (
-        <div className={`min-h-screen bg-[#fcf9f4] text-[#1f1e1d] flex flex-col font-sans selection:bg-[#8e763b]/20 selection:text-[#1f1e1d]`}>
-            {/* Phase 1: Header, Brand Wordmark, Stepper & Verification Bar */}
-            <CheckoutHeader/>
+export function CheckoutPage({
+    bookingParams,
+    initialData,
+    onConfirmReservation,
+}: CheckoutPageProps) {
+    const currencySymbol =
+        initialData?.stayDetails?.currencySymbol ||
+        bookingParams?.currencySymbol 
 
-            {/* Main Checkout Workspace: Left 8 Columns (Phases 2 & 3) + Right 4 Columns (Phase 4 Sticky Rail) */}
-            <main className="max-w-340 mx-auto px-4 sm:px-8 lg:px-12 py-10 lg:py-12 w-full flex-1">
-                <CheckoutInteractive />
+    const currencyCode =
+        bookingParams?.currency 
+
+
+    return (
+        <div className="min-h-screen bg-[#fcf9f4] text-[#1f1e1d] flex flex-col font-sans selection:bg-[#8e763b]/20 selection:text-[#1f1e1d]">
+
+            {/* Main Checkout Workspace: Left Columns (Phases 2 & 3) + Right Column (Phase 4 Sticky Rail) */}
+            <main className="w-full flex-1">
+                <CheckoutInteractive
+                    initialData={initialData}
+                    onConfirmReservation={onConfirmReservation}
+                    showHeader={false}
+                />
             </main>
 
             {/* Global Sanctuary Footer */}

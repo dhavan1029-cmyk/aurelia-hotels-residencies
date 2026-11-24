@@ -15,7 +15,9 @@ import {
     CountryIso2,
     validatePhoneNumberStrict,
     StrictValidationResult,
-} from '@/lib/hotel/phoneValidator';
+} from '@/lib/data/phoneValidator';
+import { AromaBlend, MattressType, PillowType, SoakingSalts, SovereignTier, TurndownTea, UserRole } from '@/app/generated/prisma/enums';
+// import type { SovereignTier, UserRole, AromaBlend, MattressType, PillowType, TurndownTea, SoakingSalts } from '@prisma/client';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const COOLDOWN_SECONDS = 60;
@@ -74,17 +76,17 @@ export interface PendingRegistrationDraft {
     firstName: string;
     lastName: string;
     email: string;
-    phoneNumber: string; // Formatted international string (e.g. "+44 7911 882901")
+    phoneNumber: string;
     phoneNationalDigits: string;
     phoneCallingCode: string;
-    phoneCountryIso: string;
+    phoneCountryIso: CountryIso2;
     passwordHash: string;
     conciergePin: string;
     selectedSanctuaryIds: string[];
     selectedAromaId: string;
     selectedCellarId: string;
     invitationToken: string;
-    sovereignTier: 'SOVEREIGN_KEY' | 'EXPLORER';
+    sovereignTier: SovereignTier;
     confidentialityLevel: string;
     initiatedAt: string;
 }
@@ -119,9 +121,9 @@ function verifyOtpCipher(otp: string, storedTokenHashHex: string, secret: string
     return timingSafeEqual(storedHash, submittedHash);
 }
 
-export type sovereignTierType = 'EXP' | 'SVR' | 'IMP'
+export type sovereignTierType = 'EXP' | 'SVR' | 'IMP';
 
-async function generateUniqueSovereignKey(sovereignTier: sovereignTierType): Promise<string> {
+async function generateUniqueSovereignKey(tierSuffix: sovereignTierType = 'EXP'): Promise<string> {
     let key = '';
     let isUnique = false;
     let attempts = 0;
@@ -129,7 +131,7 @@ async function generateUniqueSovereignKey(sovereignTier: sovereignTierType): Pro
     while (!isUnique && attempts < 10) {
         attempts++;
         const randomSeq = Math.floor(1000 + Math.random() * 9000);
-        key = `AUR-${randomSeq}-${sovereignTier}`;
+        key = `AUR-${randomSeq}-${tierSuffix}`;
 
         const existing = await prisma.user.findUnique({
             where: { sovereignKeyNumber: key },
@@ -169,7 +171,6 @@ export async function initiateRegistrationAction(
             rememberDevice,
         } = payload;
 
-        // Defensive field validation
         const fieldErrors: Partial<Record<keyof InitiateRegisterPayload, string>> = {};
 
         if (!firstName?.trim()) {
@@ -184,7 +185,6 @@ export async function initiateRegistrationAction(
             fieldErrors.email = 'A valid correspondence email address is required.';
         }
 
-        // Strict ITU-T National Numbering Validation via phoneValidator.ts
         const phoneValidation: StrictValidationResult = validatePhoneNumberStrict(
             phoneNumber,
             selectedCountryIso as CountryIso2
@@ -194,7 +194,6 @@ export async function initiateRegistrationAction(
             fieldErrors.phoneNumber = phoneValidation.errorMessage || 'Invalid telephone number for selected nation.';
         }
 
-        // NIST SP 800-63B passkey checks
         const trimmedPasskey = (passkey || '').trim();
         const hasMinLength = trimmedPasskey.length >= 12;
         const hasUppercase = /[A-Z]/.test(passkey || '');
@@ -218,10 +217,8 @@ export async function initiateRegistrationAction(
         }
 
         if (Object.keys(fieldErrors).length > 0) {
-
-            let message = ''
-
-            if(fieldErrors.passkey) message = 'Set a strong password'
+            let message = 'Please correct the highlighted entries.';
+            if (fieldErrors.passkey) message = 'Set a strong password.';
 
             return {
                 success: false,
@@ -231,10 +228,10 @@ export async function initiateRegistrationAction(
         }
 
         const normalizedEmail = email.trim().toLowerCase();
-        // const formattedE164Phone = phoneValidation.displayFormatted; // e.g. "+44 7911 882901"
         const cleanNationalDigits = phoneValidation.cleanNationalDigits;
+        const completeE164Phone = `${phoneValidation.callingCode}${cleanNationalDigits}`;
 
-        // Duplicate conflict checks: Email
+        // Duplicate checks
         const existingEmailUser = await prisma.user.findFirst({
             where: {
                 email: {
@@ -255,16 +252,9 @@ export async function initiateRegistrationAction(
             };
         }
 
-        // Duplicate conflict checks: Direct Telephone (checking national significant suffix)
-        const checkSuffix = cleanNationalDigits.length >= 7 
-            ? cleanNationalDigits.slice(-7) 
-            : cleanNationalDigits;
-
         const existingPhoneUser = await prisma.user.findFirst({
             where: {
-                phoneNumber: {
-                    contains: checkSuffix,
-                },
+                phoneNumber: completeE164Phone,
             },
             select: { id: true },
         });
@@ -279,7 +269,7 @@ export async function initiateRegistrationAction(
             };
         }
 
-        // Rate limiting check
+        // Rate limit check
         const recentChallenge = await prisma.otpChallenge.findFirst({
             where: { identifier: normalizedEmail },
             orderBy: { createdAt: 'desc' },
@@ -297,24 +287,21 @@ export async function initiateRegistrationAction(
             }
         }
 
-        // Prepare draft metadata
         const cleanToken = (invitationToken || '').trim().toUpperCase();
         const isSponsorToken = cleanToken.startsWith('AUR-') || cleanToken.startsWith('LUX-');
-        const sovereignTier = isSponsorToken ? 'SOVEREIGN_KEY' : 'EXPLORER';
+        const sovereignTier: SovereignTier = isSponsorToken ? 'SOVEREIGN_KEY' : 'EXPLORER';
         const confidentialityLevel = isSponsorToken
             ? 'Level IV Swiss Banking Privacy Protocol'
             : 'Standard Swiss Banking Secrecy Protocol Level III';
 
         const passwordHash = hashPasskey(trimmedPasskey);
 
-        // console.log(phoneNumber)
-
         const draftMetadata: PendingRegistrationDraft = {
             honorific: honorific.trim(),
             firstName: firstName.trim(),
             lastName: lastName.trim(),
             email: normalizedEmail,
-            phoneNumber: phoneValidation.callingCode + phoneNumber,
+            phoneNumber: completeE164Phone,
             phoneNationalDigits: cleanNationalDigits,
             phoneCallingCode: phoneValidation.callingCode,
             phoneCountryIso: phoneValidation.countryIso,
@@ -399,7 +386,7 @@ export async function initiateRegistrationAction(
 }
 
 // ============================================================================
-// 4. SERVER ACTION: VERIFY OTP CIPHER & ATOMICALLY INSCRIBE USER
+// 4. SERVER ACTION: VERIFY OTP CIPHER & INSCRIBE USER
 // ============================================================================
 
 export async function verifyRegisterOtpAction(
@@ -506,7 +493,8 @@ export async function verifyRegisterOtpAction(
             };
         }
 
-        const sovereignKeyNumber = await generateUniqueSovereignKey('EXP');
+        const tierSuffix: sovereignTierType = draft.sovereignTier === 'SOVEREIGN_KEY' ? 'SVR' : 'EXP';
+        const sovereignKeyNumber = await generateUniqueSovereignKey(tierSuffix);
 
         let preferredChampagneOrCru = "2016 Tenuta dell'Ornellaia Bolgheri Superiore";
         if (draft.selectedCellarId === 'BURGUNDY_GRAND_CRU') {
@@ -520,19 +508,28 @@ export async function verifyRegisterOtpAction(
             sensoryDirectives.push(`Primary prospective enclaves: ${draft.selectedSanctuaryIds.join(', ')}`);
         }
 
-        // Atomic commit: User + remodeled GuestProfile
+        // Map enum values safely
+        const aromaBlendValue: AromaBlend =
+            draft.selectedAromaId === 'TUSCAN_CYPRESS_CEDAR'
+                ? 'TUSCAN_CYPRESS_CEDAR'
+                : draft.selectedAromaId === 'ALPINE_JUNIPER'
+                ? 'ALPINE_JUNIPER'
+                : 'AMALFI_NEROLI_BERGAMOT';
+
         const createdUser = await prisma.$transaction(async function (tx) {
             const newUser = await tx.user.create({
                 data: {
                     email: draft.email,
                     passwordHash: draft.passwordHash,
                     phoneNumber: draft.phoneNumber,
+                    phoneCountryIso: draft.phoneCountryIso,
+                    nationality: draft.phoneCountryIso,
                     title: draft.honorific || 'Lady',
                     firstName: draft.firstName,
                     lastName: draft.lastName,
                     avatarUrl: '/garden-pavillion.png',
-                    role: 'GUEST',
-                    sovereignTier: draft.sovereignTier || 'SOVEREIGN_KEY',
+                    role: 'GUEST' as UserRole,
+                    sovereignTier: draft.sovereignTier || ('EXPLORER' as SovereignTier),
                     sovereignKeyNumber,
                     lifetimeStaysCount: 0,
                     lifetimeSpendTotal: 0.0,
@@ -542,19 +539,19 @@ export async function verifyRegisterOtpAction(
             await tx.guestProfile.create({
                 data: {
                     userId: newUser.id,
-                    roomAromaBlend: (draft.selectedAromaId as any) || 'AMALFI_NEROLI_BERGAMOT',
+                    roomAromaBlend: aromaBlendValue,
                     aromaIntensityPercent: 25,
                     atomizationProtocolActive: true,
-                    preferredMattress: 'NATURAL_LATEX_COIR',
-                    preferredPillowLeft: 'ORGANIC_GOOSE_DOWN',
-                    preferredPillowRight: 'BUCKWHEAT',
+                    preferredMattress: 'NATURAL_LATEX_COIR' as MattressType,
+                    preferredPillowLeft: 'ORGANIC_GOOSE_DOWN' as PillowType,
+                    preferredPillowRight: 'BUCKWHEAT' as PillowType,
                     idealRoomTemperatureCelsius: 19.5,
                     motorizedBlackoutLouverActive: true,
                     amberDawnSequenceActive: true,
                     circadianWakeHour: '07:15',
                     circadianWarmEveningDimHour: '22:30',
-                    turndownHerbalTea: 'WILD_CHAMOMILE',
-                    preferredSoakingSalts: 'VOLCANIC_SULFUR_MINERAL',
+                    turndownHerbalTea: 'WILD_CHAMOMILE' as TurndownTea,
+                    preferredSoakingSalts: 'VOLCANIC_SULFUR_MINERAL' as SoakingSalts,
                     preferredChampagneOrCru,
                     arrivalMineralWater: 'Suntory Minami-Alps Glacial & Lurisia Stille',
                     morningBaristaRitual: 'Panama Geisha Natural Lot #04',
@@ -572,7 +569,6 @@ export async function verifyRegisterOtpAction(
         await prisma.otpChallenge.delete({ where: { id: challenge.id } });
         cookieStore.delete('aurelia-pending-otp');
 
-        // Establish session cookie for seamless induction
         await createUserSession(createdUser.id, challenge.remember);
 
         return {
@@ -591,7 +587,7 @@ export async function verifyRegisterOtpAction(
 }
 
 // ============================================================================
-// 5. SERVER ACTION: RESEND OTP CIPHER (SAFE COOLDOWN)
+// 5. SERVER ACTION: RESEND OTP CIPHER
 // ============================================================================
 
 export async function resendRegisterOtpAction(): Promise<ResendRegisterOtpResult> {
@@ -618,7 +614,6 @@ export async function resendRegisterOtpAction(): Promise<ResendRegisterOtpResult
             };
         }
 
-        // Generate fresh 6-digit cryptographic OTP cipher unconditionally
         const rawOtp = randomInt(100000, 1000000).toString();
         const otpHashSecret = process.env.OTP_HASH_SECRET;
 
@@ -627,10 +622,8 @@ export async function resendRegisterOtpAction(): Promise<ResendRegisterOtpResult
         }
 
         const newHash = hashOtpCipher(rawOtp, otpHashSecret);
-        // Reset full expiration timer from right now
         const newExpiresAt = new Date(Date.now() + OTP_EXPIRY_MINUTES * 60 * 1000);
 
-        // Update docket: reset attempts to 0, refresh cipher hash and expiry timer
         await prisma.otpChallenge.update({
             where: { id: challenge.id },
             data: {
@@ -663,7 +656,6 @@ export async function resendRegisterOtpAction(): Promise<ResendRegisterOtpResult
             };
         }
 
-        // Re-arm the session cookie with the refreshed expiration timestamp
         cookieStore.set('aurelia-pending-otp', challenge.id, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
@@ -685,5 +677,4 @@ export async function resendRegisterOtpAction(): Promise<ResendRegisterOtpResult
         };
     }
 }
-
 

@@ -53,8 +53,11 @@ export type BookingParams = AccommodationBookingContext;
 
 export interface SuiteCardProps {
     id: string;
+    sanctuaryId: string;
     slug: string;
     name: string;
+    sanctuaryName: string;
+    sanctuarySlug: string;
     category?: string;
     badgeLabel?: string;
     elevationTag?: string;
@@ -73,7 +76,7 @@ export interface SuiteCardProps {
     viewOrientation?: string;
 
     pricePerNight: number;
-    currency?: string;
+    currency: string;
     currencySymbol?: string;
     pricePeriodSuffix?: string;
     minStayNotice?: string;

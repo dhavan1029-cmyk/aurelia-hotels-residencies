@@ -1,11 +1,11 @@
-import { FilterBar } from "@/components/hotel/accommodations/AccommodationFilterBar"
+import { FilterBar, SanctuaryCategory } from "@/components/hotel/accommodations/AccommodationFilterBar"
 // import { SuiteCard, SuiteCardProps } from "@/components/hotel/SuiteCard";
 import { Footer } from "@/components/layout/Footer";
 import AccommodationListings from '@/components/hotel/accommodations/AccommodationListings';
 // import { prisma } from '@/lib/prisma'
 
 export interface SearchParamsValues {
-    sanctuary?: string, checkIn?: string, checkOut?: string, suites?: string, guests?: string, sortBy?: string
+    category?: SanctuaryCategory, sanctuary?: string, checkIn?: string, checkOut?: string, suites?: string, guests?: string, sortBy?: string
 }
 
 interface AccommodationsProps {

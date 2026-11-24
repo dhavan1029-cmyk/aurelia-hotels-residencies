@@ -7,7 +7,7 @@ import {
     STRICT_COUNTRY_LIST,
     validatePhoneNumberStrict,
     StrictValidationResult,
-} from '@/lib/hotel/phoneValidator';
+} from '@/lib/data/phoneValidator';
 
 export interface SovereignPhoneInputProps {
     /** Initial or bound country ISO code (e.g. 'GB', 'US', 'CH', 'IT') */
@@ -96,12 +96,12 @@ export function SovereignPhoneInput({
     const showError = isTouched && hasDigits && !validation.isValid;
 
     return (
-        <div className={`space-y-1.5 select-none font-sans ${className}`}>
+        <div className={`space-y-1.5 select-none ${className}`}>
             {/* Header: Label & Plan Mask Info */}
             <div className="flex items-center justify-between">
                 <label
                     htmlFor={inputId}
-                    className="block text-[10px] font-mono font-semibold uppercase tracking-[0.16em] text-[#6d6961]"
+                    className="block text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6d6961]"
                 >
                     {label} {required && <span className="text-[#8e763b]">*</span>}
                 </label>

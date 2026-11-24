@@ -2,12 +2,13 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Footer } from '../../layout/Footer';
 import { BookingBar } from '../../hotel/BookingBar';
-import { SuiteCard, SuiteCardProps } from '../../hotel/SuiteCard';
+import { SuiteCard } from '../../hotel/SuiteCard';
 
 import { prisma } from '@/lib/config/prisma';
 import {
     mapAccommodationCategoriesToSuiteCards,
 } from '@/lib/hotel/mappers/accommodationsMapper';
+import type { AccommodationBookingContext } from '@/lib/hotel/mappers/AccommodationDetailsMapper';
 
 export interface TestimonialItem {
     quote: string;
@@ -18,13 +19,25 @@ export interface TestimonialItem {
 }
 
 export async function HomePage() {
-    const accommodations =
-        await prisma.accommodationCategory.findMany({
-            orderBy: {
-                basePriceNightly: 'desc',
+    // 1. Fetch available accommodation categories sorted by nightly rate
+    const accommodations = await prisma.accommodationCategory.findMany({
+        include: {
+            sanctuary: {
+                select: {
+                    id: true,
+                    name: true,
+                    slug: true,
+                    code: true,
+                    currency: true,
+                },
             },
-        });
+        },
+        orderBy: {
+            basePriceNightly: 'desc',
+        },
+    });
 
+    // 2. Map Database Entities to Master & Coastal Suite ViewModels
     const {
         masterSuite,
         coastalSuites,
@@ -33,10 +46,34 @@ export async function HomePage() {
         'azure-master-ocean-suite',
     );
 
+    // 3. Compute Standard Initial Booking Window (Default 14 days ahead, 5 nights, 2 adults)
+    const now = Date.now();
+    const defaultCheckInDate = new Date(now + 14 * 86400000).toISOString().split('T')[0];
+    const defaultCheckOutDate = new Date(now + 19 * 86400000).toISOString().split('T')[0];
+    const defaultNightsCount = 5;
+    const defaultGuestsCount = 2;
+
+    // 4. Construct Master Suite Booking Context
+    const masterBookingParams: AccommodationBookingContext = {
+        sanctuaryId: masterSuite?.sanctuaryId || 'sanctuary-positano',
+        sanctuarySlug: masterSuite?.sanctuarySlug || 'positano-amalfi',
+        sanctuaryName: masterSuite?.sanctuaryName || 'Aurelia Sanctuary Positano',
+        accommodationId: masterSuite?.id || 'suite-402',
+        suiteSlug: masterSuite?.slug || 'azure-master-ocean-suite',
+        suiteName: masterSuite?.name || 'The Azure Master Ocean Suite',
+        checkInDate: defaultCheckInDate,
+        checkOutDate: defaultCheckOutDate,
+        nightsCount: defaultNightsCount,
+        guestsCount: defaultGuestsCount,
+        baseRateNightly: masterSuite?.pricePerNight || 3450,
+        currency: 'EUR',
+        currencySymbol: '€',
+    };
+
     const pricingItems = [
         { label: 'Seasonal Tasting Journey', price: '€210 per guest' },
         { label: 'Campania Sommelier Pairing', price: '€135 per guest' },
-    ]
+    ];
 
     const defaultTestimonials: TestimonialItem[] = [
         {
@@ -44,7 +81,7 @@ export async function HomePage() {
                 '“Aurelia redefined our concept of hospitality. The sheer quiet, the aroma of cypress and salt, and the limestone plunge pool made time stand still.”',
             authorName: 'ELEANOR VANCE',
             authorRole: 'Private Resident Member • 4 Stays',
-            avatarUrl: '{{DATA:IMAGE:IMAGE_109}}',
+            avatarUrl: '/limestone-villa.png',
             rating: 5,
         },
         {
@@ -67,13 +104,12 @@ export async function HomePage() {
 
     return (
         <div className="min-h-screen bg-[#fcf9f4] text-[#1f1e1d] flex flex-col font-sans">
-            
             {/* Hero Section */}
             <section className="relative w-full min-h-[92vh] lg:min-h-[96vh] flex flex-col justify-between overflow-hidden bg-[#1f1e1d]">
                 {/* Background Image using Next.js Image Component */}
                 <div className="absolute inset-0 z-0">
                     <Image
-                        src={'/limestone-villa.png'}
+                        src="/limestone-villa.png"
                         alt="Aurelia Sanctuary Positano overlooking the Tyrrhenian Sea at golden hour"
                         fill
                         priority
@@ -83,13 +119,8 @@ export async function HomePage() {
                     />
 
                     {/* Editorial Vignette & Contrast Overlays */}
-                    1. Overall subtle cinematic darkening for text legibility
                     <div className="absolute inset-0 bg-black/35" />
-
-                    {/* 2. Deep gradient from bottom up to anchor the Booking Bar smoothly */}
                     <div className="absolute inset-0 bg-linear-to-t from-black/85 via-black/30 to-black/20" />
-
-                    {/* 3. Subtle directional gradient favoring left-hand narrative text */}
                     <div className="absolute inset-0 bg-linear-to-r from-black/60 via-black/20 to-transparent" />
                 </div>
 
@@ -100,8 +131,8 @@ export async function HomePage() {
                 <div className="relative z-10 w-full max-w-7xl mx-auto sm:px-8 lg:px-12 pt-8 pb-10 flex-1 flex flex-col justify-center">
                     <div className="max-w-3xl">
                         {/* Location Badge / Monograph Pill */}
-                        <div className="flex items-center w-fit gap-2.5 px-4 py-1.5 -full bg-black/40 backdrop-blur-md border border-white/20 text-[#fcf9f4] shadow-sm m-auto mb-2 md:mx-0">
-                            <span className="w-1.5 h-1.5 -full bg-[#bfa76f] animate-pulse" />
+                        <div className="flex items-center w-fit gap-2.5 px-4 py-1.5 rounded-full bg-black/40 backdrop-blur-md border border-white/20 text-[#fcf9f4] shadow-sm mb-4 mx-auto md:mx-0">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#bfa76f] animate-pulse" />
                             <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.28em] font-sans font-medium text-white/90">
                                 Positano Cliffside Sanctuary • Amalfi Coast
                             </span>
@@ -113,16 +144,16 @@ export async function HomePage() {
                         </h1>
 
                         {/* Subheading / Provenance Body Text */}
-                        <p className="mt-5 px-8 md:px-0 text-sm sm:text-base md:text-[17px] leading-relaxed text-[#fcf9f4]/90 font-sans max-w-2xl font-light drop-shadow text-center md:text-left">
+                        <p className="mt-5 px-4 sm:px-0 text-sm sm:text-base md:text-[17px] leading-relaxed text-[#fcf9f4]/90 font-sans max-w-2xl font-light drop-shadow text-center md:text-left">
                             Perched along monolithic limestone bluffs, Aurelia offers an unhurried haven crafted from warm travertine, sea stone, and deep coastal stillness.
                         </p>
 
                         {/* Action Callouts */}
-                        <div className="mt-8 flex flex-wrap flex-col md:flex-row items-center justify-center md:justify-normal gap-8 md:gap-5">
+                        <div className="mt-8 flex flex-wrap flex-col sm:flex-row items-center justify-center md:justify-start gap-4 sm:gap-5">
                             {/* Primary Gold CTA */}
                             <Link
                                 href="/accommodations"
-                                className="inline-flex items-center gap-2 px-7 py-3.5 bg-[#bfa76f] hover:bg-[#a99159] text-white font-sans text-[11px] sm:text-[12px] font-semibold uppercase tracking-[0.2em] -sm transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0"
+                                className="inline-flex items-center gap-2 px-7 py-3.5 bg-[#bfa76f] hover:bg-[#a99159] text-white font-sans text-[11px] sm:text-[12px] font-semibold uppercase tracking-[0.2em] rounded-xs transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0"
                             >
                                 <span>Explore Signature Suites</span>
                                 <span className="text-sm font-normal">→</span>
@@ -143,53 +174,47 @@ export async function HomePage() {
                 </div>
             </section>
 
-            {/* Mobile Booking Bar */}
-            <div className="relative -top-16 p-4">
+            {/* Mobile / Responsive Booking Bar */}
+            <div className="relative -top-12 sm:-top-16 p-4 max-w-7xl mx-auto w-full z-20">
                 <BookingBar />
             </div>
 
             {/* Editorial Narrative Monograph */}
-            <section className="max-w-5xl mx-auto px-6 py-24 text-center mb-24">
-                <div className="max-w-7xl mx-auto">
-                    {/* Header Monograph & Quote */}
-                    <div className="mx-auto text-center max-w-4xl tracking-wide">
-                        {/* Eyebrow Label */}
-                        <span className="block text-[11px] sm:text-[12px] font-sans font-semibold uppercase tracking-[0.35em] text-[#8e763b] mb-4">
-                            {'THE AURELIA MANIFESTO'}
-                        </span>
+            <section className="max-w-5xl mx-auto px-6 py-16 sm:py-24 text-center mb-12 sm:mb-20">
+                <div className="max-w-4xl mx-auto tracking-wide">
+                    {/* Eyebrow Label */}
+                    <span className="block text-[11px] sm:text-[12px] font-sans font-semibold uppercase tracking-[0.35em] text-[#8e763b] mb-4">
+                        THE AURELIA MANIFESTO
+                    </span>
 
-                        {/* Master Headline */}
-                        <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-[52px] font-normal text-[#1f1e1d] tracking-tight leading-[1.12]">
-                            {'An Architecture of Quiet Unhurried Grace'}
-                        </h2>
+                    {/* Master Headline */}
+                    <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-[52px] font-normal text-[#1f1e1d] tracking-tight leading-[1.12]">
+                        An Architecture of Quiet Unhurried Grace
+                    </h2>
 
-                        {/* Editorial Italic Quote */}
-                        <blockquote className="mt-8 font-serif italic text-base sm:text-lg md:text-[19px] text-[#55524d] font-light leading-9 mx-auto">
-                            {'“True luxury is neither rushed nor ostentatious. Carved into living cliffside limestone, Aurelia celebrates the restorative rhythm of the tides, hand-dressed travertine, and intuitive hospitality that anticipates every desire without ceremony.”'}
-                        </blockquote>
-                    </div>
+                    {/* Editorial Italic Quote */}
+                    <blockquote className="mt-8 font-serif italic text-base sm:text-lg md:text-[19px] text-[#55524d] font-light leading-9 mx-auto">
+                        “True luxury is neither rushed nor ostentatious. Carved into living cliffside limestone, Aurelia celebrates the restorative rhythm of the tides, hand-dressed travertine, and intuitive hospitality that anticipates every desire without ceremony.”
+                    </blockquote>
                 </div>
-
             </section>
 
             {/* Featured Suites Grid */}
-            <section
-                className={`w-full bg-[#fcf9f4] py-20 sm:py-24 lg:py-24 px-6 sm:px-8 lg:px-12 border-b border-t border-[#e8e4dc]`}
-            >
+            <section className="w-full bg-[#fcf9f4] py-20 sm:py-24 lg:py-24 px-6 sm:px-8 lg:px-12 border-b border-t border-[#e8e4dc]">
                 <div className="max-w-7xl mx-auto">
                     {/* Section Header */}
                     <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 sm:mb-14">
                         <div>
                             <span className="block text-[11px] sm:text-[12px] font-sans font-semibold uppercase tracking-[0.3em] text-[#8e763b] mb-2.5">
-                                {"PRIVATE SANCTUARIES"}
+                                PRIVATE SANCTUARIES
                             </span>
                             <h2 className="font-serif text-3xl sm:text-4xl lg:text-[44px] font-normal text-[#1f1e1d] tracking-tight leading-[1.15]">
-                                {'Curated Suites & Cliffside Villas'}
+                                Curated Suites &amp; Cliffside Villas
                             </h2>
                         </div>
 
                         <Link
-                            href={'/accommodations'}
+                            href="/accommodations"
                             className="group inline-flex items-center gap-2 text-[11px] sm:text-[12px] font-sans font-semibold uppercase tracking-[0.25em] text-[#8e763b] hover:text-[#1f1e1d] transition-colors py-1 self-start sm:self-auto"
                         >
                             <span>VIEW ALL 18 ACCOMMODATIONS</span>
@@ -201,26 +226,51 @@ export async function HomePage() {
 
                     {/* Asymmetric Bento Showcase Grid */}
                     <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 break-inside-avoid items-start">
-                        {/* LEFT COLUMN: Large Featured Suite Card (7 Columns) */}
-                        <div className="order-1 lg:col-span-8 lg:row-start-1">
-                            <SuiteCard {...masterSuite} variant="master-featured" bookingParams={{}}/>
-                            
-                        </div>
-
-                        {/* RIGHT COLUMN: Stacked Secondary Cards & Concierge Callout (5 Columns) */}
-                        <div className="order-2 lg:col-span-4 lg:row-span-2 flex flex-col gap-6">
-                            {coastalSuites.map((suite) => (
+                        {/* LEFT COLUMN: Large Featured Master Suite Card (8 Columns) */}
+                        {masterSuite && (
+                            <div className="order-1 lg:col-span-8 lg:row-start-1">
                                 <SuiteCard
-                                    key={suite.id}
-                                    {...suite}
-                                    variant="coastal-grid"
-                                    bookingParams={{}}
+                                    {...masterSuite}
+                                    variant="master-featured"
+                                    bookingParams={masterBookingParams}
                                 />
-                            ))}
-                        </div>
+                            </div>
+                        )}
+
+                        {/* RIGHT COLUMN: Stacked Coastal & Cliffside Suites (4 Columns) */}
+                        {coastalSuites && coastalSuites.length > 0 && (
+                            <div className="order-2 lg:col-span-4 lg:row-span-2 flex flex-col gap-6">
+                                {coastalSuites.map(function (suite) {
+                                    const suiteBookingParams: AccommodationBookingContext = {
+                                        sanctuaryId: suite.sanctuaryId || masterBookingParams.sanctuaryId,
+                                        sanctuarySlug: suite.sanctuarySlug || masterBookingParams.sanctuarySlug,
+                                        sanctuaryName: suite.sanctuaryName || masterBookingParams.sanctuaryName,
+                                        accommodationId: suite.id,
+                                        suiteSlug: suite.slug,
+                                        suiteName: suite.name,
+                                        checkInDate: defaultCheckInDate,
+                                        checkOutDate: defaultCheckOutDate,
+                                        nightsCount: defaultNightsCount,
+                                        guestsCount: defaultGuestsCount,
+                                        baseRateNightly: suite.pricePerNight,
+                                        currency: 'EUR',
+                                        currencySymbol: '€',
+                                    };
+
+                                    return (
+                                        <SuiteCard
+                                            key={suite.id}
+                                            {...suite}
+                                            variant="coastal-grid"
+                                            bookingParams={suiteBookingParams}
+                                        />
+                                    );
+                                })}
+                            </div>
+                        )}
 
                         {/* Dark Bespoke Inquiries Banner Card */}
-                        <div className="order-3 lg:col-span-8 lg:col-start-1 lg:row-start-2 bg-[#1f1e1d] text-[#fcf9f4] border border-[#383530] -lg p-6 sm:p-7 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-lg lg:transform lg:-translate-y-40">
+                        <div className="order-3 lg:col-span-8 lg:col-start-1 lg:row-start-2 bg-[#1f1e1d] text-[#fcf9f4] border border-[#383530] rounded-xs p-6 sm:p-7 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-lg">
                             <div>
                                 <h4 className="font-serif text-xl sm:text-2xl font-normal text-white tracking-tight">
                                     Bespoke Multi-Week Stays
@@ -232,27 +282,24 @@ export async function HomePage() {
 
                             <a
                                 href="tel:+39089875000"
-                                className="px-5 py-3 -sm bg-[#bfa76f] hover:bg-[#aa935e] text-white font-sans text-[11px] font-semibold uppercase tracking-[0.2em] whitespace-nowrap transition-all shadow-md self-stretch sm:self-auto text-center"
+                                className="px-5 py-3 rounded-xs bg-[#bfa76f] hover:bg-[#aa935e] text-white font-sans text-[11px] font-semibold uppercase tracking-[0.2em] whitespace-nowrap transition-all shadow-md self-stretch sm:self-auto text-center"
                             >
                                 CALL CONCIERGE
                             </a>
                         </div>
-
                     </div>
                 </div>
             </section>
 
             {/* Dining Venue Section */}
-            <section className='px-6 md:px-0'>
-                <article
-                    className={`max-w-7xl mx:30 lg:mx-auto my-20 bg-white border border-[#e8e4dc] -3xl p-8 sm:p-10 lg:p-12 shadow-[0_4px_30px_rgba(0,0,0,0.03)]`}
-                >
+            <section className="px-6 md:px-0">
+                <article className="max-w-7xl mx-auto my-20 bg-white border border-[#e8e4dc] p-8 sm:p-10 lg:p-12 shadow-[0_4px_30px_rgba(0,0,0,0.03)]">
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-                        {/* Left Content Column (6 cols on desktop) */}
+                        {/* Left Content Column */}
                         <div className="lg:col-span-6 flex flex-col justify-between h-full">
                             <div>
                                 {/* Michelin Star & Chef Eyebrow Badge Pill */}
-                                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 -full bg-[#f6f2ea] border border-[#ebe5d8] text-[#8e763b] text-[10px] sm:text-[11px] font-sans font-medium uppercase tracking-[0.22em] mb-6">
+                                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#f6f2ea] border border-[#ebe5d8] text-[#8e763b] text-[10px] sm:text-[11px] font-sans font-medium uppercase tracking-[0.22em] mb-6">
                                     <svg
                                         className="w-3.5 h-3.5 text-[#bfa76f] shrink-0"
                                         viewBox="0 0 24 24"
@@ -261,18 +308,18 @@ export async function HomePage() {
                                         <path d="M12 2l2.4 7.4h7.6l-6 4.5 2.3 7.1-6.3-4.6-6.3 4.6 2.3-7.1-6-4.5h7.6z" />
                                     </svg>
                                     <span>
-                                        {'THREE MICHELIN STARS'} • {'CHEF MATTEO MORETTI'}
+                                        THREE MICHELIN STARS • CHEF MATTEO MORETTI
                                     </span>
                                 </div>
 
                                 {/* Master Serif Title */}
                                 <h2 className="font-serif text-3xl sm:text-4xl lg:text-[44px] font-normal text-[#1f1e1d] tracking-tight leading-[1.12]">
-                                    {'Ristorante Il Belvedere'}
+                                    Ristorante Il Belvedere
                                 </h2>
 
                                 {/* Narrative Description */}
                                 <p className="mt-4 sm:mt-5 text-xs sm:text-[13px] md:text-sm text-[#5f5c56] font-sans font-light leading-relaxed max-w-xl">
-                                    {'Perched 200 meters above the surf on an open-air travertine terrace. Experience an unhurried seven-course tasting menu paired with rare reserve vintages from our subterranean volcanic cellar.'}
+                                    Perched 200 meters above the surf on an open-air travertine terrace. Experience an unhurried seven-course tasting menu paired with rare reserve vintages from our subterranean volcanic cellar.
                                 </p>
 
                                 {/* Pricing Breakdown Lines */}
@@ -298,36 +345,33 @@ export async function HomePage() {
                             {/* Bottom CTA & Notice Area */}
                             <div className="mt-10 pt-6 border-t border-[#f0ece3] flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
                                 <Link
-                                    href={'/experiences#dining-venue'}
-                                    // onClick={onRequestTable}
-                                    className="inline-flex items-center justify-center px-7 py-3.5 bg-[#bfa76f] hover:bg-[#aa935e] text-white font-sans text-[11px] sm:text-[12px] font-semibold uppercase tracking-[0.2em] -sm transition-all duration-300 shadow-sm active:translate-y-0.5 text-center"
+                                    href="/experiences#dining-venue"
+                                    className="inline-flex items-center justify-center px-7 py-3.5 bg-[#bfa76f] hover:bg-[#aa935e] text-white font-sans text-[11px] sm:text-[12px] font-semibold uppercase tracking-[0.2em] rounded-xs transition-all duration-300 shadow-sm active:translate-y-0.5 text-center"
                                 >
-                                    {'REQUEST DINING TABLE'}
+                                    REQUEST DINING TABLE
                                 </Link>
                                 <span className="text-xs text-[#8c8880] font-sans font-light">
-                                    {'Advance reservation recommended'}
+                                    Advance reservation recommended
                                 </span>
                             </div>
                         </div>
 
-                        {/* Right Dual Photography Column (6 cols on desktop) */}
+                        {/* Right Dual Photography Column */}
                         <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 w-full">
-                            {/* Primary Image: Sunset Open-Air Terrace */}
-                            <div className="relative aspect-4/5 sm:aspect-3/4 w-full -lg overflow-hidden bg-[#eeeae2] shadow-sm">
+                            <div className="relative aspect-4/5 sm:aspect-3/4 w-full rounded-xs overflow-hidden bg-[#eeeae2] shadow-sm">
                                 <Image
-                                    src={'/limestone-villa.png'}
-                                    alt={`Ristorante Il Belvedere open-air sunset dining terrace overlooking the Mediterranean`}
+                                    src="/limestone-villa.png"
+                                    alt="Ristorante Il Belvedere open-air sunset dining terrace overlooking the Mediterranean"
                                     fill
                                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 30vw"
                                     className="object-cover object-center transform transition-transform duration-700 hover:scale-105"
                                 />
                             </div>
 
-                            {/* Secondary Image: Sunlit Dining Chamber & Ocean View */}
-                            <div className="relative aspect-4/5 sm:aspect-3/4 w-full -lg overflow-hidden bg-[#eeeae2] shadow-sm">
+                            <div className="relative aspect-4/5 sm:aspect-3/4 w-full rounded-xs overflow-hidden bg-[#eeeae2] shadow-sm">
                                 <Image
-                                    src={'/suite-402.png'}
-                                    alt={`Ristorante Il Belvedere floor-to-ceiling panoramic ocean lounge`}
+                                    src="/suite-402.png"
+                                    alt="Ristorante Il Belvedere floor-to-ceiling panoramic ocean lounge"
                                     fill
                                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 30vw"
                                     className="object-cover object-center transform transition-transform duration-700 hover:scale-105"
@@ -337,19 +381,17 @@ export async function HomePage() {
                     </div>
                 </article>
             </section>
-            
+
             {/* Testimonials */}
-            <section
-                className={`w-full bg-[#fcf9f4] py-20 sm:py-24 lg:py-28 px-6 sm:px-8 lg:px-12 border-b border-[#e8e4dc]`}
-            >   
+            <section className="w-full bg-[#fcf9f4] py-20 sm:py-24 lg:py-28 px-6 sm:px-8 lg:px-12 border-b border-[#e8e4dc]">
                 <div className="max-w-7xl mx-auto">
                     {/* Section Header */}
                     <div className="text-center max-w-2xl mx-auto mb-14 sm:mb-16">
                         <span className="block text-[11px] sm:text-[12px] font-sans font-semibold uppercase tracking-[0.3em] text-[#8e763b] mb-3">
-                            {'CRITICAL ACCLAIM'}
+                            CRITICAL ACCLAIM
                         </span>
                         <h2 className="font-serif text-3xl sm:text-4xl lg:text-[44px] font-normal text-[#1f1e1d] tracking-tight leading-[1.15]">
-                            {'Words of Reflection'}
+                            Words of Reflection
                         </h2>
                     </div>
 
@@ -359,7 +401,7 @@ export async function HomePage() {
                             return (
                                 <div
                                     key={idx}
-                                    className="bg-white border border-[#e8e4dc] -lg p-7 sm:p-8 flex flex-col justify-between shadow-[0_4px_24px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_32px_rgba(31,30,29,0.05)] transition-all duration-300"
+                                    className="bg-white border border-[#e8e4dc] rounded-xs p-7 sm:p-8 flex flex-col justify-between shadow-[0_4px_24px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_32px_rgba(31,30,29,0.05)] transition-all duration-300"
                                 >
                                     <div>
                                         {/* 5-Star Rating Row */}
@@ -388,7 +430,6 @@ export async function HomePage() {
 
                                     {/* Author Metadata Footer */}
                                     <div className="mt-8 pt-5 border-t border-[#f4f0e6] flex items-center gap-3.5">
-
                                         <div className="flex flex-col">
                                             <span className="font-sans text-[11px] font-semibold uppercase tracking-[0.2em] text-[#1f1e1d]">
                                                 {item.authorName}
@@ -404,39 +445,35 @@ export async function HomePage() {
                     </div>
 
                     {/* Dark Monolithic Callout Banner Card */}
-                    <div className="mt-16 sm:mt-20 bg-[#161514] text-[#fcf9f4] border border-[#2d2b27] -3xl p-8 sm:p-12 lg:p-14 shadow-2xl">
+                    <div className="mt-16 sm:mt-20 bg-[#161514] text-[#fcf9f4] border border-[#2d2b27] rounded-xs p-8 sm:p-12 lg:p-14 shadow-2xl">
                         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8 lg:gap-12">
                             {/* Left Content Area */}
                             <div className="max-w-2xl">
                                 <span className="block text-[10px] sm:text-[11px] font-sans font-semibold uppercase tracking-[0.3em] text-[#bfa76f] mb-3">
-                                    {'YOUR ESCAPE AWAITS'}
+                                    YOUR ESCAPE AWAITS
                                 </span>
                                 <h3 className="font-serif text-3xl sm:text-4xl lg:text-[46px] font-normal text-white tracking-tight leading-[1.12]">
-                                    {'Begin Your Mediterranean Retreat'}
+                                    Begin Your Mediterranean Retreat
                                 </h3>
                                 <p className="mt-4 text-sm font-sans text-white/60 leading-relaxed max-w-xl">
-                                    {'Reserve directly with our private concierge team for bespoke itinerary curation, private helipad arrival, and preferred suite placement'}
+                                    Reserve directly with our private concierge team for bespoke itinerary curation, private helipad arrival, and preferred suite placement.
                                 </p>
                             </div>
 
                             {/* Right Dual Action Buttons */}
                             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 sm:gap-4 shrink-0">
-                                {/* Primary Gold Button */}
                                 <Link
-                                    href={'/accommodations'}
-                                    // onClick={onCheckAvailability}
-                                    className="inline-flex items-center justify-center px-10 py-4 bg-[#b28c51] hover:bg-[#9e7a42] text-white font-sans text-[11px] font-semibold uppercase tracking-[0.22em] -sm transition-all duration-300 shadow-sm active:translate-y-0.5 text-center whitespace-nowrap"
+                                    href="/accommodations"
+                                    className="inline-flex items-center justify-center px-10 py-4 bg-[#b28c51] hover:bg-[#9e7a42] text-white font-sans text-[11px] font-semibold uppercase tracking-[0.22em] rounded-xs transition-all duration-300 shadow-sm active:translate-y-0.5 text-center whitespace-nowrap"
                                 >
-                                    {'CHECK AVAILABILITY'}
+                                    CHECK AVAILABILITY
                                 </Link>
 
-                                {/* Secondary Outline Button */}
                                 <Link
-                                    href={'/experiences#concierge'}
-                                    // onClick={onInquireConcierge}
-                                    className="inline-flex items-center justify-center px-10 py-4 bg-transparent hover:bg-white/5 border border-white/20 hover:border-white/40 text-white font-sans text-[11px] font-medium uppercase tracking-[0.22em] -sm transition-all duration-300 active:translate-y-0.5 text-center whitespace-nowrap"
+                                    href="/experiences#concierge"
+                                    className="inline-flex items-center justify-center px-10 py-4 bg-transparent hover:bg-white/5 border border-white/20 hover:border-white/40 text-white font-sans text-[11px] font-medium uppercase tracking-[0.22em] rounded-xs transition-all duration-300 active:translate-y-0.5 text-center whitespace-nowrap"
                                 >
-                                    {'INQUIRE CONCIERGE'}
+                                    INQUIRE CONCIERGE
                                 </Link>
                             </div>
                         </div>

@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import SovereignPhoneInput from '../SovereignPhoneInput';
-import { CountryIso2 } from '@/lib/hotel/phoneValidator';
+import { CountryIso2 } from '@/lib/data/phoneValidator';
 // import { SovereignPhoneInput } from './SovereignPhoneInput';
 
 export interface RegisterIdentityValues {
@@ -211,6 +211,7 @@ export function RegisterIdentityAndSecuritySection({
                                     onChange(next);
                                 }
                             }}
+                            className='font-mono'
                         />
                     </div>
                 </div>

@@ -196,13 +196,10 @@ export function ProfileDossierHeader({
         {
             id: 'upcoming-stays',
             label: 'Upcoming Stays & Itineraries',
-            count: 1,
-            badge: 'CONFIRMED',
         },
         {
             id: 'cellar-allocations',
             label: 'Private Cellar Allocations',
-            count: 6,
         },
         {
             id: 'security-access',

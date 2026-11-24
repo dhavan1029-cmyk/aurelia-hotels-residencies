@@ -1,39 +1,31 @@
 'use client';
 
-import React from 'react';
-import Image from 'next/image';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
+import Link from 'next/link';
+import DateRangeCalendar from '../DateRangeCalendar';
+import { CurrencyCode, getCurrencySymbol, formatTariff } from '@/lib/data/currencyCatalog';
 
 export interface FolioStayDetails {
-    suiteTitle: string;
-    suiteCategoryBadge: string;
-    villaLocation: string;
-    heroImageUrl: string;
-    checkInDateDisplay: string;
-    checkInTimeDisplay: string;
-    checkOutDateDisplay: string;
-    checkOutTimeDisplay: string;
+    suiteId?: string;
+    suiteName: string;
+    suiteSlug: string;
+    sanctuaryName: string;
+    sanctuaryLocation: string;
+    checkInDate: string;   // 'YYYY-MM-DD'
+    checkOutDate: string;  // 'YYYY-MM-DD'
     nightsCount: number;
     guestsCount: number;
-    roomTypeLabel: string;
+    baseRateNightly: number;
+    currencyCode?: CurrencyCode | string;
+    currencySymbol?: string;
+    maxGuests?: number;
 }
 
-export interface FolioRateLineItem {
+export interface FolioAddOnItem {
     id: string;
-    label: string;
-    amount: number;
-    isDiscount?: boolean;
-    isComplimentary?: boolean;
-    annotation?: string;
-}
-
-export interface FolioTrustGuarantee {
-    cancellationHeadline: string;
-    cancellationPolicy: string;
-    privacyHeadline: string;
-    privacyNote: string;
-    liaisonHeadline: string;
-    liaisonNote: string;
-    compliancePill: string;
+    title: string;
+    cost: number;
+    categoryTag?: string;
 }
 
 export interface PatronHostOnDuty {
@@ -42,428 +34,541 @@ export interface PatronHostOnDuty {
     statusText: string;
     directPhone: string;
     directEmail: string;
-    avatarUrl: string;
+    avatarUrl?: string;
 }
 
 export interface CheckoutFolioRailData {
     stay: FolioStayDetails;
-    currencySymbol: string;
-    currencyCode: string;
-    nightlyRate: number;
-    sovereignDiscountPercentage: number;
-    sovereignDiscountAmount: number;
-    environmentalAndHeritageTax: number;
-    guarantees: FolioTrustGuarantee;
-    host: PatronHostOnDuty;
-}
-
-export const checkoutFolioDefaultData: CheckoutFolioRailData = {
-    stay: {
-        suiteTitle: 'Azure Master Ocean Suite',
-        suiteCategoryBadge: 'LEVEL IV OCEANFRONT RESIDENCE',
-        villaLocation: 'Villa Aurelia • Amalfi Coastline',
-        heroImageUrl: '/limestone-villa.png',
-        checkInDateDisplay: 'Oct 14, 2025',
-        checkInTimeDisplay: 'Tuesday, from 14:00',
-        checkOutDateDisplay: 'Oct 19, 2025',
-        checkOutTimeDisplay: 'Sunday, until 12:00',
-        nightsCount: 5,
-        guestsCount: 2,
-        roomTypeLabel: '1 King Master Suite',
-    },
-    currencySymbol: '€',
-    currencyCode: 'EUR',
-    nightlyRate: 980,
-    sovereignDiscountPercentage: 15,
-    sovereignDiscountAmount: 735,
-    environmentalAndHeritageTax: 442.5,
-    guarantees: {
-        cancellationHeadline: 'Flexible Cancellation Courtesy',
-        cancellationPolicy:
-            '100% refundable if amended or released prior to 23:59 CET, Oct 1, 2025.',
-        privacyHeadline: 'Patron Privacy & Vault Clearance',
-        privacyNote:
-            'Encrypted booking records with zero third-party disclosure. Highest protocol adherence.',
-        liaisonHeadline: 'Dedicated On-Property Majordomo',
-        liaisonNote:
-            'Continuous residential host allocation from harbor arrival through departure.',
-        compliancePill: 'PCI-DSS Compliant • Sovereign Tier Secured',
-    },
-    host: {
-        name: 'Matteo de Luca',
-        roleTag: 'PATRON HOST ON DUTY',
-        statusText: 'Direct Line • Standing by',
-        directPhone: '+39089875000',
-        directEmail: 'm.deluca@aureliahotels.com',
-        avatarUrl: '/garden-pavillion.png',
-    },
-};
-
-export interface ActiveAddOnItem {
-    id: string;
-    title: string;
-    price: number;
+    currencySymbol?: string;
+    currencyCode?: CurrencyCode | string;
+    nightlyRate?: number;
+    sovereignDiscountPercentage?: number;
+    sovereignDiscountAmount?: number;
+    environmentalAndHeritageTax?: number;
+    host?: PatronHostOnDuty;
 }
 
 export interface CheckoutFolioRailProps {
-    data?: CheckoutFolioRailData;
-    selectedAddOns?: ActiveAddOnItem[];
-    onCallHost?: () => void;
-    onMessageHost?: () => void;
+    stayDetails: FolioStayDetails;
+    selectedAddOns?: FolioAddOnItem[];
+    sovereignCourtesyDiscountPercent?: number; // e.g. 15 for Sovereign Fellow
+    returnHref?: string;
+    vatRatePercentage?: number;
+    cityTaxPerGuestNight?: number;
+    isSubmitting?: boolean;
+    onDatesChange?: (dates: { checkInDate: string; checkOutDate: string; nightsCount: number }) => void;
+    onPartyChange?: (guestsCount: number) => void;
     className?: string;
 }
 
+function formatDateDisplay(isoString?: string | null): string {
+    if (!isoString || (new Set(['check in', 'check out', 'add date'])).has(isoString.toLowerCase())) {
+        return 'Add date';
+    }
+    const [year, month, day] = isoString.split('-').map(Number);
+    if (!year || !month || !day) return isoString;
+    const date = new Date(year, month - 1, day);
+    return date.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+    });
+}
+
 export function CheckoutFolioRail({
-    data = checkoutFolioDefaultData,
-    selectedAddOns = [
-        {
-            id: 'riva-harbor-transfer',
-            title: 'Private Riva Yacht Harbor Transfer',
-            price: 480,
-        },
-        {
-            id: 'roman-thermal-grotto',
-            title: 'Subterranean Roman Grotto Ritual',
-            price: 240,
-        },
-    ],
-    onCallHost,
-    onMessageHost,
+    stayDetails,
+    selectedAddOns = [],
+    sovereignCourtesyDiscountPercent = 0,
+    returnHref = '/accommodations',
+    vatRatePercentage = 10,
+    cityTaxPerGuestNight = 5,
+    isSubmitting = false,
+    onDatesChange,
+    onPartyChange,
     className = '',
 }: CheckoutFolioRailProps) {
     const {
-        stay,
-        currencySymbol,
-        currencyCode,
-        nightlyRate,
-        sovereignDiscountPercentage,
-        sovereignDiscountAmount,
-        environmentalAndHeritageTax,
-        guarantees,
-        host,
-    } = data;
+        suiteName,
+        sanctuaryName,
+        sanctuaryLocation,
+        checkInDate: initialCheckIn,
+        checkOutDate: initialCheckOut,
+        nightsCount: initialNights,
+        guestsCount: initialGuests,
+        baseRateNightly,
+        currencyCode: rawCurrencyCode,
+        maxGuests = 4,
+    } = stayDetails;
 
-    // Mathematical Financial Totals
-    const roomSubtotal = nightlyRate * stay.nightsCount;
-    const addOnsSubtotal = selectedAddOns.reduce(function (sum, item) {
-        return sum + item.price;
-    }, 0);
-    const taxableSubtotal = roomSubtotal - sovereignDiscountAmount + addOnsSubtotal;
-    const grandTotal = taxableSubtotal + environmentalAndHeritageTax;
+    // Currency normalization via currencyCatalog
+    const currencyCode = (rawCurrencyCode) as CurrencyCode;
+
+    // Local reactive state for live in-rail modifications
+    const [checkIn, setCheckIn] = useState<string>(initialCheckIn || '');
+    const [checkOut, setCheckOut] = useState<string>(initialCheckOut || '');
+    const [nights, setNights] = useState<number>(initialNights || 5);
+    const [guests, setGuests] = useState<number>(initialGuests || 2);
+
+    const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+    const [isPartyPopoverOpen, setIsPartyPopoverOpen] = useState(false);
+
+    const dateContainerRef = useRef<HTMLDivElement>(null);
+    const partyContainerRef = useRef<HTMLDivElement>(null);
+
+    // Sync state if external stayDetails props change
+    useEffect(function () {
+        if (initialCheckIn) setCheckIn(initialCheckIn);
+        if (initialCheckOut) setCheckOut(initialCheckOut);
+        if (initialNights) setNights(initialNights);
+        if (initialGuests) setGuests(initialGuests);
+    }, [initialCheckIn, initialCheckOut, initialNights, initialGuests]);
+
+    // Outside-click listener for calendar and party popovers
+    useEffect(function () {
+        function handleClickOutside(event: MouseEvent) {
+            const target = event.target as Node;
+            if (dateContainerRef.current && !dateContainerRef.current.contains(target)) {
+                setIsCalendarOpen(false);
+            }
+            if (partyContainerRef.current && !partyContainerRef.current.contains(target)) {
+                setIsPartyPopoverOpen(false);
+            }
+        }
+        document.addEventListener('mousedown', handleClickOutside);
+        return function () {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
+    // Calendar Apply handler
+    function handleApplyCalendar(range: { checkIn: string; checkOut: string; nights: number }) {
+        setCheckIn(range.checkIn);
+        setCheckOut(range.checkOut);
+        setNights(range.nights);
+        setIsCalendarOpen(false);
+        if (onDatesChange) {
+            onDatesChange({
+                checkInDate: range.checkIn,
+                checkOutDate: range.checkOut,
+                nightsCount: range.nights,
+            });
+        }
+    }
+
+    function handleClearCalendar() {
+        setCheckIn('');
+        setCheckOut('');
+        setNights(1);
+    }
+
+    function handleGuestsChange(newGuests: number) {
+        setGuests(newGuests);
+        if (onPartyChange) {
+            onPartyChange(newGuests);
+        }
+    }
+
+    // Mathematical Folio Computations
+    const roomSubtotal = useMemo(function () {
+        return baseRateNightly * nights;
+    }, [baseRateNightly, nights]);
+
+    const addOnsSubtotal = useMemo(function () {
+        return selectedAddOns.reduce(function (sum, item) {
+            return sum + item.cost;
+        }, 0);
+    }, [selectedAddOns]);
+
+    const courtesyDiscountAmount = useMemo(function () {
+        if (sovereignCourtesyDiscountPercent <= 0) return 0;
+        return Math.round((roomSubtotal + addOnsSubtotal) * (sovereignCourtesyDiscountPercent / 100));
+    }, [roomSubtotal, addOnsSubtotal, sovereignCourtesyDiscountPercent]);
+
+    const taxableSubtotal = Math.max(0, roomSubtotal + addOnsSubtotal - courtesyDiscountAmount);
+    const vatAmount = Math.round(taxableSubtotal * (vatRatePercentage / 100));
+    const cityTaxTotal = cityTaxPerGuestNight * guests * nights;
+    const grandFolioTotal = taxableSubtotal + vatAmount + cityTaxTotal;
 
     return (
-        <aside className={`w-full space-y-6 ${className}`}>
-            {/* 1. Main Sticky Folio Card */}
-            <article className="bg-white border border-[#e8e4dc] -2xl overflow-hidden shadow-[0_8px_32px_rgba(31,30,29,0.04)]">
-                {/* Suite Photographic Preview Header */}
-                <div className="relative aspect-16/10 w-full overflow-hidden bg-[#eeeae2]">
-                    <Image
-                        src={stay.heroImageUrl}
-                        alt={stay.suiteTitle}
-                        fill
-                        sizes="(max-width: 1024px) 100vw, 380px"
-                        className="object-cover object-center"
-                    />
-                    <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/25 to-transparent pointer-events-none" />
-
-                    {/* Top Location Badge */}
-                    <div className="absolute top-3.5 left-3.5 z-10">
-                        <span className="px-2.5 py-1 -sm bg-black/60 backdrop-blur-md text-white font-sans text-[9px] font-semibold uppercase tracking-[0.18em]">
-                            {stay.suiteCategoryBadge}
-                        </span>
-                    </div>
-
-                    {/* Bottom Title & Estate Location */}
-                    <div className="absolute bottom-3.5 left-3.5 right-3.5 z-10 text-white">
-                        <h3 className="font-serif text-lg sm:text-xl font-normal tracking-tight text-white/95">
-                            {stay.suiteTitle}
-                        </h3>
-                        <p className="text-[10px] font-sans text-[#dedad2] tracking-wider mt-0.5">
-                            {stay.villaLocation}
-                        </p>
-                    </div>
-                </div>
-
-                {/* Stay Horizon & Calendar Timeline */}
-                <div className="p-5 sm:p-6 border-b border-[#eeeae2] bg-[#f9f5ed]/50">
-                    <div className="flex items-center justify-between text-[10px] font-sans uppercase tracking-[0.2em] text-[#8e763b] mb-3">
-                        <span>STAY HORIZON</span>
-                        <span className="text-[#8e8a82]">
-                            {stay.nightsCount} NIGHTS STAY
-                        </span>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-3 text-xs font-sans">
-                        <div className="p-3 -xl bg-white border border-[#ded9ce] shadow-2xs">
-                            <span className="text-[9px] uppercase tracking-wider text-[#8e8a82] block">
-                                CHECK-IN
-                            </span>
-                            <span className="font-serif text-sm font-semibold text-[#1f1e1d] block mt-0.5">
-                                {stay.checkInDateDisplay}
-                            </span>
-                            <span className="text-[10px] text-[#78756d] font-light mt-0.5 block">
-                                {stay.checkInTimeDisplay}
-                            </span>
-                        </div>
-
-                        <div className="p-3 -xl bg-white border border-[#ded9ce] shadow-2xs">
-                            <span className="text-[9px] uppercase tracking-wider text-[#8e8a82] block">
-                                CHECK-OUT
-                            </span>
-                            <span className="font-serif text-sm font-semibold text-[#1f1e1d] block mt-0.5">
-                                {stay.checkOutDateDisplay}
-                            </span>
-                            <span className="text-[10px] text-[#78756d] font-light mt-0.5 block">
-                                {stay.checkOutTimeDisplay}
-                            </span>
-                        </div>
-                    </div>
-
-                    <div className="mt-3 flex items-center justify-between text-[11px] font-sans text-[#6e6b64] px-1">
-                        <span>{stay.guestsCount} Adults</span>
-                        <span>•</span>
-                        <span>{stay.roomTypeLabel}</span>
-                        <span>•</span>
-                        <span className="text-[#8e763b] font-medium">Guaranteed Direct</span>
-                    </div>
-                </div>
-
-                {/* Itemized Financial Folio Ledger */}
-                <div className="p-5 sm:p-6 space-y-3.5 text-xs font-sans">
-                    <span className="text-[9px] font-sans font-semibold uppercase tracking-[0.24em] text-[#8e8a82] block mb-2">
-                        ITEMIZED RESIDENTIAL FOLIO
+        <aside
+            aria-label="Guaranteed Stay Folio Ledger"
+            className={`w-full bg-[#fcf9f4] border border-[#e8e4dc] p-5 sm:p-6 lg:p-7 shadow-[0_4px_24px_rgba(31,30,29,0.04)] text-[#1f1e1d] space-y-6 ${className}`}
+        >
+            {/* 1. Header: Sovereign Ledger Seal */}
+            <div className="flex items-center justify-between border-b border-[#eeeae2] pb-4">
+                <div>
+                    <span className="text-[8.5px] font-mono font-semibold uppercase tracking-[0.24em] text-[#8e763b] block">
+                        CONFIDENTIAL FOLIO • {currencyCode}
                     </span>
+                    <h3 className="font-serif text-lg font-normal text-[#1f1e1d] tracking-tight">
+                        Sanctuary Ledger
+                    </h3>
+                </div>
+                <div className="text-right">
+                    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-[#f2ede4] border border-[#ded9ce] text-[8.5px] font-mono uppercase tracking-[0.16em] text-[#8e763b]">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#8e763b] animate-pulse" />
+                        DIRECT SEAL
+                    </span>
+                </div>
+            </div>
 
-                    {/* Suite Rate Row */}
-                    <div className="flex items-start justify-between text-[#5f5c56] gap-2">
-                        <div>
-                            <span className="text-[#1f1e1d] font-medium">
-                                {stay.suiteTitle}
-                            </span>
-                            <span className="block text-[10px] text-[#8e8a82]">
-                                {currencySymbol}{nightlyRate.toLocaleString()} × {stay.nightsCount} nights
-                            </span>
-                        </div>
-                        <span className="font-medium text-[#1f1e1d] shrink-0">
-                            {currencySymbol}
-                            {roomSubtotal.toLocaleString(undefined, {
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2,
-                            })}
+            {/* 2. Suite Summary & Sanctuary Identity */}
+            <div className="space-y-1.5 pb-4 border-b border-[#eeeae2]">
+                <div className="flex items-baseline justify-between">
+                    <span className="font-serif text-base font-medium text-[#1f1e1d]">
+                        {suiteName}
+                    </span>
+                    <Link
+                        href={returnHref}
+                        className="text-[10px] font-sans font-medium uppercase tracking-wider text-[#8e763b] hover:underline"
+                    >
+                        Change
+                    </Link>
+                </div>
+                <p className="text-xs font-sans text-[#78756d]">
+                    {sanctuaryName} • {sanctuaryLocation}
+                </p>
+                <div className="flex items-baseline gap-1.5 pt-1">
+                    <span className="font-serif text-xl font-normal text-[#1f1e1d]">
+                        {formatTariff(baseRateNightly, currencyCode)}
+                    </span>
+                    <span className="text-[11px] font-sans text-[#78756d]">/ night baseline</span>
+                </div>
+            </div>
+
+            {/* 3. Interactive Stay Horizon & Patron Allocation Selectors */}
+            <div className="space-y-3 pb-4 border-b border-[#eeeae2]">
+                {/* 3A. Date Horizon Box with In-Rail Popover */}
+                <div ref={dateContainerRef} className="relative">
+                    <div className="flex items-center justify-between mb-1.5">
+                        <span className="text-[9px] font-mono uppercase tracking-[0.18em] text-[#8e8a82]">
+                            STAY HORIZON
                         </span>
+                        <button
+                            type="button"
+                            onClick={function () {
+                                setIsCalendarOpen(function (prev) {
+                                    return !prev;
+                                });
+                                setIsPartyPopoverOpen(false);
+                            }}
+                            className="text-[10px] font-sans font-medium text-[#8e763b] hover:text-[#1f1e1d] underline transition-colors cursor-pointer"
+                        >
+                            {isCalendarOpen ? 'Close Calendar' : 'Modify Dates'}
+                        </button>
                     </div>
 
-                    {/* Sovereign Direct Privilege (15% discount) */}
-                    <div className="flex items-start justify-between text-[#8e763b] gap-2 bg-[#f7f2e7]/70 -mx-2 px-2 py-1.5 -lg border border-[#e8dfcb]">
-                        <div>
-                            <span className="font-medium">
-                                ☆ Sovereign Direct Privilege (-{sovereignDiscountPercentage}%)
-                            </span>
-                            <span className="block text-[9px] text-[#8e763b]/80">
-                                Direct booking protocol applied
-                            </span>
-                        </div>
-                        <span className="font-semibold shrink-0">
-                            -{currencySymbol}
-                            {sovereignDiscountAmount.toLocaleString(undefined, {
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2,
-                            })}
-                        </span>
-                    </div>
-
-                    {/* Dynamic Add-Ons Rows */}
-                    {selectedAddOns.map(function (addOn) {
-                        return (
-                            <div
-                                key={addOn.id}
-                                className="flex items-start justify-between text-[#5f5c56] gap-2"
-                            >
-                                <div className="flex items-center gap-1.5">
-                                    <span className="text-[#8e763b] text-xs">+</span>
-                                    <span>{addOn.title}</span>
-                                </div>
-                                <span className="font-medium text-[#1f1e1d] shrink-0">
-                                    {currencySymbol}
-                                    {addOn.price.toLocaleString(undefined, {
-                                        minimumFractionDigits: 2,
-                                        maximumFractionDigits: 2,
-                                    })}
-                                </span>
+                    <button
+                        type="button"
+                        onClick={function () {
+                            setIsCalendarOpen(function (prev) {
+                                return !prev;
+                            });
+                            setIsPartyPopoverOpen(false);
+                        }}
+                        className={`w-full text-left p-3 bg-white border transition-all cursor-pointer shadow-2xs group ${
+                            isCalendarOpen
+                                ? 'border-[#8e763b] ring-1 ring-[#8e763b]/30 bg-[#faf8f5]'
+                                : 'border-[#ded9ce] hover:border-[#8e763b]'
+                        }`}
+                    >
+                        <div className="flex items-center justify-between text-xs font-sans font-medium text-[#1f1e1d]">
+                            <div className="flex items-center gap-2 min-w-0">
+                                <svg
+                                    className="w-3.5 h-3.5 text-[#8e763b] shrink-0"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="1.8"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                >
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                                    <line x1="16" y1="2" x2="16" y2="6" />
+                                    <line x1="8" y1="2" x2="8" y2="6" />
+                                    <line x1="3" y1="10" x2="21" y2="10" />
+                                </svg>
+                                <span className="truncate">{formatDateDisplay(checkIn)}</span>
                             </div>
-                        );
-                    })}
 
-                    {/* Complimentary Resort & Concierge */}
-                    <div className="flex items-center justify-between text-[#5f5c56] gap-2">
-                        <span>Resort &amp; Dedicated 24/7 Concierge</span>
-                        <span className="font-sans text-[10px] uppercase font-semibold text-[#24633b] tracking-wider">
-                            COMPLIMENTARY
+                            <span className="text-[#a4a098] px-1 shrink-0">→</span>
+
+                            <div className="flex items-center gap-1.5 min-w-0 justify-end">
+                                <span className="truncate">{formatDateDisplay(checkOut)}</span>
+                            </div>
+                        </div>
+
+                        <div className="mt-1.5 flex items-center justify-between text-[10px] font-sans text-[#78756d]">
+                            <span>Duration</span>
+                            <span className="font-mono font-medium text-[#8e763b]">
+                                {nights} {nights === 1 ? 'Night' : 'Nights'}
+                            </span>
+                        </div>
+                    </button>
+
+                    {/* Integrated DateRangeCalendar Popover */}
+                    {isCalendarOpen && (
+                        <div className="absolute top-[calc(100%+6px)] left-0 right-0 sm:left-auto sm:right-0 sm:w-85 z-50">
+                            <DateRangeCalendar
+                                isOpen={isCalendarOpen}
+                                onClose={function () {
+                                    setIsCalendarOpen(false);
+                                }}
+                                checkIn={checkIn}
+                                checkOut={checkOut}
+                                compact={true}
+                                onApplyDates={handleApplyCalendar}
+                                onClearDates={handleClearCalendar}
+                            />
+                        </div>
+                    )}
+                </div>
+
+                {/* 3B. Patron Count Box with Stepper Popover */}
+                <div ref={partyContainerRef} className="relative">
+                    <div className="flex items-center justify-between mb-1.5">
+                        <span className="text-[9px] font-mono uppercase tracking-[0.18em] text-[#8e8a82]">
+                            PATRONS ALLOCATION
                         </span>
+                        <button
+                            type="button"
+                            onClick={function () {
+                                setIsPartyPopoverOpen(function (prev) {
+                                    return !prev;
+                                });
+                                setIsCalendarOpen(false);
+                            }}
+                            className="text-[10px] font-sans font-medium text-[#8e763b] hover:text-[#1f1e1d] underline transition-colors cursor-pointer"
+                        >
+                            {isPartyPopoverOpen ? 'Close' : 'Adjust Party'}
+                        </button>
                     </div>
 
-                    {/* Environmental & UNESCO Heritage Surcharge */}
-                    <div className="flex items-center justify-between text-[#5f5c56] gap-2">
+                    <button
+                        type="button"
+                        onClick={function () {
+                            setIsPartyPopoverOpen(function (prev) {
+                                return !prev;
+                            });
+                            setIsCalendarOpen(false);
+                        }}
+                        className={`w-full text-left p-3 bg-white border transition-all cursor-pointer shadow-2xs group ${
+                            isPartyPopoverOpen
+                                ? 'border-[#8e763b] ring-1 ring-[#8e763b]/30 bg-[#faf8f5]'
+                                : 'border-[#ded9ce] hover:border-[#8e763b]'
+                        }`}
+                    >
+                        <div className="flex items-center justify-between text-xs font-sans font-medium text-[#1f1e1d]">
+                            <div className="flex items-center gap-2">
+                                <svg
+                                    className="w-3.5 h-3.5 text-[#8e763b] shrink-0"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="1.8"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                >
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                    <circle cx="9" cy="7" r="4" />
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                                </svg>
+                                <span>{guests} {guests === 1 ? 'Discerning Guest' : 'Discerning Guests'}</span>
+                            </div>
+                            <span className="text-[9.5px] uppercase tracking-wider text-[#8e8a82]">
+                                Max {maxGuests}
+                            </span>
+                        </div>
+                    </button>
+
+                    {/* Integrated Party Stepper Popover */}
+                    {isPartyPopoverOpen && (
+                        <div className="absolute top-[calc(100%+6px)] left-0 right-0 z-50 bg-white border border-[#ded9ce] p-4 shadow-xl space-y-3 animate-in fade-in zoom-in-95">
+                            <div className="flex items-center justify-between pb-2 border-b border-[#eeeae2]">
+                                <span className="text-[8.5px] font-mono uppercase tracking-[0.2em] text-[#8e763b] font-semibold">
+                                    PARTY COMPOSITION
+                                </span>
+                                <button
+                                    type="button"
+                                    onClick={function () {
+                                        setIsPartyPopoverOpen(false);
+                                    }}
+                                    className="text-xs text-[#8e8a82] hover:text-[#1f1e1d] cursor-pointer"
+                                >
+                                    ✕
+                                </button>
+                            </div>
+
+                            <div className="p-3 bg-[#fcf9f4] border border-[#ded9ce] flex items-center justify-between">
+                                <div>
+                                    <span className="font-serif text-sm font-semibold text-[#1f1e1d] block">
+                                        Discerning Patrons
+                                    </span>
+                                    <span className="text-[10px] text-[#78756d] font-sans font-light">
+                                        Suite occupancy limit: {maxGuests}
+                                    </span>
+                                </div>
+
+                                <div className="flex items-center gap-2">
+                                    <button
+                                        type="button"
+                                        disabled={guests <= 1}
+                                        onClick={function () {
+                                            handleGuestsChange(Math.max(1, guests - 1));
+                                        }}
+                                        className="w-7 h-7 bg-white border border-[#ded9ce] text-[#1f1e1d] flex items-center justify-center font-mono text-sm hover:bg-[#f6f2ea] disabled:opacity-30 cursor-pointer"
+                                    >
+                                        −
+                                    </button>
+                                    <span className="font-serif text-base font-bold min-w-5 text-center text-[#1f1e1d]">
+                                        {guests}
+                                    </span>
+                                    <button
+                                        type="button"
+                                        disabled={guests >= maxGuests}
+                                        onClick={function () {
+                                            handleGuestsChange(Math.min(maxGuests, guests + 1));
+                                        }}
+                                        className="w-7 h-7 bg-white border border-[#ded9ce] text-[#1f1e1d] flex items-center justify-center font-mono text-sm hover:bg-[#f6f2ea] disabled:opacity-30 cursor-pointer"
+                                    >
+                                        +
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div className="flex justify-end pt-1">
+                                <button
+                                    type="button"
+                                    onClick={function () {
+                                        setIsPartyPopoverOpen(false);
+                                    }}
+                                    className="px-3.5 py-1.5 bg-[#1f1e1d] hover:bg-[#343230] text-white text-[10px] font-sans font-semibold uppercase tracking-[0.16em] cursor-pointer"
+                                >
+                                    Confirm
+                                </button>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            {/* 4. Itemized Folio Calculation Breakdown */}
+            <div className="space-y-2.5 text-xs font-sans pb-4 border-b border-[#eeeae2]">
+                <div className="flex items-center justify-between text-[#5f5c56]">
+                    <span>
+                        {formatTariff(baseRateNightly, currencyCode)} × {nights} {nights === 1 ? 'Night' : 'Nights'}
+                    </span>
+                    <span className="font-medium text-[#1f1e1d]">
+                        {formatTariff(roomSubtotal, currencyCode)}
+                    </span>
+                </div>
+
+                {/* Selected Bespoke Add-Ons */}
+                {selectedAddOns.length > 0 && (
+                    <div className="space-y-1.5 pt-1">
+                        <span className="text-[9px] font-mono uppercase tracking-[0.16em] text-[#8e763b] block">
+                            BESPOKE EXPERIENCES ({selectedAddOns.length})
+                        </span>
+                        {selectedAddOns.map(function (addOn) {
+                            return (
+                                <div key={addOn.id} className="flex items-center justify-between text-[#5f5c56] pl-2 text-[11.5px]">
+                                    <span className="truncate pr-2">• {addOn.title}</span>
+                                    <span className="font-medium text-[#1f1e1d] shrink-0">
+                                        {formatTariff(addOn.cost, currencyCode)}
+                                    </span>
+                                </div>
+                            );
+                        })}
+                    </div>
+                )}
+
+                {/* Sovereign Courtesy Privilege Discount */}
+                {courtesyDiscountAmount > 0 && (
+                    <div className="flex items-center justify-between text-[#8e763b] pt-1">
                         <div className="flex items-center gap-1">
-                            <span>Regional Environmental &amp; UNESCO Heritage</span>
-                            <span className="text-[10px] text-[#8e8a82]">(Tax)</span>
+                            <span>Sovereign Courtesy Privilege</span>
+                            <span className="text-[10px]">({sovereignCourtesyDiscountPercent}%)</span>
                         </div>
-                        <span className="font-medium text-[#1f1e1d] shrink-0">
-                            {currencySymbol}
-                            {environmentalAndHeritageTax.toLocaleString(undefined, {
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2,
-                            })}
+                        <span className="font-mono font-medium">
+                            −{formatTariff(courtesyDiscountAmount, currencyCode)}
                         </span>
                     </div>
+                )}
 
-                    {/* Grand Total Bar */}
-                    <div className="pt-4 border-t border-[#eeeae2] flex items-baseline justify-between gap-2">
-                        <div>
-                            <span className="font-serif text-base font-semibold text-[#1f1e1d] block">
-                                Total Sovereign Investment
-                            </span>
-                            <span className="text-[10px] text-[#78756d] font-light block">
-                                All VAT, port taxes, &amp; service charges included
-                            </span>
-                        </div>
-
-                        <div className="text-right">
-                            <span className="font-serif text-2xl sm:text-[28px] font-normal text-[#1f1e1d] tracking-tight block">
-                                {currencySymbol}
-                                {grandTotal.toLocaleString(undefined, {
-                                    minimumFractionDigits: 2,
-                                    maximumFractionDigits: 2,
-                                })}
-                            </span>
-                            <span className="text-[9px] font-mono text-[#8e763b] uppercase tracking-wider block">
-                                {currencyCode} CURRENCY
-                            </span>
-                        </div>
+                {/* VAT Tax */}
+                <div className="flex items-center justify-between text-[#5f5c56]">
+                    <div className="flex items-center gap-1">
+                        <span>Hospitality VAT</span>
+                        <span className="text-[10px] text-[#8e8a82]">({vatRatePercentage}%)</span>
                     </div>
+                    <span className="font-medium text-[#1f1e1d]">
+                        {formatTariff(vatAmount, currencyCode)}
+                    </span>
                 </div>
 
-                {/* Trust & Guarantee Policies Strip */}
-                <div className="p-5 sm:p-6 bg-[#f6f2ea] border-t border-[#ded9ce] space-y-3">
-                    <div className="flex items-start gap-2.5">
-                        <svg
-                            className="w-4 h-4 text-[#8e763b] shrink-0 mt-0.5"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="1.8"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        >
-                            <polyline points="20 6 9 17 4 12" />
-                        </svg>
-                        <div>
-                            <span className="font-sans text-[11px] font-semibold text-[#1f1e1d] block">
-                                {guarantees.cancellationHeadline}
-                            </span>
-                            <p className="text-[10px] text-[#6e6b64] font-sans font-light leading-relaxed">
-                                {guarantees.cancellationPolicy}
-                            </p>
-                        </div>
+                {/* Municipal Tourism Tax */}
+                <div className="flex items-center justify-between text-[#5f5c56]">
+                    <div className="flex items-center gap-1">
+                        <span>Municipal Tourism Dues</span>
+                        <span className="text-[10px] text-[#8e8a82]">({formatTariff(cityTaxPerGuestNight, currencyCode)}/guest/night)</span>
                     </div>
-
-                    <div className="flex items-start gap-2.5">
-                        <svg
-                            className="w-4 h-4 text-[#8e763b] shrink-0 mt-0.5"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="1.8"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        >
-                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                        </svg>
-                        <div>
-                            <span className="font-sans text-[11px] font-semibold text-[#1f1e1d] block">
-                                {guarantees.privacyHeadline}
-                            </span>
-                            <p className="text-[10px] text-[#6e6b64] font-sans font-light leading-relaxed">
-                                {guarantees.privacyNote}
-                            </p>
-                        </div>
-                    </div>
-
-                    <div className="pt-2 border-t border-[#ded9ce]/80 text-center">
-                        <span className="inline-block text-[9px] font-sans font-semibold uppercase tracking-[0.2em] text-[#8e763b]">
-                            {guarantees.compliancePill}
-                        </span>
-                    </div>
+                    <span className="font-medium text-[#1f1e1d]">
+                        {formatTariff(cityTaxTotal, currencyCode)}
+                    </span>
                 </div>
-            </article>
+            </div>
 
-            {/* 2. Patron Host On Duty Card */}
-            <div className="bg-[#1f1e1d] text-[#fcf9f4] border border-[#383530] -2xl p-4 sm:p-5 shadow-lg flex items-center justify-between gap-4">
-                <div className="flex items-center gap-3.5">
-                    <div className="relative w-11 h-11 -full overflow-hidden border border-[#bfa76f] bg-[#2a2826] shrink-0">
-                        <Image
-                            src={host.avatarUrl}
-                            alt={host.name}
-                            fill
-                            sizes="44px"
-                            className="object-cover object-center"
-                        />
-                    </div>
-
-                    <div>
-                        <div className="flex items-center gap-1.5 mb-0.5">
-                            <span className="w-1.5 h-1.5 -full bg-emerald-400 animate-pulse" />
-                            <span className="text-[9px] font-sans font-semibold uppercase tracking-[0.2em] text-[#bfa76f]">
-                                {host.roleTag}
-                            </span>
-                        </div>
-                        <h4 className="font-serif text-base font-normal text-white tracking-tight">
-                            {host.name}
-                        </h4>
-                        <span className="text-[10px] text-[#a4a098] font-sans font-light">
-                            {host.statusText}
-                        </span>
-                    </div>
+            {/* 5. Total Guaranteed Folio Amount */}
+            <div className="flex items-baseline justify-between pt-1 pb-1">
+                <div>
+                    <span className="block font-serif text-base font-semibold text-[#1f1e1d]">
+                        Total Guaranteed Folio
+                    </span>
+                    <span className="text-[10px] font-sans text-[#78756d]">
+                        All municipal taxes &amp; concierge dues sealed
+                    </span>
                 </div>
+                <div className="text-right">
+                    <span className="font-serif text-2xl font-normal text-[#1f1e1d] tracking-tight">
+                        {formatTariff(grandFolioTotal, currencyCode)}
+                    </span>
+                </div>
+            </div>
 
-                <div className="flex items-center gap-2 shrink-0">
-                    <a
-                        href={`tel:${host.directPhone}`}
-                        onClick={onCallHost}
-                        className="p-2.5 -xl bg-[#2a2826] hover:bg-[#383530] border border-[#44403a] text-[#bfa76f] transition-colors"
-                        aria-label="Call Host on Duty"
+            {/* 6. Guarantee & Institutional Disclosures */}
+            <div className="space-y-3 pt-2">
+                <div className="flex items-start gap-2.5 p-3 bg-white border border-[#ded9ce] text-[11px] font-sans text-[#6e6b64]">
+                    <svg
+                        className="w-4 h-4 text-[#8e763b] shrink-0 mt-0.5"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
                     >
-                        <svg
-                            className="w-4 h-4"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="1.8"
-                        >
-                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
-                        </svg>
-                    </a>
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                        <polyline points="9 12 11 14 15 10" />
+                    </svg>
+                    <div className="leading-snug">
+                        <span className="font-semibold text-[#1f1e1d] block">
+                            Direct Sanctuary Guarantee
+                        </span>
+                        Complimentary Riva tender transfer &amp; private majordomo greeting confirmed upon arrival.
+                    </div>
+                </div>
 
+                <div className="text-center text-[10px] font-sans text-[#8e8a82]">
+                    Need bespoke adjustments?{' '}
                     <a
-                        href={`mailto:${host.directEmail}`}
-                        onClick={onMessageHost}
-                        className="p-2.5 -xl bg-[#2a2826] hover:bg-[#383530] border border-[#44403a] text-[#bfa76f] transition-colors"
-                        aria-label="Email Host on Duty"
+                        href="tel:+39089875000"
+                        className="text-[#1f1e1d] underline hover:text-[#8e763b] transition-colors"
                     >
-                        <svg
-                            className="w-4 h-4"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="1.8"
-                        >
-                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                            <polyline points="22,6 12,13 2,6" />
-                        </svg>
+                        Contact Head Majordomo Desk
                     </a>
                 </div>
             </div>
         </aside>
     );
 }
+
+export default CheckoutFolioRail;

@@ -22,9 +22,9 @@ import type {
     SiblingAccommodationItem,
     SpatialMetric,
 } from '@/components/hotel/types/accommodations';
-import { calculateNights } from '@/components/hotel/DateRangeCalendar';
 
 import {asArray, asJsonObject, formatCategoryTitle, formatCurrencySymbol, getNumber, getString, isJsonObject, renderFeatureIcon, renderPrivilegeIcon} from '@/lib/utils/accommodationUtils'
+import { getCurrencySymbol } from '@/lib/data/currencyCatalog';
 
 // ============================================================================
 // INPUT TYPES
@@ -42,18 +42,79 @@ export type AccommodationRoomUnit =
     AccommodationCategoryWithRoomUnits['roomUnits'][number];
 
 export interface AccommodationBookingContext {
-    checkInDate?: string;
-    checkOutDate?: string;
-    nightsCount?: number;
-    guestsCount?: number;
+    // ------------------------------------------------------------------------
+    // 1. DATES, HORIZON & PARTY OCCUPANCY
+    // ------------------------------------------------------------------------
+    checkInDate: string;                    // ISO date string 'YYYY-MM-DD'
+    checkOutDate: string;                   // ISO date string 'YYYY-MM-DD'
+    nightsCount: number;                    // Calculated night duration                   // Number of adult patrons
+    childrenCount?: number;                 // Optional youth guests
+    guestsCount: number;                   // Total party count (convenience alias)
+
+    // ------------------------------------------------------------------------
+    // 2. SANCTUARY DESTINATION IDENTITY
+    // ------------------------------------------------------------------------
+    sanctuaryId: string;                    // Prisma Sanctuary CUID
+    sanctuarySlug: string;                  // e.g. 'positano-amalfi'
+    sanctuaryName: string;                  // e.g. 'Aurelia Sanctuary Positano'
+    sanctuaryCode?: string;                 // e.g. 'AUR-POS'
+
+    // ------------------------------------------------------------------------
+    // 3. SUITE & ROOM SPECIFICATION
+    // ------------------------------------------------------------------------
+    accommodationId: string;                // Prisma AccommodationCategory CUID
+    suiteSlug: string;                      // e.g. 'azure-master-ocean-suite'
+    suiteName: string;                      // e.g. 'The Azure Master Ocean Suite'
+    roomUnitId?: string;                    // Optional allocated physical room unit CUID
+    roomNumber?: string;                    // e.g. 'Suite 402'
+    elevationTag?: string;                  // e.g. 'Upper Cliffside Pavilion'
+
+    // ------------------------------------------------------------------------
+    // 4. FINANCIAL & CURRENCY BREAKDOWN
+    // ------------------------------------------------------------------------
+    baseRateNightly: number;                // Nightly suite rate (e.g. 3450)
+    currency: string;                       // e.g. 'EUR'
+    currencySymbol?: string;                // e.g. '€'
+    sovereignDiscountPercent?: number;      // e.g. 15 (for Sovereign Key / Explorer)
+    estimatedTaxAndService?: number;        // Environmental & heritage tariff
+
+    // ------------------------------------------------------------------------
+    // 5. SELECTED EXPERIENCES & ADD-ONS (OPTIONAL)
+    // ------------------------------------------------------------------------
+    selectedAddOnIds?: string[];            // Selected Experience / Service CUIDs
+}
+
+export interface BasicAccommodationBookingParams {
+    checkOutDate?: string, 
+    checkInDate?: string, 
+    nightsCount: number, 
+    guestsCount: number
 }
 
 export interface AccommodationMapperOptions {
     roomUnitId?: string;
-    bookingContext?: AccommodationBookingContext;
+    bookingContext?: {checkOutDate?: string, checkInDate?: string, nightsCount: number, guestsCount: number};
 }
 
 
+interface PrivilegeEnrichment {
+    description: string;
+    badge: string;
+    iconKey: string;
+}
+
+
+export function parseISODate(iso: string): Date {
+    const [year, month, day] = iso.split('-').map(Number);
+    return new Date(year, month - 1, day);
+}
+
+export function calculateNights(startIso: string, endIso: string): number {
+    const start = parseISODate(startIso);
+    const end = parseISODate(endIso);
+    const diffTime = end.getTime() - start.getTime();
+    return Math.round(diffTime / (1000 * 60 * 60 * 24));
+}
 
 // ============================================================================
 // ROOM UNIT SELECTION
@@ -277,16 +338,16 @@ function mapNarrativeAndFloorplan(
                 `Feature ${index + 1}`,
             );
 
-            const description = getString(
+            const detail = getString(
                 item,
-                'description',
+                'detail',
                 '',
             );
 
             return {
                 icon: renderFeatureIcon(iconKey),
                 title,
-                description,
+                detail,
             };
         })
         .filter(
@@ -342,60 +403,146 @@ function mapNarrativeAndFloorplan(
 // PRIVILEGES & POLICIES
 // ============================================================================
 
-function mapPrivilegesAndPolicies(
+function resolvePrivilegeEnrichment(title: string): PrivilegeEnrichment {
+    const lower = title.toLowerCase();
+
+    if (/majordomo|butler/i.test(lower)) {
+        return {
+            description:
+                'Discreet, personalized butler service attending to wardrobe unpacking, evening turndown calibrations, and private in-suite dining.',
+            badge: 'BESPOKE SERVICE',
+            iconKey: 'majordomo',
+        };
+    }
+
+    if (/tender|riva|yacht|boat|arrival/i.test(lower)) {
+        return {
+            description:
+                'Complimentary private maritime transfer from coastal docks directly to the sanctuary private funicular pier.',
+            badge: 'HARBOR TRANSIT',
+            iconKey: 'waves',
+        };
+    }
+
+    if (/thermal|caldarium|spa|bath|pool/i.test(lower)) {
+        return {
+            description:
+                'Daily private access to the volcanic stone Caldarium and mineral hydrotherapy pools, chiseled directly into bedrock.',
+            badge: 'UNLIMITED ACCESS',
+            iconKey: 'waves',
+        };
+    }
+
+    if (/cellar|aperitivo|sommelier|wine/i.test(lower)) {
+        return {
+            description:
+                'Curated reserve vintage pours and regional cicchetti served at twilight overlooking the coastal horizon.',
+            badge: 'DAILY TWILIGHT',
+            iconKey: 'wine',
+        };
+    }
+
+    if (/breakfast|orchard|dining|chef/i.test(lower)) {
+        return {
+            description:
+                'Served privately on your oceanfront loggia or terrace, featuring fresh local citrus, baked brioche, and farm preserves.',
+            badge: 'IN-SUITE SERVED',
+            iconKey: 'orchard',
+        };
+    }
+
+    if (/helicopter|heli/i.test(lower)) {
+        return {
+            description:
+                'Direct helipad arrival and luggage clearance on the private coastal promontory pad.',
+            badge: 'AVIATION CLEARANCE',
+            iconKey: 'waves',
+        };
+    }
+
+    return {
+        description:
+            'Dedicated sanctuary privilege and personalized courtesies provided throughout your stay.',
+        badge: 'SANCTUARY INCLUSION',
+        iconKey: 'majordomo',
+    };
+}
+
+// ============================================================================
+// 2. HELPER UTILITIES
+// ============================================================================
+
+function capitalizeFirstLetter(str: string): string {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
+
+// ============================================================================
+// 3. MASTER MAPPER FUNCTION
+// ============================================================================
+
+export function mapPrivilegesAndPolicies(
     accommodation: AccommodationCategoryWithRoomUnits,
     roomUnit?: AccommodationRoomUnit,
 ): PrivilegesAndPoliciesData {
-    const rawPrivileges = asArray(accommodation.privileges);
+    const rawPrivileges = Array.isArray(accommodation.privileges)
+        ? (accommodation.privileges as unknown[])
+        : [];
 
     const privilegesList: PrivilegeItem[] = rawPrivileges
         .map((item, index): PrivilegeItem | null => {
-            if (!isJsonObject(item)) {
-                return null;
+            if (!item) return null;
+
+            // ----------------------------------------------------------------
+            // CASE A: Privilege is a String (Current DB Schema Array)
+            // ----------------------------------------------------------------
+            if (typeof item === 'string') {
+                const title = item.trim();
+                if (!title) return null;
+
+                const enrichment = resolvePrivilegeEnrichment(title);
+
+                return {
+                    id: `privilege-${index + 1}`,
+                    icon: renderPrivilegeIcon(enrichment.iconKey),
+                    title,
+                    description: enrichment.description,
+                    badge: enrichment.badge,
+                };
             }
 
-            const title = getString(
-                item,
-                'title',
-                `Privilege ${index + 1}`,
-            );
+            // ----------------------------------------------------------------
+            // CASE B: Privilege is an Object (Legacy / Extended JSON format)
+            // ----------------------------------------------------------------
+            if (typeof item === 'object') {
+                const title = (item as any).title || `Privilege ${index + 1}`;
+                const enrichment = resolvePrivilegeEnrichment(title);
+                const description = (item as any).description || enrichment.description;
+                const badge = (item as any).badge || enrichment.badge;
 
-            const description = getString(
-                item,
-                'description',
-                '',
-            );
+                let iconKey = enrichment.iconKey;
+                if (/thermal|bath|caldarium/i.test(title)) {
+                    iconKey = 'waves';
+                } else if (/breakfast|orchard|dining/i.test(title)) {
+                    iconKey = 'orchard';
+                } else if (/sommelier|wine|aperitivo/i.test(title)) {
+                    iconKey = 'wine';
+                }
 
-            const badge = getString(item, 'badge');
-
-            let iconKey = 'majordomo';
-
-            if (/thermal|bath|caldarium/i.test(title)) {
-                iconKey = 'waves';
-            } else if (/breakfast|orchard|dining/i.test(title)) {
-                iconKey = 'orchard';
-            } else if (/sommelier|wine|aperitivo/i.test(title)) {
-                iconKey = 'wine';
+                return {
+                    id: `privilege-${index + 1}`,
+                    icon: renderPrivilegeIcon(iconKey),
+                    title,
+                    description,
+                    badge,
+                };
             }
 
-            const privilege: PrivilegeItem = {
-                id: `privilege-${index + 1}`,
-                icon: renderPrivilegeIcon(iconKey),
-                title,
-                description,
-            };
-
-            if (badge) {
-                privilege.badge = badge;
-            }
-
-            return privilege;
+            return null;
         })
-        .filter(
-            (item): item is PrivilegeItem =>
-                item !== null,
-        );
+        .filter((item): item is PrivilegeItem => item !== null);
 
+    // Dynamic policies using database fields (maxOccupancy, bedroomsCount, minStayNights)
     const policies: SanctuaryPolicyItem[] = [
         {
             label: 'Check-In Protocol',
@@ -425,26 +572,28 @@ function mapPrivilegesAndPolicies(
                         : 'Bedrooms'
                 })`,
             details:
-                `Accommodates up to ${accommodation.maxOccupancy} guests with tailored linen daybed arrangements.`,
+                `Accommodates up to ${accommodation.maxOccupancy} guests with tailored linen daybed arrangements. Minimum stay: ${accommodation.minStayNights || 1} ${(accommodation.minStayNights || 1) === 1 ? 'night' : 'nights'}.`,
         },
     ];
+
+    const formattedCategory = capitalizeFirstLetter(accommodation.category || 'Suite');
 
     return {
         privilegesEyebrow: 'EXCLUSIVE SANCTUARY INCLUSIONS',
         privilegesHeading: roomUnit
-            ? `Curated Privileges of Suite ${roomUnit.unitCode}`
+            ? `Curated Privileges of ${formattedCategory} ${roomUnit.unitCode}`
             : `Curated Privileges of ${accommodation.name}`,
         privilegesDescription:
             'Every reservation within this residence includes dedicated bespoke accommodations, restorative wellness access, and direct concierge privileges.',
         privilegesList,
         policiesEyebrow: 'SANCTUARY PROTOCOLS & COURTESY',
-        policiesHeading:
-            'Arrival, Stay Horizon & Sanctuary Etiquette',
+        policiesHeading: 'Arrival, Stay Horizon & Sanctuary Etiquette',
         policies,
         conciergeNotice:
             'All arrivals via Riva yacht or private helicopter must provide coordinate notice 48 hours in advance to guarantee slip and helipad clearance.',
     };
 }
+
 
 // ============================================================================
 // RATE BREAKDOWN
@@ -452,7 +601,7 @@ function mapPrivilegesAndPolicies(
 
 function mapRateBreakdown(
     accommodation: AccommodationCategoryWithRoomUnits,
-    bookingContext?: AccommodationBookingContext,
+    bookingContext?: BasicAccommodationBookingParams,
 ): AccommodationRateBreakdown {
     const nights = Math.max(
         accommodation.minStayNights,
@@ -492,88 +641,136 @@ function mapRateBreakdown(
     };
 }
 
-// ============================================================================
-// ACCOMMODATION SIBLINGS MAPPER
-// ============================================================================
 
+function resolveCurrencySymbol(currency: string = 'EUR'): string {
+    if (!currency) return '€';
+    const symbol = getCurrencySymbol ? getCurrencySymbol(currency) : null;
+    if (symbol) return symbol;
+
+    switch (currency.toUpperCase()) {
+        case 'USD':
+            return '$';
+        case 'GBP':
+            return '£';
+        case 'CHF':
+            return 'CHF ';
+        case 'JPY':
+            return '¥';
+        case 'EUR':
+        default:
+            return '€';
+    }
+}
+
+/**
+ * Maps alternative accommodation categories (within the same sanctuary or sister enclaves).
+ * Excludes the currently viewed category to showcase distinct architectural alternatives.
+ */
 export function mapAccommodationSiblings(
-    accommodations: AccommodationCategoryWithRoomUnits[],
-    currentAccommodationId?: string,
+    siblingCategories: (AccommodationCategoryWithRoomUnits & {
+        sanctuary?: { name?: string; slug?: string };
+    })[],
+    currentAccommodationIdOrSlug?: string,
+    currentSanctuaryName?: string,
 ): SiblingAccommodationItem[] {
+    if (!Array.isArray(siblingCategories)) {
+        return [];
+    }
 
-    const siblings: SiblingAccommodationItem[] = accommodations
-        .filter(
-            (accommodation) => 
-                accommodation.id !== currentAccommodationId,
-        )
-        .map((accommodation) => {
-            const media = asJsonObject(accommodation.mediaData);
-            const rawFeatures = asArray(accommodation.features);
-            const rawPrivileges = asArray(accommodation.privileges);
+    return siblingCategories
+        .filter(function (category) {
+            if (!currentAccommodationIdOrSlug) return true;
+            return (
+                category.id !== currentAccommodationIdOrSlug &&
+                category.slug !== currentAccommodationIdOrSlug
+            );
+        })
+        .map(function (category) {
+            const media = asJsonObject(category.mediaData);
+            const rawFeatures = asArray(category.features);
+            const rawPrivileges = asArray(category.privileges);
 
+            // 1. Feature tags (up to 3 concise tags)
             const features = rawFeatures
-                .map((feature) => {
-                    if (typeof feature === 'string') {
-                        return feature;
-                    }
-
-                    if (isJsonObject(feature)) {
-                        return getString(
-                            feature,
-                            'title',
-                            getString(feature, 'name'),
+                .map(function (feat): string {
+                    if (typeof feat === 'string') return feat.trim();
+                    if (feat && typeof feat === 'object') {
+                        const featObj = feat as Record<string, unknown>;
+                        return (
+                            getString(featObj, 'title') ||
+                            getString(featObj, 'name') ||
+                            getString(featObj, 'detail')
                         );
                     }
-
                     return '';
                 })
-                .filter((feature) => feature.trim().length > 0);
+                .filter(function (feat) {
+                    return feat.length > 0;
+                })
+                .slice(0, 3);
 
-            const firstPrivilege = rawPrivileges.find(isJsonObject);
+            // 2. Primary Privilege Preview
+            let privilegeText = 'Dedicated 24-Hour Majordomo & Private Riva Access';
+            if (rawPrivileges.length > 0) {
+                const first = rawPrivileges[0];
+                if (typeof first === 'string' && first.trim().length > 0) {
+                    privilegeText = first.trim();
+                } else if (first && typeof first === 'object') {
+                    const firstObj = first as Record<string, unknown>;
+                    privilegeText =
+                        getString(firstObj, 'title') ||
+                        getString(firstObj, 'description') ||
+                        privilegeText;
+                }
+            }
 
-            const privilegeText = firstPrivilege
-                ? getString(
-                    firstPrivilege,
-                    'description',
-                    getString(firstPrivilege, 'title'),
-                )
-                : 'Discover the privileges of this sanctuary.';
+            // 3. Category & Elevation Badges
+            const formattedCategory = formatCategoryTitle(category.category);
+            const badge = getString(
+                media,
+                'badge',
+                category.viewOrientation
+                    ? category.viewOrientation.split(' ')[0]
+                    : formattedCategory
+            );
+
+            const elevationTag = getString(
+                media,
+                'elevationTag',
+                category.viewOrientation || 'Panoramic Seclusion'
+            );
+
+            const heroImageUrl = getString(
+                media,
+                'heroImage',
+                '/limestone-villa.png'
+            );
+
+            // 4. Estate context tag (shows if it's in the same estate or sister enclave)
+            const sanctuaryLabel =
+                category.sanctuary?.name || currentSanctuaryName || 'Estate';
 
             return {
-                id: accommodation.id,
-                slug: accommodation.slug,
-                name: accommodation.name,
-                category: formatCategoryTitle(
-                    accommodation.category,
-                ),
-                badge: getString(
-                    media,
-                    'badge',
-                    formatCategoryTitle(accommodation.category),
-                ),
-                squareMeters: accommodation.squareMeters,
-                elevationTag: getString(
-                    media,
-                    'elevationTag',
-                    accommodation.viewOrientation,
-                ),
-                tagline: accommodation.tagline,
-                basePriceNightly: accommodation.basePriceNightly,
-                currencySymbol: formatCurrencySymbol(
-                    accommodation.currency,
-                ),
-                heroImageUrl: getString(
-                    media,
-                    'heroImage',
-                    '/limestone-villa.png',
-                ),
+                id: category.slug || category.id,
+                slug: category.slug,
+                name: category.name,
+                category: formattedCategory,
+                badge: badge.toUpperCase(),
+                squareMeters: category.squareMeters,
+                elevationTag: elevationTag.toUpperCase(),
+                tagline: category.tagline,
+                basePriceNightly: category.basePriceNightly,
+                currencySymbol: resolveCurrencySymbol(category.currency),
+                heroImageUrl,
                 privilegeText,
                 features,
+                sanctuaryName: sanctuaryLabel,
+                totalUnitsCount: category.roomUnits ? category.roomUnits.length : 1,
             };
         });
-
-    return siblings
 }
+
+
 
 // ============================================================================
 // PRIMARY EXPORTED MAPPER

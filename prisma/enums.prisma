@@ -10,15 +10,6 @@ enum UserRole {
   SUPER_ADMIN
 }
 
-enum BookingStatus {
-  PENDING_PAYMENT
-  CONFIRMED
-  CHECKED_IN
-  CHECKED_OUT
-  CANCELLED
-  NO_SHOW
-}
-
 enum HousekeepingStatus {
   CLEAN_INSPECTED
   CLEAN_UNINSPECTED
@@ -77,4 +68,176 @@ enum SoakingSalts {
   SICILIAN_SEA_SALT_LAVENDER
   VOLCANIC_SULFUR_MINERAL
   UNSCENTED_EPSOM
+}
+
+enum CountryIso2 {
+  GB
+  CH
+  US
+  CA
+  IT
+  FR
+  DE
+  AE
+  MC
+  ES
+  JP
+  SG
+  HK
+  AU
+  IN
+  CN
+  SA
+  QA
+  KW
+  BH
+  NL
+  BE
+  AT
+  SE
+  NO
+  DK
+  PT
+  GR
+  IE
+  LU
+  KR
+  BR
+  MX
+  ZA
+  NZ
+  TR
+  EG
+  ID
+  TH
+  MY
+  AF
+  AL
+  DZ
+  AD
+  AO
+  AR
+  AM
+  AZ
+  BD
+  BY
+  BZ
+  BJ
+  BT
+  BO
+  BA
+  BW
+  BN
+  BG
+  BF
+  BI
+  KH
+  CM
+  CV
+  CL
+  CO
+  KM
+  CG
+  CD
+  CR
+  HR
+  CU
+  CY
+  CZ
+  DJ
+  DM
+  DO
+  EC
+  SV
+  EE
+  ET
+  FJ
+  FI
+  GA
+  GM
+  GE
+  GH
+  GT
+  GN
+  HU
+  IS
+  IR
+  IQ
+  IL
+  JM
+  JO
+  KZ
+  KE
+  KG
+  LA
+  LV
+  LB
+  LY
+  LI
+  LT
+  MO
+  MG
+  MW
+  MV
+  MT
+  MN
+  ME
+  MA
+  MZ
+  MM
+  NA
+  NP
+  NI
+  NG
+  OM
+  PK
+  PA
+  PY
+  PE
+  PH
+  PL
+  RO
+  RU
+  SN
+  RS
+  SK
+  SI
+  LK
+  TW
+  TN
+  UA
+  UY
+  UZ
+  VE
+  VN
+  YE
+  ZW
+}
+
+enum BookingStatus {
+  PENDING_PAYMENT
+  CONFIRMED
+  CHECKED_IN
+  CHECKED_OUT
+  CANCELLED
+  NO_SHOW
+  GUARANTEED
+}
+
+enum LineItemType {
+  ROOM_STAY
+  EXPERIENCE
+  WELLNESS_SPA
+  TRANSFER
+  GASTRONOMY
+  CELLAR_ALLOCATION
+  CUSTOM_FEE
+}
+
+enum PaymentFolioStatus {
+  OPEN
+  AUTHORIZED_HOLD
+  SETTLED
+  PARTIALLY_REFUNDED
+  REFUNDED
 }

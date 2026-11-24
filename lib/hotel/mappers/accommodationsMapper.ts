@@ -1,17 +1,40 @@
-import type { AccommodationCategory } from '@/app/generated/prisma/client';
+import { Prisma } from "@/app/generated/prisma/client";
 import type {
     SuiteCardProps,
     SuiteAmenityItem,
     SuiteFeatureItem,
     SuitePrivilegeItem,
 } from '@/components/hotel/SuiteCard';
+import type { AccommodationBookingContext } from '@/lib/hotel/mappers/AccommodationDetailsMapper';
 import { JsonObject } from '../types';
+
+// ============================================================================
+// 1. DATA CONTRACTS & VIEWMODEL SHAPES
+// ============================================================================
 
 export interface AccommodationSuiteCards {
     masterSuite: SuiteCardProps;
     coastalSuites: SuiteCardProps[];
+    bookingParams?: Partial<AccommodationBookingContext>;
 }
 
+export type AccommodationWithSanctuary = Prisma.AccommodationCategoryGetPayload<{
+    include: {
+        sanctuary: {
+            select: {
+                id: true;
+                name: true;
+                slug: true;
+                currency: true;
+                code?: true;
+            };
+        };
+    };
+}>;
+
+// ============================================================================
+// 2. DEFENSIVE PARSING & FORMATTING UTILITIES
+// ============================================================================
 
 function asObject(value: unknown): JsonObject {
     if (value !== null && typeof value === 'object' && !Array.isArray(value)) {
@@ -35,10 +58,10 @@ function getNumber(object: JsonObject, key: string, fallback = 0): number {
 }
 
 function formatCategory(category: string): string {
-    return category.replaceAll('_', ' ').toUpperCase();
+    return category ? category.replaceAll('_', ' ').toUpperCase() : 'SUITE';
 }
 
-function formatCurrency(currency: string): string {
+function formatCurrency(currency?: string): string {
     const symbols: Record<string, string> = {
         EUR: '€',
         USD: '$',
@@ -46,17 +69,19 @@ function formatCurrency(currency: string): string {
         CHF: 'CHF',
         JPY: '¥',
     };
-    return symbols[currency] ?? currency;
+    return (currency && symbols[currency]) ?? (currency || '€');
 }
 
 function cleanTagName(tag: string): string {
     return tag
         .replaceAll('_', ' ')
         .toLowerCase()
-        .replace(/\b\w/g, (char) => char.toUpperCase());
+        .replace(/\b\w/g, function (char) {
+            return char.toUpperCase();
+        });
 }
 
-function formatSpecs(acc: AccommodationCategory): string {
+function formatSpecs(acc: AccommodationWithSanctuary): string {
     return [
         `${acc.squareMeters} m² / ${acc.squareFeet} sq ft`,
         `${acc.bedroomsCount} ${acc.bedroomsCount === 1 ? 'Bedroom' : 'Bedrooms'}`,
@@ -65,28 +90,34 @@ function formatSpecs(acc: AccommodationCategory): string {
     ].join(' • ');
 }
 
+// ============================================================================
+// 3. SINGLE ENTITY MAPPER (AccommodationCategory -> SuiteCardProps)
+// ============================================================================
+
 export function mapAccommodationCategoryToSuiteCard(
-    accommodation: AccommodationCategory,
+    accommodation: AccommodationWithSanctuary,
+    bookingContextOverride?: Partial<AccommodationBookingContext>,
 ): SuiteCardProps {
     const media = asObject(accommodation.mediaData);
     const narrative = asObject(accommodation.narrative);
     const sensory = asObject(accommodation.sensoryCapabilities);
 
     const categoryLabel = formatCategory(accommodation.category);
-    const currencySymbol = formatCurrency(accommodation.currency);
+    const currencyCode = accommodation.sanctuary?.currency || accommodation.currency || 'EUR';
+    const currencySymbol = formatCurrency(currencyCode);
 
     // 1. Parse Narrative Headings and Paragraphs
     const headline = getString(narrative, 'headline', accommodation.tagline);
     const rawParagraphs = asArray(narrative.paragraphs);
-    const paragraphs = rawParagraphs.filter(
-        (p): p is string => typeof p === 'string',
-    );
+    const paragraphs = rawParagraphs.filter(function (p): p is string {
+        return typeof p === 'string';
+    });
     const description = paragraphs[0] ?? accommodation.tagline;
 
-    // 2. Parse Amenities Array of Objects [{ name, iconClass }]
+    // 2. Parse Amenities Array of Objects [{ name, iconClass, label }]
     const rawAmenities = asArray(accommodation.amenityTags);
     const amenities: SuiteAmenityItem[] = rawAmenities
-        .map((item) => {
+        .map(function (item) {
             if (typeof item === 'string') {
                 return {
                     name: item,
@@ -104,60 +135,53 @@ export function mapAccommodationCategoryToSuiteCard(
             }
             return null;
         })
-        .filter((item): item is SuiteAmenityItem => Boolean(item && item.name));
+        .filter(function (item): item is SuiteAmenityItem {
+            return Boolean(item && item.name);
+        });
 
-    // 3. Parse Features Array of Objects [{ icon, title, description }]
-    
     // 3. Parse Features Array of Objects [{ icon, title, description }]
     const rawFeatures = asArray(accommodation.features);
-
     const features: SuiteFeatureItem[] = rawFeatures
-        .map((item): SuiteFeatureItem | null => {
+        .map(function (item): SuiteFeatureItem | null {
             if (item === null || typeof item !== 'object' || Array.isArray(item)) {
                 return null;
             }
-
             const obj = item as JsonObject;
             const title = getString(obj, 'title');
-
             if (!title) {
                 return null;
             }
-
             return {
                 icon: getString(obj, 'icon'),
                 title,
-                description: getString(obj, 'description') ,
+                description: getString(obj, 'description'),
             };
         })
-        .filter((item): item is SuiteFeatureItem => item !== null);
+        .filter(function (item): item is SuiteFeatureItem {
+            return item !== null;
+        });
 
-
-    // 4. Parse Privileges Array of Objects [{ badge, title, description }]
-    
     // 4. Parse Privileges Array of Objects [{ badge, title, description }]
     const rawPrivileges = asArray(accommodation.privileges);
-
     const privileges: SuitePrivilegeItem[] = rawPrivileges
-        .map((item): SuitePrivilegeItem | null => {
+        .map(function (item): SuitePrivilegeItem | null {
             if (item === null || typeof item !== 'object' || Array.isArray(item)) {
                 return null;
             }
-
             const obj = item as JsonObject;
             const title = getString(obj, 'title');
-
             if (!title) {
                 return null;
             }
-
             return {
                 badge: getString(obj, 'badge'),
                 title,
                 description: getString(obj, 'description'),
             };
         })
-        .filter((item): item is SuitePrivilegeItem => item !== null);
+        .filter(function (item): item is SuitePrivilegeItem {
+            return item !== null;
+        });
 
     // 5. Derive Highlight Tag & Sensory Badges
     const sensoryBadges: string[] = [];
@@ -175,7 +199,7 @@ export function mapAccommodationCategoryToSuiteCard(
         sensoryBadges.push('Circadian Amber');
     }
 
-    const highlightTag = sensoryBadges[0] ?? accommodation.viewOrientation;
+    const highlightTag = sensoryBadges[0] ?? accommodation.viewOrientation ?? 'Panoramic Sea View';
 
     // 6. Photo count from mediaData.viewsCount or gallery length
     const gallery = asArray(media.gallery);
@@ -186,16 +210,38 @@ export function mapAccommodationCategoryToSuiteCard(
             ? `${privileges[0].title} Included`
             : 'Private Butler Included';
 
+    // 7. Contextual Booking Parameters
+    const bookingParams: AccommodationBookingContext = {
+        sanctuaryId: accommodation.sanctuaryId,
+        sanctuaryName: accommodation.sanctuary?.name || 'Aurelia Sanctuary',
+        sanctuarySlug: accommodation.sanctuary?.slug || 'positano-amalfi',
+        sanctuaryCode: (accommodation.sanctuary as { code?: string })?.code || 'AUR-POS',
+        accommodationId: accommodation.id,
+        suiteSlug: accommodation.slug,
+        suiteName: accommodation.name,
+        baseRateNightly: accommodation.basePriceNightly,
+        currency: currencyCode,
+        currencySymbol,
+        nightsCount: bookingContextOverride?.nightsCount ?? 5,
+        guestsCount: bookingContextOverride?.guestsCount ?? 2,
+        checkInDate: bookingContextOverride?.checkInDate ?? '',
+        checkOutDate: bookingContextOverride?.checkOutDate ?? '',
+        ...bookingContextOverride,
+    };
+
     return {
-        bookingParams: {},
         id: accommodation.id,
+        sanctuaryId: accommodation.sanctuaryId,
+        sanctuaryName: accommodation.sanctuary?.name,
+        sanctuarySlug: accommodation.sanctuary?.slug,
+        currency: currencyCode,
         slug: accommodation.slug,
         name: accommodation.name,
         category: categoryLabel,
         badgeLabel: categoryLabel,
         elevationTag: accommodation.viewOrientation,
         highlightTag,
-        metaEyebrow: `${accommodation.squareMeters} M² • ${formatCategory(accommodation.category)}`,
+        metaEyebrow: `${accommodation.squareMeters} M² • ${categoryLabel}`,
         headline,
         description,
         paragraphs,
@@ -220,7 +266,7 @@ export function mapAccommodationCategoryToSuiteCard(
         heroImageUrl: getString(
             media,
             'heroImage',
-            '/images/accommodations/default-suite.jpg',
+            '/limestone-villa.png',
         ),
         photoCount,
 
@@ -230,36 +276,60 @@ export function mapAccommodationCategoryToSuiteCard(
         amenities,
         sensoryBadges,
 
+        bookingParams,
+
         primaryCtaLabel: 'Reserve Suite',
         secondaryCtaLabel: 'Floorplan & Details',
     };
 }
 
+// ============================================================================
+// 4. COLLECTION MAPPER (Listings & Homepage Bento Groupings)
+// ============================================================================
+
 export function mapAccommodationCategoriesToSuiteCards(
-    accommodations: AccommodationCategory[],
+    accommodations: AccommodationWithSanctuary[],
     featuredSlug = 'azure-master-ocean-suite',
+    initialBookingParams?: Partial<AccommodationBookingContext>,
 ): AccommodationSuiteCards {
-    const cards: SuiteCardProps[] = accommodations.map(
-        mapAccommodationCategoryToSuiteCard,
-    );
+    if (!accommodations || accommodations.length === 0) {
+        return {
+            masterSuite: null as unknown as SuiteCardProps,
+            coastalSuites: [],
+            bookingParams: initialBookingParams,
+        };
+    }
+
+    const cards: SuiteCardProps[] = accommodations.map(function (acc) {
+        return mapAccommodationCategoryToSuiteCard(acc, initialBookingParams);
+    });
 
     const masterSuite =
-        cards.find((card) => card.slug === featuredSlug) ?? cards[0];
+        cards.find(function (card) {
+            return card.slug === featuredSlug;
+        }) ?? cards[0];
 
     const coastalSuites: SuiteCardProps[] = cards
-        .filter((card) => card.slug !== masterSuite.slug)
-        .map((card) => ({
-            ...card,
-            variant: 'compact-horizontal',
-        }));
+        .filter(function (card) {
+            return card.slug !== masterSuite.slug;
+        })
+        .map(function (card) {
+            return {
+                ...card,
+                variant: 'coastal-grid' as const,
+            };
+        });
 
     const featuredCard: SuiteCardProps = {
         ...masterSuite,
-        variant: 'featured',
+        variant: 'master-featured' as const,
     };
 
     return {
         masterSuite: featuredCard,
         coastalSuites,
+        bookingParams: initialBookingParams,
     };
 }
+
+export default mapAccommodationCategoriesToSuiteCards;

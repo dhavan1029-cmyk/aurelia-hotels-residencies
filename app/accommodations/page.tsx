@@ -1,3 +1,4 @@
+import { SanctuaryCategory } from '@/components/hotel/accommodations/AccommodationFilterBar';
 import Accommodations from '@/components/pages/hotel/Accommdations';
 
 interface PageProps {
@@ -8,7 +9,7 @@ interface PageProps {
         guests?: string;
         suites?: string;
         sortBy?: string;
-        category?: string;
+        category?: SanctuaryCategory;
     }>;
 }
 

@@ -20,7 +20,7 @@ export default async function Page() {
 	    redirect('/login')
 	}
 
-	// const {dossier, logistics, olfactory, sleep} = mapProfileDatabaseRecord(userData)
+	console.log('userData', userData.bookings)
 
 	const dossier = mapDossierHeaderData(userData)
 	const logistics = mapToProfileLogisticsData(userData)

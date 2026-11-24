@@ -12,6 +12,7 @@ export interface DateRangeCalendarProps {
     minStayNights?: number;       // default 1
     maxStayNights?: number;       // default 90
     initialMonth?: Date;          // default view month
+    compact?: boolean;            // Single-month compact mode (ideal for sidebars & rails)
     className?: string;
 }
 
@@ -32,7 +33,7 @@ export function toISODate(date: Date): string {
 export function formatDateDisplay(isoString: string | null): string {
     if (
         !isoString ||
-        (new Set(['check in', 'check out'])).has(isoString.toLowerCase())
+        (new Set(['check in', 'check out', 'add date'])).has(isoString.toLowerCase())
     ) return 'Add date';
 
     const [year, month, day] = isoString.split('-').map(Number);
@@ -51,7 +52,6 @@ export function calculateNights(startIso: string, endIso: string): number {
     return Math.round(diffTime / (1000 * 60 * 60 * 24));
 }
 
-
 function normalizeDate(value: string | null): string | null {
     if (!value) return null;
 
@@ -60,7 +60,8 @@ function normalizeDate(value: string | null): string | null {
     if (
         normalized === 'check in' ||
         normalized === 'check out' ||
-        normalized === 'add date'
+        normalized === 'add date' ||
+        !value.includes('-')
     ) {
         return null;
     }
@@ -68,8 +69,7 @@ function normalizeDate(value: string | null): string | null {
     return value;
 }
 
-
-const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const WEEKDAYS = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
 
 export function DateRangeCalendar({
     isOpen,
@@ -81,34 +81,27 @@ export function DateRangeCalendar({
     minStayNights = 1,
     maxStayNights = 90,
     initialMonth,
+    compact = false,
     className = '',
 }: DateRangeCalendarProps) {
-    // -------------------------------------------------------------
-    // 1. Pending Local State (Staged until "Apply dates" is clicked)
-    // -------------------------------------------------------------
-    
-    const [pendingCheckIn, setPendingCheckIn] = useState<string | null>(
-        () => normalizeDate(checkIn)
-    );
+    const [pendingCheckIn, setPendingCheckIn] = useState<string | null>(function () {
+        return normalizeDate(checkIn);
+    });
 
-    const [pendingCheckOut, setPendingCheckOut] = useState<string | null>(
-        () => normalizeDate(checkOut)
-    );
+    const [pendingCheckOut, setPendingCheckOut] = useState<string | null>(function () {
+        return normalizeDate(checkOut);
+    });
 
-    const [activeField, setActiveField] = useState<SelectingField>(() => {
+    const [activeField, setActiveField] = useState<SelectingField>(function () {
         const normalizedCheckIn = normalizeDate(checkIn);
         const normalizedCheckOut = normalizeDate(checkOut);
 
-        return normalizedCheckIn && !normalizedCheckOut
-            ? 'checkOut'
-            : 'checkIn';
+        return normalizedCheckIn && !normalizedCheckOut ? 'checkOut' : 'checkIn';
     });
 
     const [hoveredDate, setHoveredDate] = useState<string | null>(null);
 
-    // Initial base month: use checkIn if valid, else today / initialMonth
-    
-    const [viewDate, setViewDate] = useState<Date>(() => {
+    const [viewDate, setViewDate] = useState<Date>(function () {
         const normalizedCheckIn = normalizeDate(checkIn);
 
         if (normalizedCheckIn) {
@@ -118,52 +111,53 @@ export function DateRangeCalendar({
         return initialMonth ?? new Date();
     });
 
-
     const popoverRef = useRef<HTMLDivElement>(null);
 
-    // Sync external props on open
-    
-    useEffect(() => {
-        if (!isOpen) return;
+    // Sync external props when modal opens
+    useEffect(
+        function () {
+            if (!isOpen) return;
 
-        const normalizedCheckIn = normalizeDate(checkIn);
-        const normalizedCheckOut = normalizeDate(checkOut);
+            const normalizedCheckIn = normalizeDate(checkIn);
+            const normalizedCheckOut = normalizeDate(checkOut);
 
-        setPendingCheckIn(normalizedCheckIn);
-        setPendingCheckOut(normalizedCheckOut);
+            setPendingCheckIn(normalizedCheckIn);
+            setPendingCheckOut(normalizedCheckOut);
 
-        setActiveField(
-            normalizedCheckIn && !normalizedCheckOut
-                ? 'checkOut'
-                : 'checkIn'
-        );
+            setActiveField(
+                normalizedCheckIn && !normalizedCheckOut ? 'checkOut' : 'checkIn'
+            );
 
-        if (normalizedCheckIn) {
-            setViewDate(parseISODate(normalizedCheckIn));
-        } else {
-            setViewDate(initialMonth ?? new Date());
-        }
-    }, [isOpen, checkIn, checkOut, initialMonth]);
-
+            if (normalizedCheckIn) {
+                setViewDate(parseISODate(normalizedCheckIn));
+            } else {
+                setViewDate(initialMonth ?? new Date());
+            }
+        },
+        [isOpen, checkIn, checkOut, initialMonth]
+    );
 
     // Handle escape key & click outside
-    useEffect(function () {
-        if (!isOpen) return;
-        function handleKeyDown(e: KeyboardEvent) {
-            if (e.key === 'Escape') onClose();
-        }
-        function handleClickOutside(e: MouseEvent) {
-            if (popoverRef.current && !popoverRef.current.contains(e.target as Node)) {
-                onClose();
+    useEffect(
+        function () {
+            if (!isOpen) return;
+            function handleKeyDown(e: KeyboardEvent) {
+                if (e.key === 'Escape') onClose();
             }
-        }
-        document.addEventListener('keydown', handleKeyDown);
-        document.addEventListener('mousedown', handleClickOutside);
-        return function () {
-            document.removeEventListener('keydown', handleKeyDown);
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, [isOpen, onClose]);
+            function handleClickOutside(e: MouseEvent) {
+                if (popoverRef.current && !popoverRef.current.contains(e.target as Node)) {
+                    onClose();
+                }
+            }
+            document.addEventListener('keydown', handleKeyDown);
+            document.addEventListener('mousedown', handleClickOutside);
+            return function () {
+                document.removeEventListener('keydown', handleKeyDown);
+                document.removeEventListener('mousedown', handleClickOutside);
+            };
+        },
+        [isOpen, onClose]
+    );
 
     // Month Navigation
     function handlePrevMonth() {
@@ -187,28 +181,37 @@ export function DateRangeCalendar({
 
     const todayIso = toISODate(today);
 
-    // Dual Consecutive Months (Month 1 & Month 2)
-    const month1 = useMemo(function () {
-        return new Date(viewDate.getFullYear(), viewDate.getMonth(), 1);
-    }, [viewDate]);
+    const month1 = useMemo(
+        function () {
+            return new Date(viewDate.getFullYear(), viewDate.getMonth(), 1);
+        },
+        [viewDate]
+    );
 
-    const month2 = useMemo(function () {
-        return new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 1);
-    }, [viewDate]);
+    const month2 = useMemo(
+        function () {
+            return new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 1);
+        },
+        [viewDate]
+    );
 
-    // Check if previous navigation is before current calendar month
-    const isPrevDisabled = useMemo(function () {
-        const currentMonthFirst = new Date(today.getFullYear(), today.getMonth(), 1);
-        return month1 <= currentMonthFirst;
-    }, [month1, today]);
+    const isPrevDisabled = useMemo(
+        function () {
+            const currentMonthFirst = new Date(today.getFullYear(), today.getMonth(), 1);
+            return month1 <= currentMonthFirst;
+        },
+        [month1, today]
+    );
 
-    // Computed validation
-    const nightsCount = useMemo(function () {
-        if (pendingCheckIn && pendingCheckOut) {
-            return calculateNights(pendingCheckIn, pendingCheckOut);
-        }
-        return 0;
-    }, [pendingCheckIn, pendingCheckOut]);
+    const nightsCount = useMemo(
+        function () {
+            if (pendingCheckIn && pendingCheckOut) {
+                return calculateNights(pendingCheckIn, pendingCheckOut);
+            }
+            return 0;
+        },
+        [pendingCheckIn, pendingCheckOut]
+    );
 
     const isValidRange =
         pendingCheckIn &&
@@ -230,7 +233,6 @@ export function DateRangeCalendar({
     function handleDateClick(dateIso: string) {
         if (isDatePast(dateIso)) return;
 
-        // Step 1: Picking Check-In
         if (activeField === 'checkIn') {
             setPendingCheckIn(dateIso);
             if (pendingCheckOut && dateIso >= pendingCheckOut) {
@@ -240,7 +242,6 @@ export function DateRangeCalendar({
             return;
         }
 
-        // Step 2: Picking Check-Out
         if (activeField === 'checkOut') {
             if (!pendingCheckIn) {
                 setPendingCheckIn(dateIso);
@@ -260,6 +261,7 @@ export function DateRangeCalendar({
             }
 
             setPendingCheckOut(dateIso);
+            setActiveField('checkIn')
         }
     }
 
@@ -286,7 +288,7 @@ export function DateRangeCalendar({
         const year = monthDate.getFullYear();
         const monthIndex = monthDate.getMonth();
         const monthTitle = monthDate.toLocaleDateString('en-US', {
-            month: 'long',
+            month: 'short',
             year: 'numeric',
         });
 
@@ -299,7 +301,7 @@ export function DateRangeCalendar({
 
         const cells = [];
         for (let i = 0; i < startingDayOfWeek; i++) {
-            cells.push(<div key={`empty-${i}`} className="w-10 h-10 sm:w-11 sm:h-11" />);
+            cells.push(<div key={`empty-${i}`} className="w-8 h-8 sm:w-8.5 sm:h-8.5" />);
         }
 
         for (let day = 1; day <= daysInMonth; day++) {
@@ -317,7 +319,7 @@ export function DateRangeCalendar({
                 (activeField === 'checkOut' && hoveredDate && hoveredDate > (pendingCheckIn || '')
                     ? hoveredDate
                     : null);
-            
+
             const isInRange =
                 pendingCheckIn &&
                 effectiveEnd &&
@@ -328,32 +330,27 @@ export function DateRangeCalendar({
 
             let cellStyle = 'text-[#1f1e1d] hover:bg-[#eeeae2]';
             let containerBg = 'bg-transparent';
-            let shapeStyle = '-lg';
 
             if (isCheckIn) {
                 cellStyle = 'bg-[#8e763b] text-white font-semibold shadow-xs';
-                shapeStyle = '-l-lg -r-none';
-                if (!pendingCheckOut && !hoveredDate) shapeStyle = '-lg';
             } else if (isCheckOut) {
                 cellStyle = 'bg-[#8e763b] text-white font-semibold shadow-xs';
-                shapeStyle = '-r-lg -l-none';
             } else if (isInRange) {
                 cellStyle = 'text-[#1f1e1d] font-medium';
-                containerBg = 'bg-[#8e763b]/12';
-                shapeStyle = '-none';
+                containerBg = 'bg-[#8e763b]/15';
             } else if (isToday) {
                 cellStyle = 'text-[#8e763b] font-bold border border-[#8e763b]/40 hover:bg-[#eeeae2]';
             }
 
             if (isDisabled) {
-                cellStyle = 'text-[#b3aba0] opacity-40 cursor-not-allowed hover:bg-transparent';
+                cellStyle = 'text-[#b3aba0] opacity-35 cursor-not-allowed hover:bg-transparent';
                 containerBg = 'bg-transparent';
             }
 
             cells.push(
                 <div
                     key={dateIso}
-                    className={`relative flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 ${containerBg} ${shapeStyle}`}
+                    className={`relative flex items-center justify-center w-8 h-8 sm:w-8.5 sm:h-8.5 ${containerBg}`}
                 >
                     <button
                         type="button"
@@ -372,7 +369,7 @@ export function DateRangeCalendar({
                         aria-label={`${dateObj.toLocaleDateString('en-US', { dateStyle: 'full' })}${
                             isCheckIn ? ' - Selected Check-in' : ''
                         }${isCheckOut ? ' - Selected Check-out' : ''}`}
-                        className={`w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center font-sans text-xs transition-colors duration-150 ${shapeStyle} ${cellStyle}`}
+                        className={`w-7.5 h-7.5 sm:w-8 sm:h-8 flex items-center justify-center font-sans text-[11px] sm:text-xs transition-colors duration-150 cursor-pointer ${cellStyle}`}
                     >
                         <span>{day}</span>
                     </button>
@@ -381,19 +378,19 @@ export function DateRangeCalendar({
         }
 
         return (
-            <div className="w-fit flex flex-col space-y-3.5">
+            <div className="w-full flex flex-col space-y-2.5">
                 <div className="text-center">
-                    <h4 className="font-serif text-base sm:text-lg font-medium text-[#1f1e1d] tracking-tight">
+                    <h4 className="font-serif text-sm sm:text-base font-medium text-[#1f1e1d] tracking-tight">
                         {monthTitle}
                     </h4>
                 </div>
 
-                <div className="grid grid-cols-7 gap-1 text-center border-b border-[#f2ede4] pb-2">
+                <div className="grid grid-cols-7 gap-0.5 text-center border-b border-[#f2ede4] pb-1.5">
                     {WEEKDAYS.map(function (wd) {
                         return (
                             <span
                                 key={wd}
-                                className="text-[10px] font-sans font-medium uppercase tracking-wider text-[#78756e]"
+                                className="text-[9px] font-sans font-medium uppercase tracking-wider text-[#78756e]"
                             >
                                 {wd}
                             </span>
@@ -401,7 +398,7 @@ export function DateRangeCalendar({
                     })}
                 </div>
 
-                <div className="grid grid-cols-7 gap-y-1 gap-x-0.5 justify-items-center">
+                <div className="grid grid-cols-7 gap-y-0.5 gap-x-0.5 justify-items-center">
                     {cells}
                 </div>
             </div>
@@ -410,35 +407,36 @@ export function DateRangeCalendar({
 
     if (!isOpen) return null;
 
+    const containerWidthClass = compact
+        ? 'w-full max-w-[340px]'
+        : 'w-[320px] sm:w-[580px] lg:w-[620px] max-w-[92vw]';
+
     return (
         <div
             ref={popoverRef}
             role="dialog"
             aria-modal="true"
             aria-label="Date Range Calendar Selector"
-            className={`w-100 sm:w-150 md:w-200 lg:w-200 bg-white border border-[#ded9ce] -3xl p-5 sm:p-7 shadow-[0_20px_50px_rgba(31,30,29,0.14)] text-[#1f1e1d] animate-in fade-in-50 zoom-in-95 z-50 ${className}`}
+            className={`${containerWidthClass} bg-white border border-[#ded9ce] p-4 sm:p-5 shadow-[0_20px_50px_rgba(31,30,29,0.18)] text-[#1f1e1d] animate-in fade-in-50 zoom-in-95 z-50 ${className}`}
         >
             {/* Header & Close */}
-            <div className="flex items-start justify-between pb-4 border-b border-[#f2ede4]">
+            <div className="flex items-start justify-between pb-3 border-b border-[#f2ede4]">
                 <div className="space-y-0.5">
-                    <span className="text-[9px] font-mono font-semibold uppercase tracking-[0.26em] text-[#8e763b] block">
-                        YOUR STAY • RESERVATION HORIZON
+                    <span className="text-[8.5px] font-mono font-semibold uppercase tracking-[0.22em] text-[#8e763b] block">
+                        RESERVATION HORIZON
                     </span>
-                    <h3 className="font-serif text-2xl sm:text-[26px] font-normal text-[#1f1e1d] tracking-tight leading-none">
-                        Select your dates
+                    <h3 className="font-serif text-lg sm:text-xl font-normal text-[#1f1e1d] tracking-tight leading-none">
+                        Select Stay Dates
                     </h3>
-                    <p className="text-xs text-[#78756e] font-sans font-light">
-                        Choose your arrival and departure coordinates
-                    </p>
                 </div>
 
                 <button
                     type="button"
                     onClick={onClose}
                     aria-label="Close date picker"
-                    className="p-2 -xl text-[#78756e] hover:text-[#1f1e1d] hover:bg-[#f6f3ee] transition-colors"
+                    className="p-1.5 text-[#78756e] hover:text-[#1f1e1d] hover:bg-[#f6f3ee] transition-colors cursor-pointer"
                 >
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <line x1="18" y1="6" x2="6" y2="18" />
                         <line x1="6" y1="6" x2="18" y2="18" />
                     </svg>
@@ -446,23 +444,23 @@ export function DateRangeCalendar({
             </div>
 
             {/* Selection Tiles (Check-In / Check-Out) */}
-            <div className="py-4 border-b border-[#f2ede4] flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 flex-1">
+            <div className="py-3 border-b border-[#f2ede4] space-y-2">
+                <div className="grid grid-cols-2 gap-2">
                     <button
                         type="button"
                         onClick={function () {
                             setActiveField('checkIn');
                         }}
-                        className={`p-3 -2xl border text-left transition-all duration-200 ${
+                        className={`p-2.5 border text-left transition-all duration-200 cursor-pointer ${
                             activeField === 'checkIn'
                                 ? 'bg-[#f6f3ee] border-[#8e763b] ring-1 ring-[#8e763b]/30'
                                 : 'bg-white border-[#ded9ce] hover:border-[#8e763b]/50'
                         }`}
                     >
-                        <span className="text-[9px] font-mono font-semibold uppercase tracking-[0.2em] text-[#8e763b] block">
+                        <span className="text-[8.5px] font-mono font-semibold uppercase tracking-[0.18em] text-[#8e763b] block">
                             CHECK-IN
                         </span>
-                        <span className="font-serif text-sm sm:text-base font-medium text-[#1f1e1d] block mt-0.5 truncate">
+                        <span className="font-serif text-xs sm:text-sm font-medium text-[#1f1e1d] block mt-0.5 truncate">
                             {formatDateDisplay(pendingCheckIn)}
                         </span>
                     </button>
@@ -474,102 +472,96 @@ export function DateRangeCalendar({
                                 setActiveField('checkOut');
                             }
                         }}
-                        className={`p-3 -2xl border text-left transition-all duration-200 ${
+                        className={`p-2.5 border text-left transition-all duration-200 cursor-pointer ${
                             activeField === 'checkOut'
                                 ? 'bg-[#f6f3ee] border-[#8e763b] ring-1 ring-[#8e763b]/30'
                                 : 'bg-white border-[#ded9ce] hover:border-[#8e763b]/50'
                         }`}
                     >
-                        <span className="text-[9px] font-mono font-semibold uppercase tracking-[0.2em] text-[#8e763b] block">
+                        <span className="text-[8.5px] font-mono font-semibold uppercase tracking-[0.18em] text-[#8e763b] block">
                             CHECK-OUT
                         </span>
-                        <span className="font-serif text-sm sm:text-base font-medium text-[#1f1e1d] block mt-0.5 truncate">
+                        <span className="font-serif text-xs sm:text-sm font-medium text-[#1f1e1d] block mt-0.5 truncate">
                             {formatDateDisplay(pendingCheckOut)}
                         </span>
                     </button>
                 </div>
 
-                <div className="shrink-0 flex items-center justify-end sm:justify-start gap-2">
+                <div className="flex items-center justify-between text-[11px] font-sans px-1">
                     {isValidRange ? (
-                        <div className="px-3.5 py-2 -xl bg-[#f6f3ee] border border-[#ded9ce] flex items-center gap-2 text-xs font-sans text-[#1f1e1d]">
-                            <span className="w-1.5 h-1.5 -full bg-[#8e763b]" />
-                            <span className="font-serif font-semibold text-sm text-[#8e763b]">{nightsCount}</span>
-                            <span className="text-[#78756e] font-light">
-                                {nightsCount === 1 ? 'Night Stay' : 'Nights Stay'}
+                        <div className="flex items-center gap-1.5 text-[#1f1e1d]">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#8e763b]" />
+                            <span className="font-serif font-semibold text-[#8e763b]">{nightsCount}</span>
+                            <span className="text-[#78756e]">
+                                {nightsCount === 1 ? 'Night' : 'Nights'} stay direct
                             </span>
                         </div>
                     ) : (
-                        <div className="text-[11px] font-sans text-[#78756e] italic px-2">
-                            {pendingCheckIn && !pendingCheckOut ? 'Select departure date' : 'Select arrival date'}
-                        </div>
+                        <span className="text-[10px] text-[#78756e] italic">
+                            {pendingCheckIn && !pendingCheckOut ? 'Now select departure date' : 'Select arrival date'}
+                        </span>
                     )}
                 </div>
             </div>
 
             {/* Navigation Strip */}
-            <div className="flex items-center justify-between pt-4 pb-2 px-1">
+            <div className="flex items-center justify-between pt-2.5 pb-2 px-1">
                 <button
                     type="button"
                     disabled={isPrevDisabled}
                     onClick={handlePrevMonth}
                     aria-label="Previous month"
-                    className="p-2 -xl bg-[#f6f3ee] hover:bg-[#eeeae2] border border-[#ded9ce] text-[#1f1e1d] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                    className="p-1.5 bg-[#f6f3ee] hover:bg-[#eeeae2] border border-[#ded9ce] text-[#1f1e1d] disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
                 >
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <polyline points="15 18 9 12 15 6" />
                     </svg>
                 </button>
 
-                <div className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#78756e] hidden sm:block">
-                    CONSECUTIVE CALENDAR HORIZON
+                <div className="text-[9px] font-mono uppercase tracking-[0.18em] text-[#78756e]">
+                    {compact ? 'STAY CALENDAR' : 'CONSECUTIVE CALENDAR'}
                 </div>
 
                 <button
                     type="button"
                     onClick={handleNextMonth}
                     aria-label="Next month"
-                    className="p-2 -xl bg-[#f6f3ee] hover:bg-[#eeeae2] border border-[#ded9ce] text-[#1f1e1d] transition-colors"
+                    className="p-1.5 bg-[#f6f3ee] hover:bg-[#eeeae2] border border-[#ded9ce] text-[#1f1e1d] transition-colors cursor-pointer"
                 >
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <polyline points="9 18 15 12 9 6" />
                     </svg>
                 </button>
             </div>
 
             {/* Calendar Grids */}
-            <div className="py-2 grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
-                <div className="w-fit pl-8 md:pl-4">
+            <div className={`py-1.5 ${compact ? 'block' : 'grid grid-cols-1 sm:grid-cols-2 gap-5'}`}>
+                <div className="w-full flex justify-center">
                     {renderMonthGrid(month1)}
                 </div>
 
-                <div className="hidden md:block w-fit pl-8 md:pl-4 md:border-l border-[#f2ede4]">
-                    {renderMonthGrid(month2)}
-                </div>
-            </div>
-
-            {/* Helper restriction note */}
-            <div className="pt-3 text-[10px] font-sans text-[#78756e] flex items-center justify-between">
-                <span>Maximum stay horizon: 90 consecutive nights direct.</span>
-                {activeField === 'checkOut' && pendingCheckIn && (
-                    <span className="text-[#8e763b] font-medium">Minimum stay: 1 night</span>
+                {!compact && (
+                    <div className="hidden sm:flex sm:justify-center sm:pl-4 sm:border-l border-[#f2ede4]">
+                        {renderMonthGrid(month2)}
+                    </div>
                 )}
             </div>
 
             {/* Footer Actions */}
-            <div className="mt-4 pt-4 border-t border-[#f2ede4] flex items-center justify-between gap-4">
+            <div className="mt-3 pt-3 border-t border-[#f2ede4] flex items-center justify-between gap-2">
                 <button
                     type="button"
                     onClick={handleClear}
-                    className="text-xs font-sans font-medium text-[#78756e] hover:text-[#1f1e1d] underline transition-colors"
+                    className="text-[11px] font-sans font-medium text-[#78756e] hover:text-[#1f1e1d] underline transition-colors cursor-pointer"
                 >
-                    Clear dates
+                    Clear
                 </button>
 
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
                     <button
                         type="button"
                         onClick={onClose}
-                        className="px-4 py-2.5 -xl bg-[#f6f3ee] hover:bg-[#eeeae2] border border-[#ded9ce] text-[#2c2a26] text-xs font-sans font-medium transition-colors"
+                        className="px-3 py-1.5 bg-[#f6f3ee] hover:bg-[#eeeae2] border border-[#ded9ce] text-[#2c2a26] text-[11px] font-sans font-medium transition-colors cursor-pointer"
                     >
                         Cancel
                     </button>
@@ -578,9 +570,9 @@ export function DateRangeCalendar({
                         type="button"
                         disabled={!isValidRange}
                         onClick={handleApply}
-                        className="px-6 py-2.5 -xl bg-[#1f1e1d] hover:bg-[#343230] text-white disabled:opacity-40 disabled:cursor-not-allowed text-xs font-sans font-semibold uppercase tracking-[0.18em] transition-all duration-200 shadow-sm"
+                        className="px-4 py-1.5 bg-[#1f1e1d] hover:bg-[#343230] text-white disabled:opacity-40 disabled:cursor-not-allowed text-[10px] font-sans font-semibold uppercase tracking-[0.16em] transition-all duration-200 shadow-sm cursor-pointer"
                     >
-                        Apply dates {isValidRange ? `(${nightsCount} ${nightsCount === 1 ? 'Night' : 'Nights'})` : ''}
+                        Apply {isValidRange ? `(${nightsCount}N)` : ''}
                     </button>
                 </div>
             </div>

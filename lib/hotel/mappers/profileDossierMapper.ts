@@ -186,6 +186,7 @@ export interface ProfileExtendedTabsViewModel {
      * Null when the patron holds no active sanctuary reservations.
      */
     upcomingStay: ActiveSanctuaryStayData | null;
+    upcomingStays?: ActiveSanctuaryStayData[];
     /**
      * Array of private cellar crus allocated to this patron folio.
      */
@@ -344,20 +345,33 @@ export function mapProfileExtendedTabsData(
     const profile = user.profile;
     const tier = user.sovereignTier || 'EXPLORER';
 
-    // 1. Resolve Upcoming Stay
-    const activeBooking =
-        user.bookings?.find(function (b) {
-            return b.status === 'CONFIRMED' || b.status === 'CHECKED_IN';
-        }) || null;
+    // 1. Resolve All Upcoming / Active Bookings
+    const activeBookings = (user.bookings || [])
+        .filter(function (b) {
+            return (
+                b.status === 'CONFIRMED' ||
+                b.status === 'CHECKED_IN' ||
+                b.status === 'GUARANTEED'
+            );
+        })
+        .sort(function (a, b) {
+            const dateA = new Date(a.checkInDate).getTime();
+            const dateB = new Date(b.checkInDate).getTime();
+            return dateA - dateB;
+        });
 
-    let upcomingStay: ActiveSanctuaryStayData | null = null;
+    let upcomingStays: ActiveSanctuaryStayData[] = [];
 
     if (options.activeBookingOverride) {
         const override = options.activeBookingOverride;
-        const nights = computeNightsCount(override.checkInDate, override.checkOutDate, override.numberOfNights ?? 7);
+        const nights = computeNightsCount(
+            override.checkInDate,
+            override.checkOutDate,
+            override.numberOfNights ?? 7
+        );
         const host = resolveHostLiaisonByTier(tier, user.primaryMajordomo);
 
-        upcomingStay = {
+        upcomingStays.push({
             bookingReference: override.bookingReference,
             sanctuaryName: override.sanctuaryName || 'Aurelia Sanctuary Positano',
             enclaveLocation: `${override.sanctuaryCity || 'Positano'} • ${override.sanctuaryRegion || 'Amalfi Coast'}`,
@@ -372,33 +386,37 @@ export function mapProfileExtendedTabsData(
             attendingHostRole: host.hostRole,
             attendingHostPhone: host.phoneDisplay,
             itineraryHref: `/confirmation?bookingRef=${encodeURIComponent(override.bookingReference)}`,
-        };
-    } else if (activeBooking) {
-        const nights = computeNightsCount(
-            activeBooking.checkInDate,
-            activeBooking.checkOutDate,
-            activeBooking.numberOfNights ?? 7
-        );
-        const assignedStaff = activeBooking.assignedMajordomo || user.primaryMajordomo;
-        const host = resolveHostLiaisonByTier(tier, assignedStaff);
+        });
+    } else if (activeBookings.length > 0) {
+        upcomingStays = activeBookings.map(function (b) {
+            const nights = computeNightsCount(
+                b.checkInDate,
+                b.checkOutDate,
+                b.numberOfNights ?? 7
+            );
+            const assignedStaff = b.assignedMajordomo || user.primaryMajordomo;
+            const host = resolveHostLiaisonByTier(tier, assignedStaff);
 
-        upcomingStay = {
-            bookingReference: activeBooking.bookingReference,
-            sanctuaryName: activeBooking.sanctuary?.name || 'Aurelia Sanctuary Positano',
-            enclaveLocation: `${activeBooking.sanctuary?.city || 'Positano'} • ${activeBooking.sanctuary?.region || 'Amalfi Coast'}`,
-            suiteTitle: activeBooking.accommodationCategory?.name || 'The Azure Master Ocean Suite',
-            unitCode: activeBooking.roomUnit?.unitCode ? `Suite ${activeBooking.roomUnit.unitCode}` : 'Suite 402',
-            dateRangeDisplay: formatDateRange(activeBooking.checkInDate, activeBooking.checkOutDate),
-            nightsCountDisplay: nights.display,
-            numberOfNights: nights.count,
-            chauffeurProtocol: 'Maybach S680 Rendezvous (Naples Marina / Heliport into Coastal Pad)',
-            sanctuaryAccessMethod: 'Hardware & Sea-Gate Slipway Clearance Active (Biometric NFC)',
-            attendingHostName: host.hostName,
-            attendingHostRole: host.hostRole,
-            attendingHostPhone: host.phoneDisplay,
-            itineraryHref: `/confirmation?bookingRef=${encodeURIComponent(activeBooking.bookingReference)}`,
-        };
+            return {
+                bookingReference: b.bookingReference,
+                sanctuaryName: b.sanctuary?.name || 'Aurelia Sanctuary Positano',
+                enclaveLocation: `${b.sanctuary?.city || 'Positano'} • ${b.sanctuary?.region || 'Amalfi Coast'}`,
+                suiteTitle: b.accommodationCategory?.name || 'The Azure Master Ocean Suite',
+                unitCode: b.roomUnit?.unitCode ? `Suite ${b.roomUnit.unitCode}` : 'Suite 402',
+                dateRangeDisplay: formatDateRange(b.checkInDate, b.checkOutDate),
+                nightsCountDisplay: nights.display,
+                numberOfNights: nights.count,
+                chauffeurProtocol: 'Maybach S680 Rendezvous (Naples Marina / Heliport into Coastal Pad)',
+                sanctuaryAccessMethod: 'Hardware & Sea-Gate Slipway Clearance Active (Biometric NFC)',
+                attendingHostName: host.hostName,
+                attendingHostRole: host.hostRole,
+                attendingHostPhone: host.phoneDisplay,
+                itineraryHref: `/confirmation?bookingRef=${encodeURIComponent(b.bookingReference)}`,
+            };
+        });
     }
+
+    const primaryUpcomingStay = upcomingStays.length > 0 ? upcomingStays[0] : null;
 
     // 2. Resolve Cellar Allocations
     const preferredCru =
@@ -415,7 +433,7 @@ export function mapProfileExtendedTabsData(
                       provenance: 'Tuscan Coast • Cellar Vault Reserve #AUR-2016-ORN',
                       quantityDisplay: '2 Bottles (750ml)',
                       vaultLocation: 'Vault Shelf #AUR-ORN-16',
-                      allocationStatus: upcomingStay ? 'STAGED FOR ARRIVAL' : 'CELLAR EQUILIBRIUM',
+                      allocationStatus: primaryUpcomingStay ? 'STAGED FOR ARRIVAL' : 'CELLAR EQUILIBRIUM',
                       category: 'SUPER_TUSCAN',
                       serviceProtocol: 'Decanted into mouth-blown Riedel decanter 90m prior • 16.5°C serve',
                   },
@@ -458,8 +476,10 @@ export function mapProfileExtendedTabsData(
     };
 
     return {
-        upcomingStay,
+        upcomingStay: primaryUpcomingStay,
+        upcomingStays,
         cellarAllocations,
         securityData,
     };
 }
+

@@ -1,6 +1,23 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { SovereignPhoneInput } from '@/components/hotel/auth/SovereignPhoneInput';
+import {
+    CountryIso2,
+    STRICT_COUNTRY_LIST,
+} from '@/lib/data/phoneValidator';
+
+// ============================================================================
+// TYPE CONTRACTS
+// ============================================================================
+
+export interface StrictValidationResult {
+    isValid: boolean;
+    countryIso: CountryIso2;
+    cleanNationalDigits: string;
+    formattedInternational?: string;
+    error?: string;
+}
 
 export interface HonorificOption {
     label: string;
@@ -12,7 +29,7 @@ export interface ArrivalWindowOption {
     badge: string;
     timeRange: string;
     description: string;
-    iconType: 'early' | 'sunset' | 'charter';
+    iconType?: 'early' | 'sunset' | 'charter';
 }
 
 export interface PatronFormData {
@@ -20,90 +37,75 @@ export interface PatronFormData {
     firstName: string;
     lastName: string;
     email: string;
-    phoneCountryCode: string;
+    phoneCountryIso: CountryIso2;
     phoneNumber: string;
+    isPhoneValid?: boolean;
     countryOfResidence: string;
-    accompanyingGuestName: string;
+    accompanyingGuestName?: string;
     selectedArrivalWindowId: string;
-    transportDesignation: string;
-    dietaryAndCellarNuances: string;
+    transportDesignation?: string;
+    dietaryAndCellarNuances?: string;
 }
 
 export interface PatronSectionData {
-    eyebrow: string;
-    heading: string;
-    description: string;
-    honorificOptions: HonorificOption[];
-    countryOptions: Array<{ label: string; value: string }>;
-    arrivalWindows: ArrivalWindowOption[];
-    initialFormValues: PatronFormData;
+    initialFormValues?: Partial<PatronFormData>;
+    arrivalWindows?: ArrivalWindowOption[];
     isAuthenticated?: boolean;
     patronName?: string;
     patronFolioCode?: string;
+    sovereignTierLabel?: string;
 }
 
-export const checkoutPatronDefaultData: PatronSectionData = {
-    eyebrow: 'PHASE 01 / 03 • AURELIA RESIDENTIAL PROTOCOL',
-    heading: 'Guest Particulars & Sanctuary Preferences',
-    description:
-        'Please record the primary patron identity for encrypted sanctuary key generation, diplomatic transport orchestration, and personalized residential service. Account registration is never required to secure your suite.',
-    honorificOptions: [
-        { label: 'Lord', value: 'Lord' },
-        { label: 'Lady', value: 'Lady' },
-        { label: 'Baron', value: 'Baron' },
-        { label: 'Baroness', value: 'Baroness' },
-        { label: 'Dr.', value: 'Dr' },
-        { label: 'Mr.', value: 'Mr' },
-        { label: 'Mrs.', value: 'Mrs' },
-        { label: 'Ms.', value: 'Ms' },
-    ],
-    countryOptions: [
-        { label: 'United Kingdom (GB)', value: 'GB' },
-        { label: 'Switzerland (CH)', value: 'CH' },
-        { label: 'United States (US)', value: 'US' },
-        { label: 'Italy (IT)', value: 'IT' },
-        { label: 'Monaco (MC)', value: 'MC' },
-        { label: 'France (FR)', value: 'FR' },
-        { label: 'Germany (DE)', value: 'DE' },
-        { label: 'United Arab Emirates (AE)', value: 'AE' },
-    ],
-    arrivalWindows: [
-        {
-            id: 'early-checkin',
-            badge: 'EARLY CHECK-IN',
-            timeRange: '14:00 – 16:00',
-            description: 'Direct suite staging upon harbor arrival.',
-            iconType: 'early',
-        },
-        {
-            id: 'sunset-welcome',
-            badge: 'SUNSET WELCOME',
-            timeRange: '16:00 – 19:00',
-            description: 'Aperitivo in the terrace colonnade.',
-            iconType: 'sunset',
-        },
-        {
-            id: 'charter-tender',
-            badge: 'CHARTER / PRIVATE TENDER',
-            timeRange: 'Custom Arrival',
-            description: 'Tender berth coordinated by Aurelia dock master.',
-            iconType: 'charter',
-        },
-    ],
-    initialFormValues: {
-        title: 'Lord',
-        firstName: 'Julian',
-        lastName: 'Vane-Tempest',
-        email: 'j.vane-tempest@sovereign-holdings.co.uk',
-        phoneCountryCode: '+44',
-        phoneNumber: '7911 123456',
-        countryOfResidence: 'GB',
-        accompanyingGuestName: 'Lady Evelyn Vane-Tempest',
-        selectedArrivalWindowId: 'early-checkin',
-        transportDesignation: 'NetJets Citation Latitude — NJE849 into Naples',
-        dietaryAndCellarNuances:
-            'Preference for Campania whites & biodynamic pressings. Shellfish intolerance for companion.',
+export const HONORIFIC_OPTIONS: HonorificOption[] = [
+    { label: 'Mr.', value: 'Mr' },
+    { label: 'Mrs.', value: 'Mrs' },
+    { label: 'Ms.', value: 'Ms' },
+    { label: 'Dr.', value: 'Dr' },
+    { label: 'Lord', value: 'Lord' },
+    { label: 'Lady', value: 'Lady' },
+    { label: 'Baron', value: 'Baron' },
+    { label: 'Baroness', value: 'Baroness' },
+    { label: 'Ambassador', value: 'Ambassador' },
+    { label: 'Sheikh / Sheikha', value: 'Sheikh' },
+];
+
+export const CANONICAL_ARRIVAL_WINDOWS: ArrivalWindowOption[] = [
+    {
+        id: 'window-standard',
+        badge: 'STANDARD SANCTUARY CHECK-IN',
+        timeRange: '15:00 — 18:00',
+        description: 'Majordomo reception in cloistered courtyard with chilled Amalfi limoncello.',
+        iconType: 'early',
     },
+    {
+        id: 'window-sunset',
+        badge: 'GOLDEN HOUR DUSK RECEPTION',
+        timeRange: '18:00 — 21:00',
+        description: 'Direct cliffside escort with candlelight terrace staging and private aperitivo.',
+        iconType: 'sunset',
+    },
+    {
+        id: 'window-charter',
+        badge: 'DIPLOMATIC / PRIVATE HARBOR ARRIVAL',
+        timeRange: '21:00 — 02:00',
+        description: 'Private Riva tender disembarkation and silent suite escort with minimal formality.',
+        iconType: 'charter',
+    },
+];
+
+export const checkoutPatronDefaultValues: PatronFormData = {
+    title: 'Mr',
+    firstName: '',
+    lastName: '',
+    email: '',
+    phoneCountryIso: 'IT',
+    phoneNumber: '',
+    isPhoneValid: false,
+    countryOfResidence: 'IT',
+    accompanyingGuestName: '',
+    selectedArrivalWindowId: 'window-standard',
+    transportDesignation: '',
+    dietaryAndCellarNuances: '',
 };
 
 export interface PatronAndLogisticsProps {
@@ -113,353 +115,426 @@ export interface PatronAndLogisticsProps {
     className?: string;
 }
 
+// ============================================================================
+// COMPONENT IMPLEMENTATION
+// ============================================================================
+
 export function PatronAndLogisticsSection({
-    data = checkoutPatronDefaultData,
+    data = {},
     onChange,
     onAuthenticateClick,
     className = '',
 }: PatronAndLogisticsProps) {
     const {
-        eyebrow,
-        heading,
-        description,
-        honorificOptions,
-        countryOptions,
-        arrivalWindows,
         initialFormValues,
-        isAuthenticated = false,
+        arrivalWindows = CANONICAL_ARRIVAL_WINDOWS,
+        isAuthenticated,
         patronName,
         patronFolioCode,
+        sovereignTierLabel,
     } = data;
 
-    const [formValues, setFormValues] = useState<PatronFormData>(initialFormValues);
+    const defaultWindowId =
+        arrivalWindows && arrivalWindows.length > 0
+            ? arrivalWindows[0].id
+            : 'window-standard';
 
-    function handleFieldChange(field: keyof PatronFormData, value: string) {
-        const updated = { ...formValues, [field]: value };
-        setFormValues(updated);
-        if (onChange) {
-            onChange(updated);
-        }
-    }
+    const [formValues, setFormValues] = useState<PatronFormData>(function () {
+        return {
+            ...checkoutPatronDefaultValues,
+            selectedArrivalWindowId: defaultWindowId,
+            ...(initialFormValues || {}),
+        };
+    });
+
+    useEffect(
+        function () {
+            if (!initialFormValues || Object.keys(initialFormValues).length === 0) {
+                return;
+            }
+            setFormValues(function (prev) {
+                return {
+                    ...prev,
+                    ...initialFormValues,
+                };
+            });
+        },
+        [initialFormValues]
+    );
+
+    const handleFieldChange = useCallback(
+        function <K extends keyof PatronFormData>(field: K, value: PatronFormData[K]) {
+            setFormValues(function (prev) {
+                const updated: PatronFormData = { ...prev, [field]: value };
+                if (onChange) {
+                    onChange(updated);
+                }
+                return updated;
+            });
+        },
+        [onChange]
+    );
+
+    const handlePhoneValidationChange = useCallback(
+        function (result: any) {
+            setFormValues(function (prev) {
+                const countryIso = (result.countryIso || result.iso || prev.phoneCountryIso) as CountryIso2;
+                const digits = result.cleanNationalDigits || result.sanitized || result.value || '';
+                const valid = Boolean(result.isValid);
+
+                const updated: PatronFormData = {
+                    ...prev,
+                    phoneCountryIso: countryIso,
+                    phoneNumber: digits,
+                    isPhoneValid: valid,
+                };
+
+                if (onChange) {
+                    onChange(updated);
+                }
+                return updated;
+            });
+        },
+        [onChange]
+    );
 
     return (
-        <div className={`space-y-8 ${className}`}>
-
-            {/* Editorial Header Monograph */}
-            <div>
-                <span className="block text-[10px] sm:text-[11px] font-sans font-semibold uppercase tracking-[0.25em] text-[#8e763b] mb-2">
-                    {eyebrow}
+        <div className={`space-y-10 ${className}`}>
+            {/* 1. SECTION TITLE & RESIDENTIAL PROTOCOL STRIP */}
+            <div className="border-b border-[#eeeae2] pb-4">
+                <span className="text-[9px] font-mono uppercase tracking-[0.24em] text-[#8e763b] block">
+                    STAGE 01 • RESIDENTIAL PROTOCOL &amp; PATRON IDENTITY
                 </span>
-                <h1 className="font-serif text-3xl sm:text-4xl lg:text-[42px] font-normal text-[#1f1e1d] tracking-tight leading-[1.12]">
-                    {heading}
-                </h1>
-                <p className="mt-3 text-xs sm:text-[13px] md:text-sm text-[#5f5c56] font-sans font-light leading-relaxed max-w-3xl">
-                    {description}
+                <h2 className="font-serif text-2xl font-light text-[#1f1e1d] tracking-tight mt-0.5">
+                    Guest Particulars &amp; Sanctuary Preferences
+                </h2>
+                <p className="text-xs font-sans text-[#78756d] mt-1">
+                    Record primary patron particulars for encrypted key issuance and harbor transfer coordination. Registration is never mandatory.
                 </p>
+
+                {/* Authentication Recognition / Prompt */}
+                {isAuthenticated ? (
+                    <div className="mt-4 p-4 bg-[#fbf9f4] border border-[#bfa76f]/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
+                        <div className="flex items-center gap-3">
+                            <span className="w-2 h-2 rounded-full bg-[#8e763b] animate-pulse shrink-0" />
+                            <div>
+                                <span className="text-[11px] font-sans font-semibold uppercase tracking-[0.16em] text-[#1f1e1d] block">
+                                    RECOGNIZED SOVEREIGN PATRON
+                                </span>
+                                <span className="text-xs font-sans text-[#78756d]">
+                                    {patronName || 'Esteemed Patron'} • Folio:{' '}
+                                    <span className="font-mono font-medium text-[#8e763b]">
+                                        {patronFolioCode || 'AUR-SVR-FOLIO'}
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <span className="text-[9px] font-mono tracking-widest uppercase text-[#8e763b] px-3 py-1 bg-[#bfa76f]/10 border border-[#bfa76f]/30 self-start sm:self-auto font-medium">
+                            ✦ {sovereignTierLabel || 'PRE-CALIBRATED STAY'}
+                        </span>
+                    </div>
+                ) : (
+                    onAuthenticateClick && (
+                        <div className="mt-4 p-3 bg-[#faf8f5] border border-[#e8e4dc] flex items-center justify-between gap-3">
+                            <div className="flex items-center gap-2 min-w-0">
+                                <span className="text-[#8e763b] text-xs shrink-0">✦</span>
+                                <span className="text-xs font-sans text-[#1f1e1d] truncate">
+                                    Already hold an accredited Sovereign Key or Explorer Docket?
+                                </span>
+                            </div>
+                            <button
+                                type="button"
+                                onClick={onAuthenticateClick}
+                                className="text-[10px] font-sans font-semibold uppercase tracking-[0.16em] text-[#8e763b] hover:text-[#1f1e1d] underline transition-colors cursor-pointer shrink-0"
+                            >
+                                Sign In for Automated Clearance
+                            </button>
+                        </div>
+                    )
+                )}
             </div>
 
-            {/* SECTION 1: Primary Patron Details Form Card */}
-            <article className="bg-white border border-[#e8e4dc] -2xl p-6 sm:p-8 lg:p-9 shadow-[0_4px_24px_rgba(0,0,0,0.02)]">
-                {/* Form Card Header */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#eeeae2] pb-5 mb-6">
-                    <div className="flex items-center gap-3">
-                        <span className="w-6 h-6 bg-[#1f1e1d] text-white flex items-center justify-center font-sans text-xs font-semibold">
-                            1
-                        </span>
-                        <h2 className="font-serif text-xl sm:text-2xl font-normal text-[#1f1e1d] tracking-tight">
-                            Primary Patron Details
-                        </h2>
+            {/* 2. PRIMARY PATRON IDENTITY FORM */}
+            <section aria-labelledby="primary-patron-title" className="space-y-4">
+                <div className="flex items-center justify-between">
+                    <div>
+                        <h3 id="primary-patron-title" className="font-serif text-base font-normal text-[#1f1e1d]">
+                            Primary Patron Dossier
+                        </h3>
+                        <p className="text-xs font-sans text-[#78756d]">
+                            Encrypted and protected under Swiss FADP and EU-GDPR standards.
+                        </p>
                     </div>
-
-                    <div className="flex items-center gap-2">
-                        <span className="px-2.5 py-0.5 -sm bg-[#f2ede4] border border-[#ded9ce] text-[9px] font-sans font-semibold uppercase tracking-[0.16em] text-[#8e763b]">
-                            REQUIRED FIELDS
-                        </span>
-                        <span className="hidden sm:inline text-[11px] font-sans text-[#78756d]">
-                            All correspondence is confidential &amp; encrypted.
-                        </span>
-                    </div>
+                    <span className="text-[9px] font-mono uppercase tracking-[0.16em] text-[#8e763b]">
+                        REQUIRED FIELDS
+                    </span>
                 </div>
 
-                {/* Form Inputs Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-12 gap-5">
-                    {/* Honorific Title */}
-                    <div className="sm:col-span-3">
-                        <label className="block text-[10px] font-sans font-semibold uppercase tracking-[0.18em] text-[#6d6961] mb-2">
-                            HONORIFIC TITLE
-                        </label>
-                        <select
-                            value={formValues.title}
-                            onChange={function (e) {
-                                handleFieldChange('title', e.target.value);
-                            }}
-                            className="w-full px-3.5 py-3 -xl bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] transition-colors shadow-2xs"
-                        >
-                            {honorificOptions.map(function (opt) {
-                                return (
-                                    <option key={opt.value} value={opt.value}>
-                                        {opt.label}
-                                    </option>
-                                );
-                            })}
-                        </select>
-                    </div>
-
-                    {/* First / Given Name */}
-                    <div className="sm:col-span-4">
-                        <label className="block text-[10px] font-sans font-semibold uppercase tracking-[0.18em] text-[#6d6961] mb-2">
-                            FIRST / GIVEN NAME *
-                        </label>
-                        <input
-                            type="text"
-                            required
-                            value={formValues.firstName}
-                            onChange={function (e) {
-                                handleFieldChange('firstName', e.target.value);
-                            }}
-                            placeholder="e.g. Julian"
-                            className="w-full px-3.5 py-3 -xl bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] transition-colors shadow-2xs placeholder-[#a4a098]"
-                        />
-                    </div>
-
-                    {/* Surname */}
-                    <div className="sm:col-span-5">
-                        <label className="block text-[10px] font-sans font-semibold uppercase tracking-[0.18em] text-[#6d6961] mb-2">
-                            SURNAME *
-                        </label>
-                        <input
-                            type="text"
-                            required
-                            value={formValues.lastName}
-                            onChange={function (e) {
-                                handleFieldChange('lastName', e.target.value);
-                            }}
-                            placeholder="e.g. Vane-Tempest"
-                            className="w-full px-3.5 py-3 -xl bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] transition-colors shadow-2xs placeholder-[#a4a098]"
-                        />
-                    </div>
-
-                    {/* Discreet Email Address */}
-                    <div className="sm:col-span-6">
-                        <label className="block text-[10px] font-sans font-semibold uppercase tracking-[0.18em] text-[#6d6961] mb-2">
-                            DISCREET EMAIL ADDRESS *
-                        </label>
-                        <div className="relative">
-                            <input
-                                type="email"
-                                required
-                                value={formValues.email}
-                                onChange={function (e) {
-                                    handleFieldChange('email', e.target.value);
-                                }}
-                                placeholder="patron@sovereign-holdings.co.uk"
-                                className="w-full pl-10 pr-3.5 py-3 -xl bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] transition-colors shadow-2xs placeholder-[#a4a098]"
-                            />
-                            <svg
-                                className="w-4 h-4 text-[#8e763b] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="1.8"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                            >
-                                <rect x="3" y="5" width="18" height="14" rx="2" />
-                                <polyline points="3 7 12 13 21 7" />
-                            </svg>
-                        </div>
-                        <span className="block text-[10px] font-sans text-[#8e8a82] mt-1.5 leading-snug">
-                            Digital key card &amp; itinerary dispatched here 24h prior.
-                        </span>
-                    </div>
-
-                    {/* Mobile Contact */}
-                    <div className="sm:col-span-6">
-                        <label className="block text-[10px] font-sans font-semibold uppercase tracking-[0.18em] text-[#6d6961] mb-2">
-                            MOBILE CONTACT (WHATSAPP / SMS) *
-                        </label>
-                        <div className="flex gap-2">
+                <div className="p-5 sm:p-6 bg-[#faf8f5] border border-[#e8e4dc] space-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-12 gap-4">
+                        {/* Honorific Title */}
+                        <div className="sm:col-span-3">
+                            <label className="block text-[9px] font-mono uppercase tracking-[0.18em] text-[#6d6961] mb-1.5">
+                                HONORIFIC TITLE
+                            </label>
                             <select
-                                value={formValues.phoneCountryCode}
+                                value={formValues.title}
                                 onChange={function (e) {
-                                    handleFieldChange('phoneCountryCode', e.target.value);
+                                    handleFieldChange('title', e.target.value);
                                 }}
-                                className="px-3 py-3 -xl bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] transition-colors shadow-2xs shrink-0"
+                                className="w-full px-3 py-2 bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] transition-colors shadow-2xs cursor-pointer"
                             >
-                                <option value="+44">+44 (UK)</option>
-                                <option value="+41">+41 (CH)</option>
-                                <option value="+1">+1 (US)</option>
-                                <option value="+39">+39 (IT)</option>
-                                <option value="+33">+33 (FR)</option>
-                                <option value="+49">+49 (DE)</option>
-                                <option value="+971">+971 (AE)</option>
+                                {HONORIFIC_OPTIONS.map(function (opt) {
+                                    return (
+                                        <option key={opt.value} value={opt.value}>
+                                            {opt.label}
+                                        </option>
+                                    );
+                                })}
                             </select>
+                        </div>
+
+                        {/* First / Given Name */}
+                        <div className="sm:col-span-4">
+                            <label className="block text-[9px] font-mono uppercase tracking-[0.18em] text-[#6d6961] mb-1.5">
+                                GIVEN NAME <span className="text-[#8e763b]">*</span>
+                            </label>
                             <input
-                                type="tel"
+                                type="text"
                                 required
-                                value={formValues.phoneNumber}
+                                value={formValues.firstName}
                                 onChange={function (e) {
-                                    handleFieldChange('phoneNumber', e.target.value);
+                                    handleFieldChange('firstName', e.target.value);
                                 }}
-                                placeholder="7911 123456"
-                                className="w-full px-3.5 py-3 -xl bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] transition-colors shadow-2xs placeholder-[#a4a098]"
+                                placeholder="e.g. Julian"
+                                className="w-full px-3 py-2 bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] transition-colors shadow-2xs placeholder-[#a4a098]"
                             />
                         </div>
-                        <span className="block text-[10px] font-sans text-[#8e8a82] mt-1.5 leading-snug">
-                            Direct connection for your assigned personal majordomo.
-                        </span>
-                    </div>
 
-                    {/* Country of Residence */}
-                    <div className="sm:col-span-6">
-                        <label className="block text-[10px] font-sans font-semibold uppercase tracking-[0.18em] text-[#6d6961] mb-2">
-                            COUNTRY OF RESIDENCE
-                        </label>
-                        <select
-                            value={formValues.countryOfResidence}
-                            onChange={function (e) {
-                                handleFieldChange('countryOfResidence', e.target.value);
-                            }}
-                            className="w-full px-3.5 py-3 -xl bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] transition-colors shadow-2xs"
-                        >
-                            {countryOptions.map(function (country) {
-                                return (
-                                    <option key={country.value} value={country.value}>
-                                        {country.label}
-                                    </option>
-                                );
-                            })}
-                        </select>
-                    </div>
+                        {/* Surname */}
+                        <div className="sm:col-span-5">
+                            <label className="block text-[9px] font-mono uppercase tracking-[0.18em] text-[#6d6961] mb-1.5">
+                                SURNAME <span className="text-[#8e763b]">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                required
+                                value={formValues.lastName}
+                                onChange={function (e) {
+                                    handleFieldChange('lastName', e.target.value);
+                                }}
+                                placeholder="e.g. Vane-Tempest"
+                                className="w-full px-3 py-2 bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] transition-colors shadow-2xs placeholder-[#a4a098]"
+                            />
+                        </div>
 
-                    {/* Accompanying Adult Guest */}
-                    <div className="sm:col-span-6">
-                        <label className="block text-[10px] font-sans font-semibold uppercase tracking-[0.18em] text-[#6d6961] mb-2">
-                            ACCOMPANYING ADULT GUEST
-                        </label>
-                        <input
-                            type="text"
-                            value={formValues.accompanyingGuestName}
-                            onChange={function (e) {
-                                handleFieldChange('accompanyingGuestName', e.target.value);
-                            }}
-                            placeholder="e.g. Lady Evelyn Vane-Tempest"
-                            className="w-full px-3.5 py-3 -xl bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] transition-colors shadow-2xs placeholder-[#a4a098]"
-                        />
-                        <span className="block text-[10px] font-sans text-[#8e8a82] mt-1.5 leading-snug">
-                            For personalized sanctuary pass &amp; dining reservations.
-                        </span>
-                    </div>
-                </div>
-            </article>
+                        {/* Discreet Email Address */}
+                        <div className="sm:col-span-6">
+                            <label className="block text-[9px] font-mono uppercase tracking-[0.18em] text-[#6d6961] mb-1.5">
+                                DISCREET EMAIL ADDRESS <span className="text-[#8e763b]">*</span>
+                            </label>
+                            <div className="relative">
+                                <input
+                                    type="email"
+                                    required
+                                    value={formValues.email}
+                                    onChange={function (e) {
+                                        handleFieldChange('email', e.target.value);
+                                    }}
+                                    placeholder="patron@sovereign-holdings.co.uk"
+                                    className="w-full pl-9 pr-3 py-2 bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] transition-colors shadow-2xs placeholder-[#a4a098]"
+                                />
+                                <svg
+                                    className="w-3.5 h-3.5 text-[#8e763b] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="1.8"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                >
+                                    <rect x="3" y="5" width="18" height="14" rx="2" />
+                                    <polyline points="3 7 12 13 21 7" />
+                                </svg>
+                            </div>
+                            <span className="block text-[9.5px] font-sans text-[#8e8a82] mt-1 leading-snug">
+                                Digital key &amp; itinerary dispatched here 24h prior to docking.
+                            </span>
+                        </div>
 
-            {/* SECTION 2: Arrival Logistics & Host Orchestration */}
-            <article className="bg-white border border-[#e8e4dc] -2xl p-6 sm:p-8 lg:p-9 shadow-[0_4px_24px_rgba(0,0,0,0.02)]">
-                {/* Form Card Header */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#eeeae2] pb-5 mb-6">
-                    <div className="flex items-center gap-3">
-                        <span className="w-6 h-6 -full bg-[#1f1e1d] text-white flex items-center justify-center font-sans text-xs font-semibold">
-                            2
-                        </span>
-                        <div>
-                            <h2 className="font-serif text-xl sm:text-2xl font-normal text-[#1f1e1d] tracking-tight">
-                                Arrival Logistics &amp; Host Orchestration
-                            </h2>
-                            <p className="text-xs text-[#78756d] font-sans font-light mt-0.5">
-                                Ensure seamless harbor rendezvous or heliport reception.
-                            </p>
+                        {/* Direct Mobile Contact */}
+                        <div className="sm:col-span-6">
+                            <SovereignPhoneInput
+                                selectedIso={formValues.phoneCountryIso as any}
+                                value={formValues.phoneNumber}
+                                name="checkoutPhone"
+                                label="DIRECT MOBILE"
+                                required={true}
+                                onChange={handlePhoneValidationChange}
+                                className="font-sans text-[9.5px]"
+                            />
+                        </div>
+
+                        {/* Country of Residence */}
+                        <div className="sm:col-span-6">
+                            <label className="block text-[9px] font-mono uppercase tracking-[0.18em] text-[#6d6961] mb-1.5">
+                                COUNTRY OF RESIDENCE
+                            </label>
+                            <select
+                                value={formValues.countryOfResidence}
+                                onChange={function (e) {
+                                    handleFieldChange('countryOfResidence', e.target.value);
+                                }}
+                                className="w-full px-3 py-2 bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] transition-colors shadow-2xs cursor-pointer"
+                            >
+                                {STRICT_COUNTRY_LIST.map(function (country) {
+                                    return (
+                                        <option key={country.iso} value={country.iso}>
+                                            {country.name} ({country.iso})
+                                        </option>
+                                    );
+                                })}
+                            </select>
+                        </div>
+
+                        {/* Accompanying Adult Guest */}
+                        <div className="sm:col-span-6">
+                            <label className="block text-[9px] font-mono uppercase tracking-[0.18em] text-[#6d6961] mb-1.5">
+                                ACCOMPANYING ADULT GUEST
+                            </label>
+                            <input
+                                type="text"
+                                value={formValues.accompanyingGuestName || ''}
+                                onChange={function (e) {
+                                    handleFieldChange('accompanyingGuestName', e.target.value);
+                                }}
+                                placeholder="e.g. Lady Evelyn Vane-Tempest"
+                                className="w-full px-3 py-2 bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] transition-colors shadow-2xs placeholder-[#a4a098]"
+                            />
+                            <span className="block text-[9.5px] font-sans text-[#8e8a82] mt-1 leading-snug">
+                                For companion NFC key attestation &amp; dining reservations.
+                            </span>
                         </div>
                     </div>
                 </div>
+            </section>
 
-                {/* 3 Arrival Window Choice Cards */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+            {/* 3. ARRIVAL LOGISTICS & HOST ORCHESTRATION TILES */}
+            <section aria-labelledby="arrival-orchestration-title" className="space-y-4">
+                <div className="flex items-center justify-between">
+                    <div>
+                        <h3 id="arrival-orchestration-title" className="font-serif text-base font-normal text-[#1f1e1d]">
+                            Arrival Logistics &amp; Host Orchestration
+                        </h3>
+                        <p className="text-xs font-sans text-[#78756d]">
+                            Select an arrival window to coordinate private tenders and courtyard greeting.
+                        </p>
+                    </div>
+                    <span className="text-[9px] font-mono uppercase tracking-[0.16em] text-[#8e763b]">
+                        HARBOR &amp; HELIPORT
+                    </span>
+                </div>
+
+                {/* Arrival Window Choice Cards (Matching Pillow Card Aesthetics) */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     {arrivalWindows.map(function (window) {
                         const isSelected = formValues.selectedArrivalWindowId === window.id;
 
                         return (
-                            <div
+                            <button
                                 key={window.id}
+                                type="button"
                                 onClick={function () {
                                     handleFieldChange('selectedArrivalWindowId', window.id);
                                 }}
-                                className={`p-4 -xl border transition-all duration-300 cursor-pointer flex flex-col justify-between ${
+                                className={`text-left p-4 border transition-all cursor-pointer flex flex-col justify-between ${
                                     isSelected
-                                        ? 'bg-[#f7f2e7] border-[#8e763b] shadow-xs'
-                                        : 'bg-white border-[#ded9ce] hover:border-[#8e763b]/60'
+                                        ? 'bg-white border-[#8e763b] ring-1 ring-[#8e763b]/30 shadow-xs'
+                                        : 'bg-[#faf8f5] border-[#e8e4dc] hover:border-[#8e763b]/50'
                                 }`}
                             >
-                                <div>
-                                    <div className="flex items-center justify-between mb-3">
-                                        <span className="text-[9px] font-sans font-semibold uppercase tracking-[0.16em] text-[#8e763b]">
+                                <div className="space-y-2">
+                                    <div className="flex items-start justify-between gap-2">
+                                        <span className="text-[8.5px] font-mono uppercase tracking-wider text-[#8e763b]">
                                             {window.badge}
                                         </span>
-                                        <span
-                                            className={`w-3.5 h-3.5 -full border flex items-center justify-center ${
+                                        <div
+                                            className={`w-3.5 h-3.5 border rounded-full flex items-center justify-center shrink-0 mt-0.5 ${
                                                 isSelected
                                                     ? 'border-[#8e763b] bg-[#8e763b]'
                                                     : 'border-[#ded9ce] bg-white'
                                             }`}
                                         >
                                             {isSelected && (
-                                                <span className="w-1.5 h-1.5 -full bg-white" />
+                                                <span className="w-1.5 h-1.5 rounded-full bg-white" />
                                             )}
-                                        </span>
+                                        </div>
                                     </div>
 
-                                    <h3 className="font-serif text-base sm:text-lg font-medium text-[#1f1e1d] tracking-tight">
+                                    <h4 className="font-serif text-sm font-medium text-[#1f1e1d] leading-snug">
                                         {window.timeRange}
-                                    </h3>
-                                    <p className="mt-1 text-xs text-[#6e6b64] font-sans font-light leading-relaxed">
+                                    </h4>
+                                    <p className="text-[11px] font-sans text-[#78756d] leading-relaxed">
                                         {window.description}
                                     </p>
                                 </div>
-                            </div>
+                            </button>
                         );
                     })}
                 </div>
+            </section>
 
-                {/* Dual Transport & Dietary Nuances Input Strip */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 pt-4 border-t border-[#eeeae2]">
+            {/* 4. TRANSPORT & CELLAR NUANCES (MATCHING MICROCLIMATE PANEL STYLING) */}
+            <section aria-labelledby="bespoke-transit-title" className="p-5 sm:p-6 bg-[#faf8f5] border border-[#e8e4dc] space-y-4">
+                <div>
+                    <h3 id="bespoke-transit-title" className="font-serif text-base font-normal text-[#1f1e1d]">
+                        Bespoke Transit &amp; Sommelier Directives
+                    </h3>
+                    <p className="text-xs font-sans text-[#78756d]">
+                        Optional flight numbers and cellar requirements dispatched directly to estate staff.
+                    </p>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {/* Vessel, Jet Flight, or Train Designation */}
                     <div>
-                        <label className="block text-[10px] font-sans font-semibold uppercase tracking-[0.18em] text-[#6d6961] mb-2">
+                        <label className="block text-[9px] font-mono uppercase tracking-[0.18em] text-[#6d6961] mb-1.5">
                             VESSEL, JET FLIGHT, OR TRAIN DESIGNATION
                         </label>
                         <input
                             type="text"
-                            value={formValues.transportDesignation}
+                            value={formValues.transportDesignation || ''}
                             onChange={function (e) {
                                 handleFieldChange('transportDesignation', e.target.value);
                             }}
                             placeholder="e.g. NetJets Citation Latitude — NJE849 into Naples"
-                            className="w-full px-3.5 py-3 -xl bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] transition-colors shadow-2xs placeholder-[#a4a098]"
+                            className="w-full px-3 py-2 bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] transition-colors shadow-2xs placeholder-[#a4a098]"
                         />
-                        <span className="block text-[10px] font-sans text-[#8e8a82] mt-1.5 leading-snug">
+                        <span className="block text-[9.5px] font-sans text-[#8e8a82] mt-1 leading-snug">
                             Coordinated with private heliport or Positano harbor master.
                         </span>
                     </div>
 
                     {/* Dietary & Cellar Nuances */}
                     <div>
-                        <label className="block text-[10px] font-sans font-semibold uppercase tracking-[0.18em] text-[#6d6961] mb-2">
+                        <label className="block text-[9px] font-mono uppercase tracking-[0.18em] text-[#6d6961] mb-1.5">
                             DIETARY &amp; CELLAR NUANCES
                         </label>
                         <input
                             type="text"
-                            value={formValues.dietaryAndCellarNuances}
+                            value={formValues.dietaryAndCellarNuances || ''}
                             onChange={function (e) {
                                 handleFieldChange('dietaryAndCellarNuances', e.target.value);
                             }}
                             placeholder="e.g. Preference for Campania whites & biodynamic pressings"
-                            className="w-full px-3.5 py-3 -xl bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] transition-colors shadow-2xs placeholder-[#a4a098]"
+                            className="w-full px-3 py-2 bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] transition-colors shadow-2xs placeholder-[#a4a098]"
                         />
-                        <span className="block text-[10px] font-sans text-[#8e8a82] mt-1.5 leading-snug">
+                        <span className="block text-[9.5px] font-sans text-[#8e8a82] mt-1 leading-snug">
                             Shared directly with Executive Sommelier Matteo Moretti.
                         </span>
                     </div>
                 </div>
-            </article>
+            </section>
         </div>
     );
 }
