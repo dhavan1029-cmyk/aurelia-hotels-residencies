@@ -1,31 +1,16 @@
 'use client';
 
 import React, { useState } from 'react';
-import {
-    GazetteNewsletterData,
-    experiencesVipDefaultData,
-} from './BespokeConciergeInquiryBanner';
 
 export interface SeasonalGazetteNewsletterStripProps {
-    data?: GazetteNewsletterData;
     onSubscribe?: (email: string) => void;
     className?: string;
 }
 
 export function SeasonalGazetteNewsletterStrip({
-    data = experiencesVipDefaultData.newsletter,
     onSubscribe,
     className = '',
 }: SeasonalGazetteNewsletterStripProps) {
-    const {
-        eyebrow,
-        heading,
-        tagline,
-        privacyNotice,
-        buttonLabel,
-        placeholderText,
-    } = data;
-
     const [email, setEmail] = useState('');
     const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -45,13 +30,13 @@ export function SeasonalGazetteNewsletterStrip({
                 {/* Left Title Monograph (6 cols) */}
                 <div className="lg:col-span-6 space-y-2">
                     <span className="block text-[10px] sm:text-[11px] font-sans font-semibold uppercase tracking-[0.28em] text-[#8e763b]">
-                        {eyebrow}
+                        AURELIA SEASONAL GAZETTE
                     </span>
                     <h3 className="font-serif text-2xl sm:text-3xl lg:text-[34px] font-normal text-[#1f1e1d] tracking-tight leading-[1.15]">
-                        {heading}
+                        Inscribe for Private Harvest &amp; Cellar Releases
                     </h3>
                     <p className="text-xs sm:text-[13px] text-[#5f5c56] font-sans font-light leading-relaxed max-w-lg">
-                        {tagline}
+                        Receive confidential intimations of rare vintage releases, olive pressing dates, and priority charter allocation.
                     </p>
                 </div>
 
@@ -76,18 +61,18 @@ export function SeasonalGazetteNewsletterStrip({
                                     onChange={function (e) {
                                         setEmail(e.target.value);
                                     }}
-                                    placeholder={placeholderText}
-                                    className="flex-1 px-4 py-3.5 -xl bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] transition-colors shadow-2xs placeholder-[#a4a098]"
+                                    placeholder="Enter confidential email address..."
+                                    className="flex-1 px-4 py-3.5 bg-white border border-[#ded9ce] text-xs font-sans text-[#1f1e1d] outline-none focus:border-[#8e763b] transition-colors shadow-2xs placeholder-[#a4a098]"
                                 />
                                 <button
                                     type="submit"
-                                    className="px-6 py-3.5 -xl bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-[11px] font-semibold uppercase tracking-[0.2em] transition-all shadow-md shrink-0 active:translate-y-0.5"
+                                    className="px-6 py-3.5 bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-[11px] font-semibold uppercase tracking-[0.2em] transition-all shadow-md shrink-0 active:translate-y-0.5"
                                 >
-                                    {buttonLabel}
+                                    INSCRIBE
                                 </button>
                             </div>
                             <span className="block text-[10px] font-sans text-[#8e8a82]">
-                                {privacyNotice}
+                                Discreet correspondence only. Zero third-party disclosure.
                             </span>
                         </form>
                     )}
@@ -96,3 +81,5 @@ export function SeasonalGazetteNewsletterStrip({
         </section>
     );
 }
+
+export default SeasonalGazetteNewsletterStrip

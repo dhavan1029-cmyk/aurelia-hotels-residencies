@@ -1,28 +1,19 @@
-
 export interface ExperiencesHeaderData {
-    editionEyebrow: string;
-    heading: string;
-    narrative: string;
     sanctuaryLocationPill: string;
-    curatorDeskNotice: string;
-    directDeskPhoneDisplay?: string;
-    directDeskPhoneTel?: string;
+    majordomoName: string;
+    directDeskPhoneDisplay: string;
+    directDeskPhoneTel: string;
 }
 
 export const experiencesHeaderDefaultData: ExperiencesHeaderData = {
-    editionEyebrow: '• AURELIA SEASONAL GAZETTE • 2025 •',
-    heading: 'Curated Escapes & Sensory Gastronomy',
-    narrative:
-        'Beyond the stillness of our monolithic travertine suites lies the living culture of the Campanian coastline. From private wooden Riva excursions navigating the sheer limestone bluffs of Capri to subterranean volcanic caldarium immersions and cellar tastings of historic reserve vintages, each experience is tailored for unhurried presence.',
     sanctuaryLocationPill: 'SANCTUARY POSITANO • AMALFI COASTLINE',
-    curatorDeskNotice: 'Bespoke privatizations coordinated directly via Head Majordomo Matteo de Luca.',
+    majordomoName: 'Matteo de Luca',
     directDeskPhoneDisplay: '+39 089 875 000',
     directDeskPhoneTel: '+39089875000',
 };
 
 export interface ExperiencesHeaderSectionProps {
     data?: ExperiencesHeaderData;
-    onInquireCurator?: () => void;
     className?: string;
 }
 
@@ -31,13 +22,10 @@ export function ExperiencesHeaderSection({
     className = '',
 }: ExperiencesHeaderSectionProps) {
     const {
-        editionEyebrow,
-        heading,
-        narrative,
         sanctuaryLocationPill,
-        curatorDeskNotice,
-        directDeskPhoneDisplay = '+39 089 875 000',
-        directDeskPhoneTel = '+39089875000',
+        majordomoName,
+        directDeskPhoneDisplay,
+        directDeskPhoneTel,
     } = data;
 
     return (
@@ -48,19 +36,19 @@ export function ExperiencesHeaderSection({
                 {/* Gazette Monograph Header Block */}
                 <div className="flex flex-col items-center text-center max-w-4xl mx-auto space-y-6">
                     {/* Top Architectural Gazette Badge */}
-                    <div className="inline-flex items-center gap-2 px-4 py-1.5 -full bg-[#f6f2ea] border border-[#ded9ce] text-[9px] sm:text-[10px] font-sans font-semibold uppercase tracking-[0.28em] text-[#8e763b] shadow-2xs">
-                        <span className="w-1.5 h-1.5 -full bg-[#8e763b] animate-pulse" />
-                        <span>{editionEyebrow}</span>
+                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#f6f2ea] border border-[#ded9ce] text-[9px] sm:text-[10px] font-sans font-semibold uppercase tracking-[0.28em] text-[#8e763b] shadow-2xs">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#8e763b] animate-pulse" />
+                        <span>• AURELIA SEASONAL GAZETTE • 2025 •</span>
                     </div>
 
                     {/* Master Serif Headline */}
                     <h1 className="font-serif text-3xl sm:text-5xl lg:text-[58px] font-normal text-[#1f1e1d] tracking-tight leading-[1.08]">
-                        {heading}
+                        Curated Escapes &amp; Sensory Gastronomy
                     </h1>
 
                     {/* Subtitle / Narrative Monograph */}
                     <p className="text-xs sm:text-[14px] md:text-[15px] text-[#5f5c56] font-sans font-light leading-relaxed max-w-3xl">
-                        {narrative}
+                        Beyond the stillness of our monolithic travertine suites lies the living culture of the Campanian coastline. From private wooden Riva excursions navigating the sheer limestone bluffs of Capri to subterranean volcanic caldarium immersions and cellar tastings of historic reserve vintages, each experience is tailored for unhurried presence.
                     </p>
 
                     {/* Meta Status & Concierge Hotline Sub-strip */}
@@ -70,7 +58,7 @@ export function ExperiencesHeaderSection({
                         </span>
                         <span className="hidden sm:inline text-[#ded9ce]">•</span>
                         <span className="font-light italic text-[#78756d]">
-                            {curatorDeskNotice}
+                            Bespoke privatizations coordinated directly via Head Majordomo {majordomoName}.
                         </span>
                         <span className="hidden sm:inline text-[#ded9ce]">•</span>
                         <a

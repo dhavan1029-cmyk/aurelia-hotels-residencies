@@ -21,90 +21,70 @@ export interface RhythmExperienceCardData {
     currencyCode: string;
     specs: RhythmFeatureSpec[];
     primaryCtaLabel: string;
-    secondaryCtaLabel: string;
     heroImageUrl: string;
     heroImageAlt: string;
     isMichelin?: boolean;
     michelinStars?: number;
 }
 
-export interface ExperiencesRhythmsSectionData {
-    eyebrow: string;
-    heading: string;
-    description: string;
-    advisoryPill: string;
-    experiences: [RhythmExperienceCardData, RhythmExperienceCardData];
-}
-
-export const experiencesRhythmsDefaultData: ExperiencesRhythmsSectionData = {
-    eyebrow: 'SIGNATURE RHYTHMS',
-    heading: 'Intimate Sanctuary Encounters',
-    description:
-        'Carved directly into coastal bedrock or suspended over the surf, these signature rituals pair subterranean mineral stillness with Campania\'s highest culinary artistry.',
-    advisoryPill: 'PRIORITY RESERVATIONS FOR SOVEREIGN KEY PATRONS',
-    experiences: [
-        {
-            id: 'exp-roman-caldarium-circuit',
-            slug: 'subterranean-roman-thermal-grotto',
-            categoryBadge: 'THERMAL WELLNESS & RECOVERY',
-            title: 'Subterranean Roman Thermal Grotto Circuit & Caldarium Ritual',
-            tagline: 'Chiseled Volcanic Rock & Warm Neroli Apothecary',
-            narrative:
-                'Descend into natural volcanic limestone caverns naturally heated by subterranean mineral veins. Experience an unhurried 90-minute circuit through the ancient Caldarium, Tepidarium, and Frigidarium, followed by an invigorating warm neroli and volcanic basalt fascia release.',
-            tariffAmount: 240,
-            tariffUnit: 'per patron ritual',
-            currencySymbol: '€',
-            currencyCode: 'EUR',
-            specs: [
-                { iconType: 'clock', label: '90 Minutes' },
-                { iconType: 'patrons', label: 'Max 2 Patrons' },
-                { iconType: 'curation', label: 'Volcanic Mineral Soak' },
-                { iconType: 'sommelier', label: 'Botanical Herbal Infusion' },
-            ],
-            primaryCtaLabel: 'RESERVE RITUAL',
-            secondaryCtaLabel: 'RITUAL PROTOCOL →',
-            heroImageUrl: '/limestone-villa.png',
-            heroImageAlt: 'Subterranean Roman thermal bath and caldarium cavern with warm steaming mineral water and amber candlelight',
-        },
-        {
-            id: 'exp-belvedere-michelin-evening',
-            slug: 'michelin-evening-ristorante-il-belvedere',
-            categoryBadge: 'GASTRONOMY & WINE CELLAR',
-            title: 'Michelin Evening at Il Belvedere Overlooking the Gulf',
-            tagline: 'Seven-Course Degustation & Rare Cellar Vintages',
-            narrative:
-                'Perched 200 meters above the Mediterranean surf on an open-air travertine terrace. Executive Chef Matteo Moretti presents an unhurried seven-course tasting journey of deep coastal catch and century-old lemon grove harvest, accompanied by rare reserve cru pours from our subterranean vaults.',
-            tariffAmount: 320,
-            tariffUnit: 'per patron tasting',
-            currencySymbol: '€',
-            currencyCode: 'EUR',
-            specs: [
-                { iconType: 'clock', label: '19:30 or 21:00 Seating' },
-                { iconType: 'patrons', label: '2 to 6 Patrons' },
-                { iconType: 'curation', label: '7-Course Coastal Journey' },
-                { iconType: 'sommelier', label: 'Sommelier Reserve Pairing' },
-            ],
-            primaryCtaLabel: 'REQUEST DINING TABLE',
-            secondaryCtaLabel: 'TASTING MENU →',
-            heroImageUrl: '/limestone-villa.png',
-            heroImageAlt: 'Fine dining Michelin star culinary presentation with edible flowers and artisan Campanian ceramics',
-            isMichelin: true,
-            michelinStars: 3,
-        },
-    ],
-};
+export const experiencesRhythmsDefaultData: RhythmExperienceCardData[] = [
+    {
+        id: 'exp-roman-caldarium-circuit',
+        slug: 'subterranean-roman-thermal-grotto',
+        categoryBadge: 'THERMAL WELLNESS & RECOVERY',
+        title: 'Subterranean Roman Thermal Grotto Circuit & Caldarium Ritual',
+        tagline: 'Chiseled Volcanic Rock & Warm Neroli Apothecary',
+        narrative:
+            'Descend into natural volcanic limestone caverns naturally heated by subterranean mineral veins. Experience an unhurried 90-minute circuit through the ancient Caldarium, Tepidarium, and Frigidarium, followed by an invigorating warm neroli and volcanic basalt fascia release.',
+        tariffAmount: 240,
+        tariffUnit: 'per patron ritual',
+        currencySymbol: '€',
+        currencyCode: 'EUR',
+        specs: [
+            { iconType: 'clock', label: '90 Minutes' },
+            { iconType: 'patrons', label: 'Max 2 Patrons' },
+            { iconType: 'curation', label: 'Volcanic Mineral Soak' },
+            { iconType: 'sommelier', label: 'Botanical Herbal Infusion' },
+        ],
+        primaryCtaLabel: 'RESERVE RITUAL',
+        heroImageUrl: '/limestone-villa.png',
+        heroImageAlt: 'Subterranean Roman thermal bath and caldarium cavern with warm steaming mineral water and amber candlelight',
+    },
+    {
+        id: 'exp-belvedere-michelin-evening',
+        slug: 'michelin-evening-ristorante-il-belvedere',
+        categoryBadge: 'GASTRONOMY & WINE CELLAR',
+        title: 'Michelin Evening at Il Belvedere Overlooking the Gulf',
+        tagline: 'Seven-Course Degustation & Rare Cellar Vintages',
+        narrative:
+            'Perched 200 meters above the Mediterranean surf on an open-air travertine terrace. Executive Chef Matteo Moretti presents an unhurried seven-course tasting journey of deep coastal catch and century-old lemon grove harvest, accompanied by rare reserve cru pours from our subterranean vaults.',
+        tariffAmount: 320,
+        tariffUnit: 'per patron tasting',
+        currencySymbol: '€',
+        currencyCode: 'EUR',
+        specs: [
+            { iconType: 'clock', label: '19:30 or 21:00 Seating' },
+            { iconType: 'patrons', label: '2 to 6 Patrons' },
+            { iconType: 'curation', label: '7-Course Coastal Journey' },
+            { iconType: 'sommelier', label: 'Sommelier Reserve Pairing' },
+        ],
+        primaryCtaLabel: 'REQUEST DINING TABLE',
+        heroImageUrl: '/limestone-villa.png',
+        heroImageAlt: 'Fine dining Michelin star culinary presentation with edible flowers and artisan Campanian ceramics',
+        isMichelin: true,
+        michelinStars: 3,
+    },
+];
 
 export interface SignatureRhythmsDualBentoSectionProps {
-    data?: ExperiencesRhythmsSectionData;
+    experiences?: RhythmExperienceCardData[];
     className?: string;
 }
 
 export function SignatureRhythmsDualBentoSection({
-    data = experiencesRhythmsDefaultData,
+    experiences = experiencesRhythmsDefaultData,
     className = '',
 }: SignatureRhythmsDualBentoSectionProps) {
-    const { eyebrow, heading, description, advisoryPill, experiences } = data;
-
     const renderSpecIcon = (type: RhythmFeatureSpec['iconType']) => {
         switch (type) {
             case 'clock':
@@ -148,20 +128,20 @@ export function SignatureRhythmsDualBentoSection({
             <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 pb-8 sm:pb-10 border-b border-[#e8e4dc] mb-8 sm:mb-10">
                 <div className="max-w-2xl">
                     <span className="block text-[10px] sm:text-[11px] font-sans font-semibold uppercase tracking-[0.28em] text-[#8e763b] mb-2.5">
-                        {eyebrow}
+                        SIGNATURE RHYTHMS
                     </span>
                     <h2 className="font-serif text-3xl sm:text-4xl lg:text-[42px] font-normal text-[#1f1e1d] tracking-tight leading-[1.12]">
-                        {heading}
+                        Intimate Sanctuary Encounters
                     </h2>
                     <p className="mt-3 text-xs sm:text-[13px] md:text-sm text-[#5f5c56] font-sans font-light leading-relaxed">
-                        {description}
+                        Carved directly into coastal bedrock or suspended over the surf, these signature rituals pair subterranean mineral stillness with Campania&apos;s highest culinary artistry.
                     </p>
                 </div>
 
                 <div className="shrink-0 self-start lg:self-auto">
-                    <span className="inline-flex items-center gap-2 px-3.5 py-1.5 -full bg-[#f6f2ea] border border-[#ded9ce] text-[9px] sm:text-[10px] font-sans font-semibold uppercase tracking-[0.2em] text-[#8e763b] shadow-2xs">
-                        <span className="w-1.5 h-1.5 -full bg-[#8e763b]" />
-                        <span>{advisoryPill}</span>
+                    <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#f6f2ea] border border-[#ded9ce] text-[9px] sm:text-[10px] font-sans font-semibold uppercase tracking-[0.2em] text-[#8e763b] shadow-2xs">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#8e763b]" />
+                        <span>PRIORITY RESERVATIONS FOR SOVEREIGN KEY PATRONS</span>
                     </span>
                 </div>
             </div>
@@ -172,7 +152,7 @@ export function SignatureRhythmsDualBentoSection({
                     return (
                         <article
                             key={card.id}
-                            className="bg-white border border-[#e8e4dc] -lg overflow-hidden shadow-[0_4px_24px_rgba(31,30,29,0.03)] hover:shadow-[0_16px_40px_rgba(31,30,29,0.08)] hover:border-[#8e763b]/40 transition-all duration-500 flex flex-col justify-between group"
+                            className="bg-white border border-[#e8e4dc] overflow-hidden shadow-[0_4px_24px_rgba(31,30,29,0.03)] hover:shadow-[0_16px_40px_rgba(31,30,29,0.08)] hover:border-[#8e763b]/40 transition-all duration-500 flex flex-col justify-between group"
                         >
                             {/* Card Media Container */}
                             <div>
@@ -188,22 +168,22 @@ export function SignatureRhythmsDualBentoSection({
 
                                     {/* Top Left Badges */}
                                     <div className="absolute top-4 left-4 z-10 flex flex-wrap items-center gap-2">
-                                        <span className="px-3 py-1 -sm bg-black/60 backdrop-blur-md text-white font-sans text-[9px] sm:text-[10px] font-semibold uppercase tracking-[0.2em] shadow-sm">
+                                        <span className="px-3 py-1 bg-black/60 backdrop-blur-md text-white font-sans text-[9px] sm:text-[10px] font-semibold uppercase tracking-[0.2em] shadow-sm">
                                             {card.categoryBadge}
                                         </span>
 
                                         {card.isMichelin && (
-                                            <span className="inline-flex items-center gap-1.5 px-3 py-1 -sm bg-[#8e763b] text-white font-sans text-[9px] sm:text-[10px] font-semibold uppercase tracking-[0.18em] shadow-sm">
+                                            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#8e763b] text-white font-sans text-[9px] sm:text-[10px] font-semibold uppercase tracking-[0.18em] shadow-sm">
                                                 <svg className="w-3 h-3 text-white fill-current" viewBox="0 0 24 24">
                                                     <path d="M12 2l2.4 7.4h7.6l-6 4.5 2.3 7.1-6.3-4.6-6.3 4.6 2.3-7.1-6-4.5h7.6z" />
                                                 </svg>
-                                                <span>3 MICHELIN STARS</span>
+                                                <span>{card.michelinStars || 3} MICHELIN STARS</span>
                                             </span>
                                         )}
                                     </div>
 
                                     {/* Floating Bottom Right Tariff Badge */}
-                                    <div className="absolute bottom-4 right-4 z-10 bg-white/95 backdrop-blur-md px-4 py-2 -xl shadow-md border border-[#e8e4dc] text-right">
+                                    <div className="absolute bottom-4 right-4 z-10 bg-white/95 backdrop-blur-md px-4 py-2 shadow-md border border-[#e8e4dc] text-right">
                                         <div className="flex items-baseline gap-1">
                                             <span className="font-serif text-xl sm:text-2xl font-bold text-[#1f1e1d] leading-none">
                                                 {card.currencySymbol}{card.tariffAmount.toLocaleString()}
@@ -235,7 +215,7 @@ export function SignatureRhythmsDualBentoSection({
                                             return (
                                                 <div
                                                     key={idx}
-                                                    className="p-2.5 -xl bg-[#fcf9f4] border border-[#ded9ce] flex items-center gap-2 shadow-2xs"
+                                                    className="p-2.5 bg-[#fcf9f4] border border-[#ded9ce] flex items-center gap-2 shadow-2xs"
                                                 >
                                                     <span className="p-1 -md bg-white border border-[#e8e4dc] shrink-0">
                                                         {renderSpecIcon(spec.iconType)}
@@ -254,7 +234,7 @@ export function SignatureRhythmsDualBentoSection({
                             <div className="p-6 sm:p-8 pt-0 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-[#f0ece3] mt-2">
                                 <Link
                                     href={`/checkout?experience=${card.slug}`}
-                                    className="w-full sm:flex-1 inline-flex items-center justify-center gap-2 px-6 py-3.5 -xl bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-[11px] font-semibold uppercase tracking-[0.2em] transition-all shadow-md active:translate-y-0.5 text-center group/btn"
+                                    className="w-full sm:flex-1 inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-[11px] font-semibold uppercase tracking-[0.2em] transition-all shadow-md active:translate-y-0.5 text-center group/btn"
                                 >
                                     <span>{card.primaryCtaLabel}</span>
                                     <span className="transform transition-transform duration-300 group-hover/btn:translate-x-1">
@@ -269,3 +249,5 @@ export function SignatureRhythmsDualBentoSection({
         </section>
     );
 }
+
+export default SignatureRhythmsDualBentoSection
