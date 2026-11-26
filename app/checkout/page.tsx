@@ -422,9 +422,9 @@ export default async function Page({
     const comfortAndAddOnsData: ComfortAndAddOnsData = {
         pillowOptions: DEFAULT_PILLOW_OPTIONS,
         defaultPillowId: resolvedPillowId,
-        initialTemperatureCelsius: profile?.idealRoomTemperatureCelsius ?? 19.5,
-        minTemperatureCelsius: 16.0,
-        maxTemperatureCelsius: 24.0,
+        initialTemperatureCelsius: Number(profile?.idealRoomTemperatureCelsius ?? 19.5),
+        minTemperatureCelsius: 16,
+        maxTemperatureCelsius: 24,
         temperatureStep: 0.5,
         addOns: addOnOptions,
         voucher: sovereignVoucher,

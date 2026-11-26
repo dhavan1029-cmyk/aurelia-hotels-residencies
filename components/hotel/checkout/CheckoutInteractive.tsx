@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation';
 import CheckoutHeader, {
     CheckoutStepId,
     CheckoutHeaderData,
-    checkoutHeaderDefaultData,
 } from './Header';
 
 import {
@@ -381,7 +380,6 @@ export function CheckoutInteractive({
             <div className="w-screen border-b border-[#eeeae2] bg-[#fcf9f4]/95 backdrop-blur-md sticky top-0 z-40">
                 <CheckoutHeader
                     data={{
-                        ...checkoutHeaderDefaultData,
                         ...(initialData.header || {}),
                         currencySymbol,
                         currencyCode,

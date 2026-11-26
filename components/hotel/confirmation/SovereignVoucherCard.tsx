@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import Image from 'next/image';
 
@@ -8,9 +8,7 @@ export interface VoucherStayDates {
     viewOrientation: string;
     squareMeters: number;
     checkInDate: string;
-    checkInDetails: string;
     checkOutDate: string;
-    checkOutDetails: string;
     nightsCount: number;
     guestsCount: number;
 }
@@ -25,12 +23,11 @@ export interface VoucherFolioAccounting {
     currencySymbol: string;
     currencyCode: string;
     suiteTariffTotal: number;
-    rivaTenderTransferLabel: string;
     cityTaxAndResortDues: number;
     hospitalityVatPercentage: number;
     hospitalityVatAmount: number;
     grandTotal: number;
-    paymentStatusBadge: string;
+    isSettled: boolean;
     vatInvoiceNumber: string;
 }
 
@@ -41,42 +38,32 @@ export interface ResidenceHostLiaison {
 }
 
 export interface SovereignVoucherCardData {
-    folioHeaderEyebrow: string;
-    voucherTitle: string;
-    settlementBadgeText: string;
     cardLastFour: string;
     cardIssuer: string;
     stay: VoucherStayDates;
-    inclusionsHeadline: string;
     inclusions: VoucherInclusion[];
     assignedHost: ResidenceHostLiaison;
     accounting: VoucherFolioAccounting;
 }
 
 export const sovereignVoucherDefaultData: SovereignVoucherCardData = {
-    folioHeaderEyebrow: 'OFFICIAL GUEST FOLIO',
-    voucherTitle: 'The Sovereign Residence Voucher',
-    settlementBadgeText: 'PAYMENT SETTLEMENT • Fully Guaranteed',
-    cardLastFour: '4092',
-    cardIssuer: 'Sovereign Titanium',
+    cardLastFour: '••••',
+    cardIssuer: 'Sovereign Key Card',
     stay: {
-        suiteTitle: 'The Azure Master Ocean Suite',
-        suiteUnitBadge: 'Suite 402',
-        viewOrientation: 'Cliffside Panorama',
-        squareMeters: 165,
-        checkInDate: 'Tue Oct 14, 2025',
-        checkInDetails: 'Guaranteed early entry from 15:00',
-        checkOutDate: 'Sun Oct 19, 2025',
-        checkOutDetails: 'Leisure departure until 14:00',
-        nightsCount: 5,
+        suiteTitle: 'Sanctuary Suite',
+        suiteUnitBadge: 'Suite Docket',
+        viewOrientation: 'Panoramic View',
+        squareMeters: 120,
+        checkInDate: 'Unspecified Date',
+        checkOutDate: 'Unspecified Date',
+        nightsCount: 1,
         guestsCount: 2,
     },
-    inclusionsHeadline: 'SOVEREIGN TIER PRIVILEGES',
     inclusions: [
         {
             id: 'riva-transfer',
             title: 'Private Riva Yacht Harbor Transfer',
-            description: 'Direct maritime tender from Naples Mergellina Harbor to private Aurelia slipway.',
+            description: 'Direct maritime tender from regional slipway to private Aurelia water gate.',
         },
         {
             id: 'thermal-circuit',
@@ -95,21 +82,20 @@ export const sovereignVoucherDefaultData: SovereignVoucherCardData = {
         },
     ],
     assignedHost: {
-        name: 'Elena Vance',
+        name: 'Head Majordomo On Duty',
         title: 'Head of Hospitality & Residential Concierge',
-        avatarUrl: '/images/hosts/elena-vance.jpg',
+        avatarUrl: '/garden-pavillion.png',
     },
     accounting: {
         currencySymbol: '€',
         currencyCode: 'EUR',
-        suiteTariffTotal: 4450.00,
-        rivaTenderTransferLabel: 'Complimentary',
-        cityTaxAndResortDues: 392.50,
+        suiteTariffTotal: 0,
+        cityTaxAndResortDues: 0,
         hospitalityVatPercentage: 10,
-        hospitalityVatAmount: 485.00,
-        grandTotal: 5327.50,
-        paymentStatusBadge: 'PAID IN FULL',
-        vatInvoiceNumber: 'INV-AUR-89240',
+        hospitalityVatAmount: 0,
+        grandTotal: 0,
+        isSettled: true,
+        vatInvoiceNumber: 'INV-AUR',
     },
 };
 
@@ -125,52 +111,45 @@ export function SovereignVoucherCard({
     className = '',
 }: SovereignVoucherCardProps) {
     const {
-        folioHeaderEyebrow,
-        voucherTitle,
-        settlementBadgeText,
         cardLastFour,
         cardIssuer,
         stay,
-        inclusionsHeadline,
         inclusions,
         assignedHost,
         accounting,
     } = data;
 
-    // Interactive Handlers for Phase 2 (Voucher & VAT Invoice)
-	const handleViewInvoice = () => {
-		console.log(
-			'Opening official VAT invoice modal dialog:',
-			data.accounting.vatInvoiceNumber,
-		);
-		alert(
-			`Accessing Official VAT Folio: ${data.accounting.vatInvoiceNumber}`,
-		);
-	};	
+    const handleViewInvoice = () => {
+        if (onViewInvoice) {
+            onViewInvoice();
+            return;
+        }
+        alert(`Accessing Official VAT Folio: ${accounting.vatInvoiceNumber}`);
+    };
 
     return (
         <article
-            className={`w-full max-w-360 mx-auto bg-white border border-[#e8e4dc] -2xl sm:-3xl shadow-[0_8px_32px_rgba(31,30,29,0.04)] overflow-hidden ${className}`}
+            className={`w-full max-w-360 mx-auto bg-white border border-[#e8e4dc] shadow-[0_8px_32px_rgba(31,30,29,0.04)] overflow-hidden ${className}`}
         >
             {/* Top Folio Header Bar */}
             <div className="px-6 sm:px-10 py-5 bg-[#f6f2ea] border-b border-[#ded9ce] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
-                    <span className="w-2.5 h-2.5 -full bg-[#8e763b]" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#8e763b]" />
                     <div>
                         <span className="block text-[9px] font-sans font-semibold uppercase tracking-[0.24em] text-[#8e8a82]">
-                            {folioHeaderEyebrow}
+                            OFFICIAL GUEST FOLIO
                         </span>
                         <h2 className="font-serif text-lg sm:text-xl font-normal text-[#1f1e1d] tracking-tight">
-                            {voucherTitle}
+                            The Sovereign Residence Voucher
                         </h2>
                     </div>
                 </div>
 
                 <div className="flex items-center gap-2 self-start sm:self-auto">
-                    <div className="px-3 py-1.5 -lg bg-white border border-[#ded9ce] text-[10px] font-sans text-[#5c5952] flex items-center gap-2 shadow-2xs">
-                        <span className="w-1.5 h-1.5 -full bg-emerald-500" />
+                    <div className="px-3 py-1.5 bg-white border border-[#ded9ce] text-[10px] font-sans text-[#5c5952] flex items-center gap-2 shadow-2xs">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                         <span className="font-medium text-[#1f1e1d] uppercase tracking-wider">
-                            {settlementBadgeText}
+                            {accounting.isSettled ? 'PAYMENT SETTLEMENT • Fully Guaranteed' : 'PAYMENT PENDING • Pre-Authorization Active'}
                         </span>
                         <span className="text-[#a4a098]">•</span>
                         <span className="font-mono text-[#8e763b]">
@@ -186,13 +165,13 @@ export function SovereignVoucherCard({
                 <div className="lg:col-span-4 space-y-6">
                     <div>
                         <span className="block text-[9px] font-sans font-semibold uppercase tracking-[0.22em] text-[#8e763b] mb-1.5">
-                            SANCTUARY & CHAMBER
+                            SANCTUARY &amp; CHAMBER
                         </span>
                         <h3 className="font-serif text-xl sm:text-2xl font-normal text-[#1f1e1d] tracking-tight">
                             {stay.suiteTitle}
                         </h3>
                         <div className="flex items-center gap-2 mt-2">
-                            <span className="px-2.5 py-0.5  bg-[#f6f2ea] border border-[#ded9ce] text-[10px] font-sans font-semibold text-[#8e763b] uppercase tracking-wider">
+                            <span className="px-2.5 py-0.5 bg-[#f6f2ea] border border-[#ded9ce] text-[10px] font-sans font-semibold text-[#8e763b] uppercase tracking-wider">
                                 {stay.suiteUnitBadge}
                             </span>
                             <span className="text-xs text-[#78756d] font-sans font-light">
@@ -207,7 +186,7 @@ export function SovereignVoucherCard({
                             STAY HORIZON
                         </span>
 
-                        <div className="p-3.5 -sm bg-white border border-[#ded9ce] shadow-2xs space-y-1">
+                        <div className="p-3.5 bg-white border border-[#ded9ce] shadow-2xs space-y-1">
                             <span className="text-[9px] font-sans uppercase tracking-wider text-[#8e8a82] block">
                                 ARRIVAL CHECK-IN
                             </span>
@@ -215,11 +194,11 @@ export function SovereignVoucherCard({
                                 {stay.checkInDate}
                             </span>
                             <span className="text-[11px] font-sans text-[#78756d] font-light block">
-                                {stay.checkInDetails}
+                                Guaranteed early entry from 15:00
                             </span>
                         </div>
 
-                        <div className="p-3.5 -sm bg-white border border-[#ded9ce] shadow-2xs space-y-1">
+                        <div className="p-3.5 bg-white border border-[#ded9ce] shadow-2xs space-y-1">
                             <span className="text-[9px] font-sans uppercase tracking-wider text-[#8e8a82] block">
                                 DEPARTURE CHECK-OUT
                             </span>
@@ -227,7 +206,7 @@ export function SovereignVoucherCard({
                                 {stay.checkOutDate}
                             </span>
                             <span className="text-[11px] font-sans text-[#78756d] font-light block">
-                                {stay.checkOutDetails}
+                                Leisure departure until 14:00
                             </span>
                         </div>
 
@@ -246,7 +225,7 @@ export function SovereignVoucherCard({
                             INCLUDED RESIDENTIAL PRIVILEGES
                         </span>
                         <h4 className="font-serif text-lg font-normal text-[#1f1e1d] tracking-tight">
-                            {inclusionsHeadline}
+                            SOVEREIGN TIER PRIVILEGES
                         </h4>
                     </div>
 
@@ -279,8 +258,8 @@ export function SovereignVoucherCard({
                     </div>
 
                     {/* Assigned Majordomo Liaison Badge */}
-                    <div className="pt-4 border-t border-[#eeeae2] flex items-center gap-3 p-3.5 -sm bg-white border shadow-2xs">
-                        <div className="relative w-10 h-10 -full overflow-hidden bg-[#eeeae2] border border-[#dcdad5] shrink-0">
+                    <div className="pt-4 border-t border-[#eeeae2] flex items-center gap-3 p-3.5 bg-white border shadow-2xs">
+                        <div className="relative w-10 h-10 rounded-full overflow-hidden bg-[#eeeae2] border border-[#dcdad5] shrink-0">
                             {assignedHost.avatarUrl ? (
                                 <Image
                                     src={assignedHost.avatarUrl}
@@ -291,7 +270,7 @@ export function SovereignVoucherCard({
                                 />
                             ) : (
                                 <div className="w-full h-full flex items-center justify-center font-serif text-xs font-bold text-[#1f1e1d]">
-                                    EV
+                                    MD
                                 </div>
                             )}
                         </div>
@@ -333,13 +312,13 @@ export function SovereignVoucherCard({
                             <div className="flex items-center justify-between text-[#5f5c56]">
                                 <span>Riva Tender Transfer</span>
                                 <span className="font-medium text-[#24633b] uppercase text-[10px] tracking-wider">
-                                    {accounting.rivaTenderTransferLabel}
+                                    Complimentary
                                 </span>
                             </div>
 
                             {/* City Tax & Dues */}
                             <div className="flex items-center justify-between text-[#5f5c56]">
-                                <span>Positano City Tax & Resort Dues</span>
+                                <span>City Tax &amp; Resort Dues</span>
                                 <span className="font-medium text-[#1f1e1d]">
                                     {accounting.currencySymbol}
                                     {accounting.cityTaxAndResortDues.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
@@ -348,7 +327,7 @@ export function SovereignVoucherCard({
 
                             {/* VAT */}
                             <div className="flex items-center justify-between text-[#5f5c56]">
-                                <span>Italian Hospitality VAT ({accounting.hospitalityVatPercentage}%)</span>
+                                <span>Hospitality VAT ({accounting.hospitalityVatPercentage}%)</span>
                                 <span className="font-medium text-[#1f1e1d]">
                                     {accounting.currencySymbol}
                                     {accounting.hospitalityVatAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
@@ -362,7 +341,7 @@ export function SovereignVoucherCard({
                                         Total Settled Folio
                                     </span>
                                     <span className="text-[10px] text-[#78756d] font-sans font-light">
-                                        All taxes & statutory dues included
+                                        All taxes &amp; statutory dues included
                                     </span>
                                 </div>
                                 <div className="text-right">
@@ -380,14 +359,14 @@ export function SovereignVoucherCard({
 
                     {/* Settlement Badges Strip */}
                     <div className="pt-4 border-t border-[#eeeae2] flex items-center justify-between">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1  bg-[#e9f5ee] border border-[#badfca] text-[#24633b] font-sans text-[10px] font-semibold uppercase tracking-wider">
-                            <span className="w-1.5 h-1.5 -full bg-[#24633b]" />
-                            <span>{accounting.paymentStatusBadge}</span>
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#e9f5ee] border border-[#badfca] text-[#24633b] font-sans text-[10px] font-semibold uppercase tracking-wider">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#24633b]" />
+                            <span>{accounting.isSettled ? 'PAID IN FULL' : 'AUTHORIZATION SEALED'}</span>
                         </div>
 
                         <button
                             type="button"
-                            onClick={onViewInvoice}
+                            onClick={handleViewInvoice}
                             className="font-mono text-[10px] text-[#78756d] hover:text-[#1f1e1d] uppercase tracking-wider underline cursor-pointer transition-colors"
                         >
                             {accounting.vatInvoiceNumber}
@@ -398,3 +377,5 @@ export function SovereignVoucherCard({
         </article>
     );
 }
+
+export default SovereignVoucherCard;

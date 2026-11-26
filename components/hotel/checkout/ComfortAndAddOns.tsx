@@ -312,7 +312,7 @@ return (
                 </div>
                 <div className="flex items-baseline gap-2 self-start sm:self-auto">
                     <span className="font-serif text-2xl font-light text-[#1f1e1d]">
-                        {Number(temperature)}°C
+                        {temperature.toFixed(1)}°C
                     </span>
                     <span className="text-xs font-sans text-[#8e8a82]">
                         ({((Number(temperature) * 9) / 5 + 32).toFixed(1)}°F)
