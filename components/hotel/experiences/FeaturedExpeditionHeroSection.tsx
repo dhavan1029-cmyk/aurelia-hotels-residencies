@@ -1,248 +1,289 @@
+
+import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-export interface ExpeditionSpecMetric {
+// ============================================================================
+// 1. DATA CONTRACTS & VIEWMODELS
+// ============================================================================
+
+export interface ExpeditionSpecItem {
+    id: string;
     label: string;
-    sublabel: string;
-    iconType: 'duration' | 'party' | 'crew' | 'catering';
+    value: string;
+    iconType: 'duration' | 'party' | 'crew' | 'culinary';
 }
 
 export interface FeaturedExpeditionData {
-    experienceId: string;
+    id: string;
     slug: string;
-    heroBadge: string;
-    heritageBadge: string;
-    categoryTag: string;
+    badgePrimary: string;
+    badgeSecondary: string;
+    imageUrl: string;
+    imageAlt: string;
+    circuitLabel: string;
+    imageHeadline: string;
+    categoryEyebrow: string;
     title: string;
-    tariffAmount: number;
-    tariffUnit: string;
-    currencySymbol: string;
-    currencyCode: string;
-    narrative: string[];
-    specMetrics: ExpeditionSpecMetric[];
-    includedHighlights: string[];
-    primaryCtaLabel: string;
-    heroImageUrl: string;
-    heroImageAlt: string;
+    tariffLabel: string;
+    priceFormatted: string;
+    description: string;
+    specs: ExpeditionSpecItem[];
+    inclusions: string[];
+    dossierPdfUrl?: string;
 }
-
-export const experiencesFeaturedDefaultData: FeaturedExpeditionData = {
-    experienceId: 'exp-riva-aquarama-capri',
-    slug: 'private-riva-aquarama-faraglioni-capri',
-    heroBadge: 'FEATURED EXPEDITION',
-    heritageBadge: 'RESTORED 1968 CLASSIC',
-    categoryTag: 'PRIVATE MARINE CHARTER • FULL DAY OR SUNSET CRUISE',
-    title: 'Private Riva Aquarama Faraglioni & Capri Expedition',
-    tariffAmount: 1850,
-    tariffUnit: 'per charter voyage',
-    currencySymbol: '€',
-    currencyCode: 'EUR',
-    narrative: [
-        'Embark directly from the Aurelia private limestone slipway aboard our master-restored 1968 Riva Aquarama Super. Glide across the sapphire expanse toward the sheer sea-stacks of the Faraglioni, anchoring in secluded turquoise grottos inaccessible by terrestrial path.',
-        'Each voyage is attended by our licensed senior skipper and dedicated steward. Enjoy cellar-chilled Franciacorta Gran Cuvée paired with artisan Campanian cicchetti, followed by an optional tender disembarkation at the private cliffs of La Fontelina.',
-    ],
-    specMetrics: [
-        { label: '8 Hours', sublabel: 'EXPEDITION HORIZON', iconType: 'duration' },
-        { label: 'Up to 6 Patrons', sublabel: 'EXCLUSIVE CAPACITY', iconType: 'party' },
-        { label: 'Master & Steward', sublabel: 'DEDICATED CREW', iconType: 'crew' },
-        { label: 'In-Cove Artisan Lunch', sublabel: 'RESERVE SOMMELIER', iconType: 'catering' },
-    ],
-    includedHighlights: [
-        'Private captain, marine fuel, and maritime permits included',
-        'Dom Pérignon Vintage champagne & seasonal Campanian fruit collation',
-        'Subsurface snorkel gear & underwater seabob immersion',
-        'Seamless room-folio billing & complimentary helipad coordination',
-    ],
-    primaryCtaLabel: 'RESERVE CHARTER RENDEZVOUS',
-    heroImageUrl: '/limestone-villa.png',
-    heroImageAlt: 'Vintage wooden Riva speedboat cruising on azure blue Mediterranean sea along dramatic Amalfi limestone cliffs',
-};
 
 export interface FeaturedExpeditionHeroSectionProps {
-    data?: FeaturedExpeditionData;
-    className?: string;
+    data?: Partial<FeaturedExpeditionData>;
 }
 
-export function FeaturedExpeditionHeroSection({
-    data = experiencesFeaturedDefaultData,
-    className = '',
-}: FeaturedExpeditionHeroSectionProps) {
-    const {
-        slug,
-        heroBadge,
-        heritageBadge,
-        categoryTag,
-        title,
-        tariffAmount,
-        tariffUnit,
-        currencySymbol,
-        narrative,
-        specMetrics,
-        includedHighlights,
-        primaryCtaLabel,
-        heroImageUrl,
-        heroImageAlt,
-    } = data;
+// ============================================================================
+// 2. DEFAULT FALLBACK DATA (Matches Screen Design)
+// ============================================================================
 
-    const renderSpecIcon = (type: ExpeditionSpecMetric['iconType']) => {
-        switch (type) {
-            case 'duration':
-                return (
-                    <svg className="w-4 h-4 text-[#8e763b]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-                        <circle cx="12" cy="12" r="10" />
-                        <polyline points="12 6 12 12 16 14" />
-                    </svg>
-                );
-            case 'party':
-                return (
-                    <svg className="w-4 h-4 text-[#8e763b]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                        <circle cx="9" cy="7" r="4" />
-                        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                    </svg>
-                );
-            case 'crew':
-                return (
-                    <svg className="w-4 h-4 text-[#8e763b]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                        <circle cx="12" cy="7" r="4" />
-                    </svg>
-                );
-            case 'catering':
-                return (
-                    <svg className="w-4 h-4 text-[#8e763b]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-                        <path d="M18 2l-4 4-2-2 4-4 2 2z" />
-                        <path d="M14 6l-9 9a2 2 0 0 0 0 2.83l.17.17a2 2 0 0 0 2.83 0l9-9" />
-                        <path d="M6 18l-3 3" />
-                        <path d="M2 14l2-2" />
-                        <path d="M12 2l8 8" />
-                    </svg>
-                );
-            default:
-                return null;
-        }
+const DEFAULT_FEATURED_EXPEDITION: FeaturedExpeditionData = {
+    id: 'exp-riva-odyssey',
+    slug: 'riva-heritage-coastal-odyssey',
+    badgePrimary: 'FLAGSHIP EXPEDITION',
+    badgeSecondary: 'RESTORED 1968 RIVA AQUARAMA SPECIAL',
+    imageUrl: '/images/experiences/riva-aquarama-capri.jpg',
+    imageAlt: 'Restored 1968 Riva Aquarama cruising past the Faraglioni of Capri',
+    circuitLabel: 'AMALFI • FARAGLIONI OF CAPRI CIRCUIT',
+    imageHeadline: 'Capri Sea Grottoes & Faraglioni Private Cruise',
+    categoryEyebrow: 'MARINE CHARTER • EXPEDITION NO. 01',
+    title: 'Riva Heritage Coastal Odyssey',
+    tariffLabel: 'TARIFF / GUEST',
+    priceFormatted: '€1,850',
+    description:
+        "Embark from the private Sanctuary sea dock at dawn aboard our hand-varnished Riva Aquarama. Glide silently into the emerald caves of Nerano, drop anchor beneath Capri's iconic Faraglioni monoliths, and savor a chilled cellar collation accompanied by estate-bottled vintage reserves.",
+    specs: [
+        {
+            id: 'duration',
+            label: 'DURATION',
+            value: '480 Min (8.0 Hours)',
+            iconType: 'duration',
+        },
+        {
+            id: 'party',
+            label: 'PARTY ALLOTMENT',
+            value: 'Up to 6 Patrons',
+            iconType: 'party',
+        },
+        {
+            id: 'crew',
+            label: 'MASTER CREW',
+            value: 'Skipper & Sommelier',
+            iconType: 'crew',
+        },
+        {
+            id: 'culinary',
+            label: 'CULINARY PROVISIONS',
+            value: 'In-Cove Crudo Feast',
+            iconType: 'culinary',
+        },
+    ],
+    inclusions: [
+        'Private tender transfers directly from Sanctuary Cliffside Pontoon',
+        'Dom Pérignon 2013 allocation & wild Mediterranean sea urchin crudo',
+        'Sub-surface motorized Seabob exploration units & customized bath linens',
+    ],
+    dossierPdfUrl: '/dossiers/riva-heritage-coastal-odyssey.pdf',
+};
+
+// ============================================================================
+// 3. HELPER: SPEC ICON RENDERER
+// ============================================================================
+
+function SpecIcon({ type }: { type: ExpeditionSpecItem['iconType'] }) {
+    switch (type) {
+        case 'duration':
+            return (
+                <svg className="w-3.5 h-3.5 text-[#8e763b] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            );
+        case 'party':
+            return (
+                <svg className="w-3.5 h-3.5 text-[#8e763b] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+            );
+        case 'crew':
+            return (
+                <svg className="w-3.5 h-3.5 text-[#8e763b] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+            );
+        case 'culinary':
+            return (
+                <svg className="w-3.5 h-3.5 text-[#8e763b] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+            );
+    }
+}
+
+// ============================================================================
+// 4. MAIN COMPONENT: FeaturedExpeditionHeroSection
+// ============================================================================
+
+export function FeaturedExpeditionHeroSection({ data }: FeaturedExpeditionHeroSectionProps) {
+    const expedition: FeaturedExpeditionData = {
+        ...DEFAULT_FEATURED_EXPEDITION,
+        ...data,
+        specs: data?.specs && data.specs.length > 0 ? data.specs : DEFAULT_FEATURED_EXPEDITION.specs,
+        inclusions:
+            data?.inclusions && data.inclusions.length > 0
+                ? data.inclusions
+                : DEFAULT_FEATURED_EXPEDITION.inclusions,
     };
 
     return (
-        <section className={`w-full max-w-340 mx-auto px-4 sm:px-8 lg:px-12 py-10 sm:py-12 ${className}`}>
-            <article className="bg-white border border-[#e8e4dc] overflow-hidden shadow-[0_8px_32px_rgba(31,30,29,0.04)] hover:border-[#8e763b]/40 transition-all duration-500">
-                <div className="grid grid-cols-1 lg:grid-cols-12 items-stretch">
-                    {/* Left Photographic Showcase Column (7 Columns) */}
-                    <div className="lg:col-span-7 relative min-h-90 sm:min-h-115 lg:min-h-full bg-[#eeeae2] overflow-hidden group">
-                        <Image
-                            src={heroImageUrl}
-                            alt={heroImageAlt}
-                            fill
-                            priority
-                            sizes="(max-width: 1024px) 100vw, 58vw"
-                            className="object-cover object-center transform transition-transform duration-1000 ease-out group-hover:scale-105"
-                        />
-                        <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
+        <section
+            aria-label={expedition.title}
+            className="w-full max-w-7xl mx-auto px-4 sm:px-8 pb-14"
+        >
+            <article className="bg-white border border-[#e8e4dc] grid grid-cols-1 lg:grid-cols-12 overflow-hidden shadow-[0_8px_32px_rgba(31,30,29,0.04)]">
+                {/* Left Column (7 cols): Full-Bleed Maritime Photography */}
+                <div className="lg:col-span-7 relative min-h-95 sm:min-h-120 lg:min-h-135 bg-[#1f1e1d]">
+                    <Image
+                        src={expedition.imageUrl}
+                        alt={expedition.imageAlt}
+                        fill
+                        priority
+                        sizes="(max-width: 1024px) 100vw, 58vw"
+                        className="object-cover"
+                    />
 
-                        {/* Top Badges */}
-                        <div className="absolute top-4 left-4 z-10 flex flex-wrap items-center gap-2">
-                            <span className="px-3 py-1 bg-black/60 backdrop-blur-md text-white font-sans text-[10px] font-semibold uppercase tracking-[0.22em] shadow-sm">
-                                {heroBadge}
-                            </span>
-                            <span className="px-3 py-1 bg-[#8e763b] text-white font-sans text-[10px] font-semibold uppercase tracking-[0.2em] shadow-sm">
-                                {heritageBadge}
-                            </span>
-                        </div>
+                    {/* Subtle Dark Bottom Scrim */}
+                    <div
+                        className="absolute inset-0 bg-linear-to-t from-[#1f1e1d]/85 via-[#1f1e1d]/20 to-transparent"
+                        aria-hidden="true"
+                    />
 
-                        {/* Bottom Photographic Caption & Overlay */}
-                        <div className="absolute bottom-5 left-5 right-5 z-10 text-white">
-                            <span className="text-[10px] font-sans uppercase tracking-[0.24em] text-[#dcdad5] block mb-1">
-                                TYRRHENIAN ARCHIPELAGO • CAPRI CRUISE
-                            </span>
-                            <p className="font-serif text-lg sm:text-xl font-light tracking-tight text-white/95">
-                                Private dock boarding directly from the Aurelia sea gate.
-                            </p>
-                        </div>
+                    {/* Top-Left Badges */}
+                    <div className="absolute top-5 left-5 right-5 flex flex-wrap items-center gap-2">
+                        <span className="bg-[#1f1e1d] text-[#fcf9f4] text-[9.5px] font-mono tracking-[0.2em] uppercase px-2.5 py-1">
+                            {expedition.badgePrimary}
+                        </span>
+                        <span className="bg-[#fcf9f4]/95 text-[#1f1e1d] text-[9.5px] font-mono tracking-[0.16em] uppercase px-2.5 py-1">
+                            {expedition.badgeSecondary}
+                        </span>
                     </div>
 
-                    {/* Right Detailed Narrative & Reservation Column (5 Columns) */}
-                    <div className="lg:col-span-5 p-6 sm:p-8 lg:p-10 flex flex-col justify-between space-y-8 bg-[#fcf9f4]">
-                        {/* Header & Tariff Block */}
-                        <div>
-                            <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 border-b border-[#eeeae2] pb-4 mb-4">
-                                <span className="text-[9px] sm:text-[10px] font-sans font-semibold uppercase tracking-[0.24em] text-[#8e763b]">
-                                    {categoryTag}
-                                </span>
+                    {/* Bottom-Left Overlay Title */}
+                    <div className="absolute bottom-6 left-6 right-6 space-y-1.5">
+                        <p className="text-[10px] font-mono tracking-[0.22em] text-[#bfa76f] uppercase">
+                            {expedition.circuitLabel}
+                        </p>
+                        <h2 className="text-2xl sm:text-[28px] font-serif text-[#fcf9f4] leading-tight">
+                            {expedition.imageHeadline}
+                        </h2>
+                    </div>
+                </div>
 
-                                <div className="text-left sm:text-right shrink-0">
-                                    <div className="flex items-baseline gap-1">
-                                        <span className="font-serif text-2xl sm:text-3xl font-normal text-[#1f1e1d]">
-                                            {currencySymbol}{tariffAmount.toLocaleString()}
-                                        </span>
-                                    </div>
-                                    <span className="text-[10px] font-sans text-[#78756d] uppercase tracking-wider block">
-                                        {tariffUnit}
-                                    </span>
-                                </div>
+                {/* Right Column (5 cols): Technical Specs & Reservation Dossier */}
+                <div className="lg:col-span-5 p-6 sm:p-8 lg:p-10 flex flex-col justify-between bg-white">
+                    <div>
+                        {/* Header Row: Title & Tariff */}
+                        <div className="flex items-start justify-between gap-4 pb-5 border-b border-[#e8e4dc]">
+                            <div className="space-y-1">
+                                <p className="text-[10px] font-mono tracking-[0.2em] text-[#8e763b] uppercase">
+                                    {expedition.categoryEyebrow}
+                                </p>
+                                <h3 className="text-2xl sm:text-[26px] font-serif text-[#1f1e1d] leading-snug">
+                                    {expedition.title}
+                                </h3>
                             </div>
 
-                            {/* Headline */}
-                            <h2 className="font-serif text-2xl sm:text-3xl lg:text-[34px] font-normal text-[#1f1e1d] tracking-tight leading-[1.14]">
-                                {title}
-                            </h2>
-
-                            {/* Editorial Narrative Paragraphs */}
-                            <div className="mt-4 space-y-3 text-xs sm:text-[13px] text-[#5f5c56] font-sans font-light leading-relaxed">
-                                {narrative.map(function (paragraph, idx) {
-                                    return <p key={idx}>{paragraph}</p>;
-                                })}
+                            <div className="text-right shrink-0">
+                                <p className="text-[9px] font-mono tracking-[0.18em] text-[#7c756c] uppercase">
+                                    {expedition.tariffLabel}
+                                </p>
+                                <p className="text-xl sm:text-2xl font-serif text-[#1f1e1d] mt-0.5">
+                                    {expedition.priceFormatted}
+                                </p>
                             </div>
+                        </div>
 
-                            {/* 4 Stone Spatial & Service Metrics Grid */}
-                            <div className="grid grid-cols-2 gap-3 mt-6 pt-6 border-t border-[#eeeae2]">
-                                {specMetrics.map(function (metric, idx) {
-                                    return (
-                                        <div
-                                            key={idx}
-                                            className="p-3 bg-white border border-[#ded9ce] shadow-2xs flex items-start gap-2.5"
-                                        >
-                                            <span className="p-1.5 bg-[#f6f2ea] border border-[#e8e4dc] shrink-0">
-                                                {renderSpecIcon(metric.iconType)}
+                        {/* Narrative Description */}
+                        <p className="text-[13px] leading-[1.68] text-[#5c564f] mt-5">
+                            {expedition.description}
+                        </p>
+
+                        {/* 2x2 Technical Specification Grid */}
+                        <div className="grid grid-cols-2 gap-3 my-6">
+                            {expedition.specs.map(function (spec) {
+                                return (
+                                    <div
+                                        key={spec.id}
+                                        className="bg-[#f6f3ee] border border-[#e8e4dc]/70 p-3 space-y-1"
+                                    >
+                                        <div className="flex items-center gap-1.5">
+                                            <SpecIcon type={spec.iconType} />
+                                            <span className="text-[9.5px] font-mono tracking-[0.16em] text-[#7c756c] uppercase">
+                                                {spec.label}
                                             </span>
-                                            <div>
-                                                <span className="font-serif text-xs sm:text-[13px] font-semibold text-[#1f1e1d] block leading-tight">
-                                                    {metric.label}
-                                                </span>
-                                                <span className="text-[9px] font-sans uppercase tracking-[0.16em] text-[#8e8a82] block mt-0.5">
-                                                    {metric.sublabel}
-                                                </span>
-                                            </div>
                                         </div>
-                                    );
-                                })}
-                            </div>
-
-                            {/* Included Curated Inclusions Checklist */}
-                            <ul className="mt-5 space-y-1.5 pt-4 border-t border-[#eeeae2] text-[11px] font-sans text-[#6e6b64]">
-                                {includedHighlights.map(function (highlight, idx) {
-                                    return (
-                                        <li key={idx} className="flex items-center gap-2">
-                                            <span className="w-1.5 h-1.5 rounded-full bg-[#8e763b] shrink-0" />
-                                            <span>{highlight}</span>
-                                        </li>
-                                    );
-                                })}
-                            </ul>
+                                        <p className="text-[12.5px] font-semibold text-[#1f1e1d]">
+                                            {spec.value}
+                                        </p>
+                                    </div>
+                                );
+                            })}
                         </div>
 
-                        {/* Action CTA Button */}
-                        <div className="pt-6 border-t border-[#eeeae2] flex flex-col sm:flex-row items-center gap-3">
-                            <Link
-                                href={`/checkout?experience=${slug}`}
-                                className="w-full sm:flex-1 inline-flex items-center justify-center gap-2 px-6 py-4 bg-[#1f1e1d] hover:bg-[#343230] text-white font-sans text-[11px] font-semibold uppercase tracking-[0.2em] transition-all shadow-md active:translate-y-0.5 text-center group"
+                        {/* Inclusions Checklist */}
+                        <ul className="space-y-2 mb-7">
+                            {expedition.inclusions.map(function (item, idx) {
+                                return (
+                                    <li key={idx} className="flex items-start gap-2.5 text-[12px] text-[#5c564f]">
+                                        <svg
+                                            className="w-3.5 h-3.5 text-[#8e763b] shrink-0 mt-0.5"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                            aria-hidden="true"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth={1.75}
+                                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                                            />
+                                        </svg>
+                                        <span>{item}</span>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    </div>
+
+                    {/* Bottom Action Row */}
+                    <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                        <Link
+                            href={`/checkout?experience=${encodeURIComponent(expedition.slug)}`}
+                            className="flex-1 bg-[#1f1e1d] text-[#fcf9f4] hover:bg-[#33312f] transition-colors px-5 py-3.5 text-[10.5px] font-mono tracking-[0.16em] uppercase flex items-center justify-between gap-3"
+                        >
+                            <span>RESERVE CHARTER RENDEZVOUS</span>
+                            <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            </svg>
+                        </Link>
+
+                        {expedition.dossierPdfUrl && (
+                            <a
+                                href={expedition.dossierPdfUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="border border-[#e8e4dc] bg-[#fcf9f4] text-[#1f1e1d] hover:border-[#8e763b] transition-colors px-4 py-3.5 text-[10.5px] font-mono tracking-[0.16em] uppercase flex items-center justify-center gap-2 shrink-0"
                             >
-                                <span>{primaryCtaLabel}</span>
-                                <span className="transform transition-transform duration-300 group-hover:translate-x-1">
-                                    →
-                                </span>
-                            </Link>
-                        </div>
+                                <svg className="w-3.5 h-3.5 text-[#8e763b]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                <span>DOSSIER PDF</span>
+                            </a>
+                        )}
                     </div>
                 </div>
             </article>
@@ -250,4 +291,4 @@ export function FeaturedExpeditionHeroSection({
     );
 }
 
-export default FeaturedExpeditionHeroSection
+export default FeaturedExpeditionHeroSection;

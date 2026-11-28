@@ -1,536 +1,405 @@
-import { getCurrencySymbol, CurrencyCode } from '@/lib/data/currencyCatalog';
-import type { ExperiencesHeaderData } from '@/components/hotel/experiences/Header';
+// import type { Sanctuary, Experience, DiningVenue } from '@prisma/client';
 import type {
+    ExperiencesTelemetryData,
+    ExperiencesEditorialData,
+    ExperienceCategoryOption,
+    ExperienceCategoryId,
+} from '@/components/hotel/experiences/ExperiencesHeader';
+import type {
+    ExpeditionSpecItem,
     FeaturedExpeditionData,
-    ExpeditionSpecMetric,
 } from '@/components/hotel/experiences/FeaturedExpeditionHeroSection';
 import type {
-    RhythmExperienceCardData,
-    RhythmFeatureSpec,
-} from '@/components/hotel/experiences/SignatureRhythmsDualBentoSection';
+    DiningVenueMetric,
+    GastronomicVenueData,
+} from '@/components/hotel/experiences/GastronomicSanctuariesSection';
 import type {
-    EnologyExperienceCardData,
-    MasterclassFeaturePill,
-} from '@/components/hotel/experiences/EnologyAndTerroirMasterclassesSection';
-import type { BespokeInquiryBannerData } from '@/components/hotel/experiences/BespokeConciergeInquiryBanner';
+    SignatureEncounterItem,
+    EncounterMetricPill,
+    SanctuaryCredentialMetric,
+} from '@/components/hotel/experiences/CuratedEncountersSection';
+import type { SovereignPrivatizationData } from '@/components/hotel/experiences/SovereignPrivatizationSection';
+import { DiningVenue, Experience, Sanctuary } from '@/app/generated/prisma/client';
 
 // ============================================================================
-// 1. DATABASE ENTITY CONTRACTS (PRISMA RELATIONAL SHAPES)
+// 1. JSONB SCHEMA CONTRACTS (Matching Seed Data Payloads)
 // ============================================================================
 
-export interface DbSanctuaryMediaData {
+export interface SanctuaryMediaDataJson {
     heroImage?: string;
+    heroAlt?: string;
     gallery?: string[];
+    panoramas?: Array<{ label: string; url: string }>;
 }
 
-export interface DbStaffMemberPayload {
-    id: string;
-    sanctuaryId: string;
-    name: string;
-    role: string;
-    email: string;
-    phone: string;
-    isActive: boolean;
-    avatarUrl?: string | null;
+export interface SanctuaryEditorialJson {
+    eyebrow?: string;
+    manifesto?: string;
+    architect?: string;
+    accolades?: string[];
 }
 
-export interface DbDiningVenueMediaData {
-    heroImage?: string;
-    gallery?: string[];
+export interface SanctuaryArrivalGuideJson {
+    helipadCoordinates?: string;
+    seaDockVhfChannel?: string;
+    privateJetAirport?: string;
+    chauffeurNotice?: string;
 }
 
-export interface DbDiningVenuePayload {
-    id: string;
-    sanctuaryId: string;
-    name: string;
-    cuisineType: string;
-    michelinStars?: number | null;
-    dressCode: string;
-    hours: string;
-    mediaData?: DbDiningVenueMediaData | Record<string, unknown> | null;
-    createdAt?: Date | string;
-    updatedAt?: Date | string;
+export interface ExperienceMediaDataJson {
+    imageUrl?: string;
+    imageAlt?: string;
+    badgePrimary?: string;
+    badgeSecondary?: string;
+    tariffFormatted?: string;
+    priceUnit?: string;
+    circuitLabel?: string;
+    isFlagship?: boolean;
+    displayOrder?: number;
+    inclusionFootnote?: string;
+    badgeCategory?: string;
 }
 
-export interface DbExperienceNarrative {
-    body?: string;
-    headline?: string;
-    paragraphs?: string[];
-    curatorNote?: string;
+export interface ExperienceNarrativeJson {
+    shortDescription?: string;
+    fullMonograph?: string;
+    inclusions?: string[];
+    crewDescription?: string;
 }
 
-export interface DbExperienceMediaData {
-    heroImage?: string;
-    gallery?: string[];
-}
-
-export interface DbExperienceScheduleData {
-    departureTime?: string;
+export interface ExperienceScheduleDataJson {
     operatingDays?: string[];
-    seatingTimes?: string[];
+    departureTime?: string;
+    returnTime?: string;
+    meetingPoint?: string;
+    weatherPolicy?: string;
+    seatings?: string[];
+    metrics?: Array<{
+        label?: string;
+        value?: string;
+        icon?: string;
+        primary?: string;
+        sublabel?: string;
+    }>;
 }
 
-export interface DbExperiencePayload {
-    id: string;
-    sanctuaryId: string;
-    slug: string;
-    title: string;
-    category: string;
-    tagline: string;
-    durationMinutes: number;
-    pricePerPerson: number;
-    currency: string;
-    maxPartySize: number;
-    mediaData?: DbExperienceMediaData | Record<string, unknown> | null;
-    narrative?: DbExperienceNarrative | Record<string, unknown> | null;
-    scheduleData?: DbExperienceScheduleData | Record<string, unknown> | null;
-    createdAt?: Date | string;
-    updatedAt?: Date | string;
-}
-
-export interface DbSanctuaryWithExperiencesPayload {
-    id: string;
-    slug: string;
-    code: string;
-    name: string;
-    tagline: string;
-    city: string;
-    region: string;
-    country: string;
-    latitude: number;
-    longitude: number;
-    mapUrl?: string | null;
-    timezone: string;
-    currency: string;
-    status: string;
-    contactEmail: string;
-    contactPhone: string;
-    mediaData?: DbSanctuaryMediaData | Record<string, unknown> | null;
-    editorial?: Record<string, unknown> | null;
-    arrivalGuide?: Record<string, unknown> | null;
-    description?: string | null;
-    experiences?: DbExperiencePayload[] | null;
-    diningVenues?: DbDiningVenuePayload[] | null;
-    staff?: DbStaffMemberPayload[] | null;
+export interface DiningVenueMediaDataJson {
+    slug?: string;
+    badgeLabel?: string;
+    subBadgeLabel?: string;
+    imageUrl?: string;
+    imageAlt?: string;
+    cuisineSubtitle?: string;
+    narrative?: string;
+    seatings?: string;
+    cellarFocus?: string;
+    sommelierInAttendance?: string;
+    footnoteLabel?: string;
+    ctaLabel?: string;
+    ctaHref?: string;
+    isPrimaryCta?: boolean;
+    metrics?: Array<{ label: string; value: string }>;
 }
 
 // ============================================================================
 // 2. HELPER UTILITIES
 // ============================================================================
 
-function extractMediaHeroImage(media: unknown, fallback: string): string {
-    if (!media || typeof media !== 'object') return fallback;
-    const m = media as Record<string, unknown>;
-    if (typeof m.heroImage === 'string' && m.heroImage.trim().length > 0) {
-        return m.heroImage;
-    }
-    if (Array.isArray(m.gallery) && m.gallery.length > 0 && typeof m.gallery[0] === 'string') {
-        return m.gallery[0];
+function parseJson<T>(raw: unknown, fallback: T): T {
+    if (!raw) return fallback;
+    if (typeof raw === 'object') return raw as T;
+    if (typeof raw === 'string') {
+        try {
+            return JSON.parse(raw) as T;
+        } catch {
+            return fallback;
+        }
     }
     return fallback;
 }
 
-function resolveMajordomo(staffList?: DbStaffMemberPayload[] | null): {
-    name: string;
-    phone: string;
-    role: string;
-} {
-    if (staffList && staffList.length > 0) {
-        const majordomo = staffList.find(function (s) {
-            return s.role === 'MAJORDOMO' && s.isActive !== false;
-        });
-        if (majordomo) {
-            return {
-                name: majordomo.name,
-                phone: majordomo.phone,
-                role: majordomo.role,
-            };
-        }
-        const activeStaff = staffList[0];
+function formatCoordinates(lat: number, lng: number): string {
+    const latDir = lat >= 0 ? 'N' : 'S';
+    const lngDir = lng >= 0 ? 'E' : 'W';
+    return `${Math.abs(lat).toFixed(4)}°${latDir}, ${Math.abs(lng).toFixed(4)}°${lngDir}`;
+}
+
+// ============================================================================
+// 3. PHASE 1 MAPPERS: Telemetry, Editorial Header, and Category Counts
+// ============================================================================
+
+export function mapSanctuaryToTelemetry(sanctuary?: Sanctuary | null): ExperiencesTelemetryData {
+    if (!sanctuary) {
         return {
-            name: activeStaff.name,
-            phone: activeStaff.phone,
-            role: activeStaff.role,
+            sanctuaryName: 'SANCTUARY POSITANO',
+            regionSubtitle: 'AMALFI COASTLINE, ITALY',
+            coordinatesDisplay: '40.6281°N, 14.4850°E',
+            majordomoPhoneDisplay: '+39 089 875 111',
+            majordomoPhoneTel: '+39089875111',
+            dossierCode: 'POS-01 • MMXV-VII',
         };
     }
 
+    const cleanTel = sanctuary.contactPhone.replace(/\s+/g, '');
+    const coordinatesDisplay = formatCoordinates(sanctuary.latitude, sanctuary.longitude);
+
     return {
-        name: 'Matteo de Luca',
-        phone: '+39 089 875 000',
-        role: 'Head Majordomo',
+        sanctuaryName: sanctuary.name.toUpperCase(),
+        regionSubtitle: `${sanctuary.region.toUpperCase()}, ${sanctuary.country.toUpperCase()}`,
+        coordinatesDisplay,
+        majordomoPhoneDisplay: sanctuary.contactPhone,
+        majordomoPhoneTel: cleanTel,
+        dossierCode: `${sanctuary.code} • SOVEREIGN KEY`,
     };
 }
 
-function formatDurationHoursOrMinutes(durationMinutes: number): string {
-    if (!durationMinutes || durationMinutes <= 0) return 'Flexible Horizon';
-    if (durationMinutes >= 60) {
-        const hours = durationMinutes / 60;
-        return hours % 1 === 0 ? `${hours} Hours` : `${durationMinutes} Minutes`;
+export function mapSanctuaryToEditorialHeader(sanctuary?: Sanctuary | null): ExperiencesEditorialData {
+    if (!sanctuary) {
+        return {
+            folioLabel: 'FOLIO NO. IV • CURATED ITINERARIES & CELLAR ARCHIVES',
+            headline: 'Curated Escapes & Sensory Gastronomy',
+            narrativeMonograph:
+                'Suspended between sheer limestone cliffs and the Tyrrhenian abyss, each encounter is an unhurried, private rite curated exclusively for the patrons of Sanctuary Positano.',
+        };
     }
-    return `${durationMinutes} Minutes`;
-}
 
-// ============================================================================
-// 3. MAPPER: SECTION 1 (ExperiencesHeaderSection)
-// ============================================================================
-
-export function mapSanctuaryToExperiencesHeader(
-    sanctuary: DbSanctuaryWithExperiencesPayload
-): ExperiencesHeaderData {
-    const locationPill = `SANCTUARY ${sanctuary.city.toUpperCase()} • ${sanctuary.region.toUpperCase()}`;
-    const majordomo = resolveMajordomo(sanctuary.staff);
-    const phoneDisplay = sanctuary.contactPhone || majordomo.phone;
-    const phoneTel = phoneDisplay.replace(/\s+/g, '');
+    const editorial = parseJson<SanctuaryEditorialJson>(sanctuary.editorial, {});
 
     return {
-        sanctuaryLocationPill: locationPill,
-        majordomoName: majordomo.name,
-        directDeskPhoneDisplay: phoneDisplay,
-        directDeskPhoneTel: phoneTel,
+        folioLabel: editorial.eyebrow || `FOLIO ${sanctuary.code} • CURATED ITINERARIES & CELLAR ARCHIVES`,
+        headline: sanctuary.tagline || 'Curated Escapes & Sensory Gastronomy',
+        narrativeMonograph:
+            editorial.manifesto ||
+            sanctuary.description ||
+            `Chiseled directly into the cliffs, each encounter is an unhurried, private rite curated exclusively for patrons of ${sanctuary.name}.`,
     };
 }
 
+export function mapCategoryFilterOptions(
+    categoryCounts: Record<string, number>,
+    totalCount: number
+): ExperienceCategoryOption[] {
+    return [
+        { id: 'all', label: 'All Encounters', count: totalCount },
+        { id: 'marine-charters', label: 'Marine Charters', count: categoryCounts['marine-charters'] || 0 },
+        { id: 'thermal-wellness', label: 'Thermal Wellness', count: categoryCounts['thermal-wellness'] || 0 },
+        { id: 'gastronomy-dining', label: 'Gastronomy & Dining', count: categoryCounts['gastronomy-dining'] || 0 },
+        { id: 'terroir-masterclasses', label: 'Terroir & Masterclasses', count: categoryCounts['terroir-masterclasses'] || 0 },
+    ];
+}
+
 // ============================================================================
-// 4. MAPPER: SECTION 2 (FeaturedExpeditionHeroSection)
+// 4. PHASE 2 MAPPER: Flagship Expedition Hero Section
 // ============================================================================
 
-export function mapExperiencesToFeaturedExpedition(
-    experiences: DbExperiencePayload[],
-    sanctuaryName: string = 'Aurelia Sanctuary Positano'
+export function mapToFeaturedExpeditionData(
+    experience: Experience,
+    sanctuary?: Sanctuary | null
 ): FeaturedExpeditionData {
-    // 1. Resolve preferred marine or highest-tariff charter experience
-    const featured =
-        experiences.find(function (exp) {
-            const cat = exp.category.toUpperCase();
-            return cat.includes('MARINE') || cat.includes('CHARTER') || exp.slug.includes('riva');
-        }) ||
-        experiences[0] || {
-            id: 'exp-riva-aquarama-capri',
-            slug: 'private-riva-aquarama-faraglioni-capri',
-            title: 'Private Riva Aquarama Faraglioni & Capri Expedition',
-            category: 'PRIVATE MARINE CHARTER • FULL DAY OR SUNSET CRUISE',
-            tagline: 'Restored 1968 Classic Navigation',
-            durationMinutes: 480,
-            pricePerPerson: 1850,
-            currency: 'EUR',
-            maxPartySize: 6,
-            mediaData: { heroImage: '/limestone-villa.png' },
-            narrative: {
-                paragraphs: [
-                    `Embark directly from the ${sanctuaryName} private limestone slipway aboard our master-restored 1968 Riva Aquarama Super. Glide across the sapphire expanse toward the sheer sea-stacks of the Faraglioni, anchoring in secluded turquoise grottos inaccessible by terrestrial path.`,
-                    'Each voyage is attended by our licensed senior skipper and dedicated steward. Enjoy cellar-chilled Franciacorta Gran Cuvée paired with artisan Campanian cicchetti, followed by an optional tender disembarkation at private cliff landings.',
-                ],
-            },
-        };
+    const id = experience.id;
+    const media = parseJson<ExperienceMediaDataJson>(experience.mediaData, {});
+    const narrative = parseJson<ExperienceNarrativeJson>(experience.narrative, {});
+    const schedule = parseJson<ExperienceScheduleDataJson>(experience.scheduleData, {});
 
-    const currency = (featured.currency || 'EUR') as CurrencyCode;
-    const currencySymbol = getCurrencySymbol(currency);
-    const heroImageUrl = extractMediaHeroImage(featured.mediaData, '/limestone-villa.png');
-
-    // Parse narrative paragraphs from json
-    let narrativeParagraphs: string[] = [];
-    if (featured.narrative && typeof featured.narrative === 'object') {
-        const n = featured.narrative as Record<string, unknown>;
-        if (Array.isArray(n.paragraphs) && n.paragraphs.length > 0) {
-            narrativeParagraphs = n.paragraphs.filter(function (p): p is string {
-                return typeof p === 'string';
-            });
-        } else if (typeof n.body === 'string') {
-            narrativeParagraphs = [n.body];
-        }
-    }
-
-    if (narrativeParagraphs.length === 0) {
-        narrativeParagraphs = [
-            `Embark directly from the ${sanctuaryName} private slipway for an unhurried, private coastal expedition.`,
-            'Attended by certified estate crew, providing chilled cellar reserves and artisan culinary collations.',
-        ];
-    }
-
-    const specMetrics: ExpeditionSpecMetric[] = [
+    // Map schedule metrics into ExpeditionSpec items
+    const defaultSpecs: ExpeditionSpecItem[] = [
         {
-            label: formatDurationHoursOrMinutes(featured.durationMinutes),
-            sublabel: 'EXPEDITION HORIZON',
+            id,
+            label: 'DURATION',
+            value: `${Math.round(experience.durationMinutes / 60)} Hours (${experience.durationMinutes} Min)`,
             iconType: 'duration',
         },
         {
-            label: `Up to ${featured.maxPartySize || 6} Patrons`,
-            sublabel: 'EXCLUSIVE CAPACITY',
+            id,
+            label: 'PARTY ALLOTMENT',
+            value: `Up to ${experience.maxPartySize} Patrons`,
             iconType: 'party',
         },
         {
-            label: 'Master & Steward',
-            sublabel: 'DEDICATED CREW',
+            id,
+            label: 'MASTER CREW',
+            value: narrative.crewDescription?.split('&')[0]?.replace('Commanded by', '').trim() || 'Skipper & Sommelier',
             iconType: 'crew',
         },
         {
-            label: 'In-Cove Artisan Collation',
-            sublabel: 'RESERVE SOMMELIER',
-            iconType: 'catering',
+            id,
+            label: 'CULINARY PROVISIONS',
+            value: 'In-Cove Crudo Feast',
+            iconType: 'culinary',
         },
     ];
 
-    const includedHighlights = [
-        'Private captain, marine fuel, and maritime permits included',
-        'Vintage champagne & seasonal orchard fruit collation',
-        'Subsurface snorkel gear & underwater seabob immersion',
-        'Seamless room-folio billing & complimentary helipad coordination',
+    let specs = defaultSpecs;
+    if (Array.isArray(schedule.metrics) && schedule.metrics.length > 0) {
+        specs = schedule.metrics.map(function (m, idx) {
+            return {
+                id,
+                label: m.label || defaultSpecs[idx]?.label || 'SPECIFICATION',
+                value: m.value || defaultSpecs[idx]?.value || '',
+                iconType: (m.icon as ExpeditionSpecItem['iconType']) || defaultSpecs[idx]?.iconType || 'duration',
+            };
+        });
+    }
+
+    const inclusions = Array.isArray(narrative.inclusions) && narrative.inclusions.length > 0
+        ? narrative.inclusions
+        : [
+              'Private tender transfers directly from Sanctuary Cliffside Pontoon',
+              'Dom Pérignon allocation & wild Mediterranean sea urchin crudo',
+              'Sub-surface motorized Seabob exploration units & customized bath linens',
+          ];
+
+    const priceFormatted = media.tariffFormatted || `${experience.currency === 'EUR' ? '€' : experience.currency + ' '}${experience.pricePerPerson.toLocaleString()}`;
+
+    return {
+        id: experience.id,
+        slug: experience.slug,
+        badgePrimary: media.badgePrimary || 'FLAGSHIP EXPEDITION',
+        badgeSecondary: media.badgeSecondary || experience.tagline.toUpperCase(),
+        imageUrl: media.imageUrl || '/images/experiences/riva-aquarama-capri.jpg',
+        imageAlt: media.imageAlt || experience.title,
+        circuitLabel: media.circuitLabel || experience.tagline.toUpperCase(),
+        imageHeadline: experience.title,
+        categoryEyebrow: `${experience.category.toUpperCase().replace('-', ' ')} • EXPEDITION`,
+        title: experience.title,
+        tariffLabel: 'TARIFF / GUEST',
+        priceFormatted,
+        description: narrative.fullMonograph || narrative.shortDescription || experience.tagline,
+        specs,
+        inclusions,
+        // ctaLabel: 'RESERVE CHARTER',
+        // ctaHref: `/checkout?experienceId=${encodeURIComponent(experience.id)}&slug=${encodeURIComponent(experience.slug)}`,
+    };
+}
+
+// ============================================================================
+// 5. PHASE 3 MAPPER: Gastronomic Sanctuaries & Michelin Dining Venues
+// ============================================================================
+
+export function mapDiningVenueToViewModel(venue: DiningVenue): GastronomicVenueData {
+    const media = parseJson<DiningVenueMediaDataJson>(venue.mediaData, {});
+
+    const metrics: DiningVenueMetric[] = [
+        { label: 'SEATINGS', value: media.seatings || venue.hours },
+        { label: 'DRESS CODE', value: venue.dressCode },
+        { label: 'CELLAR FOCUS', value: media.cellarFocus || 'Curated Regional Labels' },
     ];
 
     return {
-        experienceId: featured.id,
-        slug: featured.slug,
-        heroBadge: 'FEATURED EXPEDITION',
-        heritageBadge: featured.tagline?.toUpperCase() || 'RESTORED CLASSIC',
-        categoryTag: featured.category.toUpperCase().split('_').join(' '),
-        title: featured.title,
-        tariffAmount: featured.pricePerPerson,
-        tariffUnit: 'per charter voyage',
-        currencySymbol,
-        currencyCode: currency,
-        narrative: narrativeParagraphs,
-        specMetrics,
-        includedHighlights,
-        primaryCtaLabel: 'RESERVE CHARTER RENDEZVOUS',
-        heroImageUrl,
-        heroImageAlt: `${featured.title} — ${sanctuaryName}`,
+        id: venue.id,
+        slug: media.slug || venue.id,
+        badgeLabel: media.badgeLabel || (venue.michelinStars ? `${venue.michelinStars === 3 ? 'THREE' : venue.michelinStars === 2 ? 'TWO' : 'ONE'} MICHELIN STAR${venue.michelinStars > 1 ? 'S' : ''}` : undefined),
+        michelinStars: venue.michelinStars || undefined,
+        subBadgeLabel: media.subBadgeLabel || undefined,
+        imageUrl: media.imageUrl || '/images/dining/il-belvedere-cliffside.jpg',
+        imageAlt: media.imageAlt || venue.name,
+        cuisineSubtitle: media.cuisineSubtitle || venue.cuisineType.toUpperCase(),
+        name: venue.name,
+        narrative: media.narrative || `${venue.name} presents an unhurried exploration of regional culinary craftsmanship.`,
+        metrics,
+        footnoteLabel: media.footnoteLabel || 'Private Table Reservation Mandate',
+        ctaLabel: media.ctaLabel || 'REQUEST TABLE',
+        ctaHref: media.ctaHref || `/contact?subject=dining-${encodeURIComponent(venue.id)}`,
+        isPrimaryCta: media.isPrimaryCta !== false,
     };
 }
 
 // ============================================================================
-// 5. MAPPER: SECTION 3 (SignatureRhythmsDualBentoSection)
+// 6. PHASE 4 MAPPER: Curated Signature Encounters & Institutional Credentials
 // ============================================================================
 
-export function mapExperiencesAndDiningToSignatureRhythms(
-    experiences: DbExperiencePayload[],
-    diningVenues?: DbDiningVenuePayload[] | null
-): RhythmExperienceCardData[] {
-    const cards: RhythmExperienceCardData[] = [];
+export function mapExperienceToSignatureEncounter(experience: Experience): SignatureEncounterItem {
+    const media = parseJson<ExperienceMediaDataJson>(experience.mediaData, {});
+    const narrative = parseJson<ExperienceNarrativeJson>(experience.narrative, {});
+    const schedule = parseJson<ExperienceScheduleDataJson>(experience.scheduleData, {});
 
-    // Card 1: Thermal / Wellness / Recovery Experience
-    const thermalExp =
-        experiences.find(function (e) {
-            const c = (e.category || '').toUpperCase();
-            return c.includes('THERMAL') || c.includes('WELLNESS') || e.slug.includes('caldarium');
-        }) ||
-        experiences.find(function (e) {
-            return !e.category.toUpperCase().includes('MARINE');
-        });
+    // Metrics Pill Extraction
+    let metrics: EncounterMetricPill[] = [
+        { primary: `${experience.durationMinutes} MIN`, sublabel: `MAX ${experience.maxPartySize} GUESTS` },
+        { primary: 'EXCLUSIVE', sublabel: 'SANCTUARY ACCESS' },
+    ];
 
-    if (thermalExp) {
-        const currency = (thermalExp.currency || 'EUR') as CurrencyCode;
-        const heroImageUrl = extractMediaHeroImage(thermalExp.mediaData, '/limestone-villa.png');
-
-        let narrativeText = thermalExp.tagline;
-        if (thermalExp.narrative && typeof thermalExp.narrative === 'object') {
-            const n = thermalExp.narrative as Record<string, unknown>;
-            if (typeof n.body === 'string') {
-                narrativeText = n.body;
-            } else if (Array.isArray(n.paragraphs) && n.paragraphs.length > 0) {
-                narrativeText = n.paragraphs[0];
-            }
-        }
-
-        const specs: RhythmFeatureSpec[] = [
-            { iconType: 'clock', label: `${thermalExp.durationMinutes || 90} Minutes` },
-            { iconType: 'patrons', label: `Max ${thermalExp.maxPartySize || 2} Patrons` },
-            { iconType: 'curation', label: 'Volcanic Mineral Soak' },
-            { iconType: 'sommelier', label: 'Botanical Herbal Infusion' },
-        ];
-
-        cards.push({
-            id: thermalExp.id,
-            slug: thermalExp.slug,
-            categoryBadge: thermalExp.category.toUpperCase().split('_').join(' '),
-            title: thermalExp.title,
-            tagline: thermalExp.tagline,
-            narrative: narrativeText,
-            tariffAmount: thermalExp.pricePerPerson,
-            tariffUnit: 'per patron ritual',
-            currencySymbol: getCurrencySymbol(currency),
-            currencyCode: currency,
-            specs,
-            primaryCtaLabel: 'RESERVE RITUAL',
-            heroImageUrl,
-            heroImageAlt: thermalExp.title,
-            isMichelin: false,
+    if (Array.isArray(schedule.metrics) && schedule.metrics.length > 0) {
+        metrics = schedule.metrics.slice(0, 2).map(function (m) {
+            return {
+                primary: m.primary || m.value || `${experience.durationMinutes} MIN`,
+                sublabel: m.sublabel || m.label || 'DETAILS',
+            };
         });
     }
 
-    // Card 2: Signature Dining Venue or Gastronomy Experience
-    const venue = diningVenues && diningVenues.length > 0 ? diningVenues[0] : null;
-
-    if (venue) {
-        const heroImageUrl = extractMediaHeroImage(venue.mediaData, '/limestone-villa.png');
-        const michelin = venue.michelinStars && venue.michelinStars > 0 ? venue.michelinStars : undefined;
-
-        const specs: RhythmFeatureSpec[] = [
-            { iconType: 'clock', label: venue.hours || '19:30 or 21:00 Seating' },
-            { iconType: 'patrons', label: '2 to 6 Patrons' },
-            { iconType: 'curation', label: `${venue.cuisineType} Journey` },
-            { iconType: 'sommelier', label: 'Sommelier Reserve Pairing' },
-        ];
-
-        cards.push({
-            id: venue.id,
-            slug: `dining-${venue.id}`,
-            categoryBadge: `${venue.cuisineType.toUpperCase()} & WINE CELLAR`,
-            title: venue.name,
-            tagline: `Seven-Course Degustation & Rare Cellar Vintages • ${venue.dressCode}`,
-            narrative: `Perched high above the Mediterranean surf on an open-air travertine terrace. Executive gastronomy presenting an unhurried multi-course tasting journey accompanied by rare cellar reserve cru pours.`,
-            tariffAmount: 320,
-            tariffUnit: 'per patron tasting',
-            currencySymbol: '€',
-            currencyCode: 'EUR',
-            specs,
-            primaryCtaLabel: 'REQUEST DINING TABLE',
-            heroImageUrl,
-            heroImageAlt: `${venue.name} fine dining presentation`,
-            isMichelin: Boolean(michelin),
-            michelinStars: michelin,
-        });
-    } else {
-        // Fallback to secondary experience if no DiningVenue records exist
-        const diningExp = experiences.find(function (e) {
-            return (
-                e.id !== cards[0]?.id &&
-                (e.category.toUpperCase().includes('GASTRONOMY') || e.slug.includes('belvedere'))
-            );
-        }) || experiences[1];
-
-        if (diningExp) {
-            const currency = (diningExp.currency || 'EUR') as CurrencyCode;
-            const heroImageUrl = extractMediaHeroImage(diningExp.mediaData, '/limestone-villa.png');
-
-            cards.push({
-                id: diningExp.id,
-                slug: diningExp.slug,
-                categoryBadge: diningExp.category.toUpperCase().split('_').join(' '),
-                title: diningExp.title,
-                tagline: diningExp.tagline,
-                narrative: diningExp.tagline,
-                tariffAmount: diningExp.pricePerPerson,
-                tariffUnit: 'per patron tasting',
-                currencySymbol: getCurrencySymbol(currency),
-                currencyCode: currency,
-                specs: [
-                    { iconType: 'clock', label: `${diningExp.durationMinutes} Minutes` },
-                    { iconType: 'patrons', label: `Max ${diningExp.maxPartySize} Patrons` },
-                    { iconType: 'curation', label: 'Artisan Culinary Course' },
-                    { iconType: 'sommelier', label: 'Sommelier Pours' },
-                ],
-                primaryCtaLabel: 'REQUEST DINING TABLE',
-                heroImageUrl,
-                heroImageAlt: diningExp.title,
-                isMichelin: true,
-                michelinStars: 3,
-            });
-        }
-    }
-
-    return cards;
-}
-
-// ============================================================================
-// 6. MAPPER: SECTION 4 (EnologyAndTerroirMasterclassesSection)
-// ============================================================================
-
-export function mapExperiencesToEnologyMasterclasses(
-    experiences: DbExperiencePayload[]
-): EnologyExperienceCardData[] {
-    // Filter for cellar, wine, agronomist, harvest, or tasting experiences
-    const enologyExps = experiences.filter(function (e) {
-        const text = `${e.category} ${e.title} ${e.slug}`.toUpperCase();
-        return (
-            text.includes('CELLAR') ||
-            text.includes('WINE') ||
-            text.includes('ENOLOGY') ||
-            text.includes('BAROLO') ||
-            text.includes('OLIVE') ||
-            text.includes('HARVEST') ||
-            text.includes('TASTING')
-        );
-    });
-
-    const targetList = enologyExps.length > 0 ? enologyExps : experiences.slice(0, 3);
-
-    return targetList.map(function (exp, index) {
-        const currency = (exp.currency || 'EUR') as CurrencyCode;
-        const heroImageUrl = extractMediaHeroImage(exp.mediaData, '/limestone-villa.png');
-
-        let narrativeText = exp.tagline;
-        if (exp.narrative && typeof exp.narrative === 'object') {
-            const n = exp.narrative as Record<string, unknown>;
-            if (typeof n.body === 'string') {
-                narrativeText = n.body;
-            } else if (Array.isArray(n.paragraphs) && n.paragraphs.length > 0) {
-                narrativeText = n.paragraphs[0];
-            }
-        }
-
-        const isWine = exp.title.toUpperCase().includes('BAROLO') || exp.title.toUpperCase().includes('WINE');
-        const specs: MasterclassFeaturePill[] = [
-            {
-                iconType: 'duration',
-                label: `${exp.durationMinutes || 90} Minutes`,
-            },
-            {
-                iconType: 'vintage',
-                label: isWine ? '5 Historic Vintages' : '4 Ancient Cultivars Pressed',
-            },
-            {
-                iconType: 'sommelier',
-                label: isWine ? 'Private Sommelier Masterclass' : 'Master Agronomist Guided',
-            },
-            {
-                iconType: 'keepsake',
-                label: isWine ? 'Artisan Fromage & Truffle Flight' : 'Monogrammed 500ml EVOO Bottle',
-            },
-        ];
-
-        return {
-            id: exp.id,
-            slug: exp.slug,
-            categoryBadge: exp.category.toUpperCase().split('_').join(' '),
-            curatorTag: `LIMITED TO ${exp.maxPartySize || 6} GUESTS`,
-            title: exp.title,
-            tagline: exp.tagline,
-            narrative: narrativeText,
-            tariffAmount: exp.pricePerPerson,
-            tariffUnit: 'per patron session',
-            currencySymbol: getCurrencySymbol(currency),
-            currencyCode: currency,
-            specs,
-            inclusionsSummary: isWine
-                ? 'Includes Riedel Sommelier crystal service and bespoke cellar monograph keepsake.'
-                : 'Includes hearth-baked sourdough tasting and personalized wax-sealed harvest bottle.',
-            primaryCtaLabel: isWine ? 'INQUIRE FOR CELLAR PLACEMENT' : 'RESERVE BOTANICAL SESSION',
-            heroImageUrl,
-            heroImageAlt: exp.title,
-        };
-    });
-}
-
-// ============================================================================
-// 7. MAPPER: SECTION 5 (BespokeConciergeInquiryBanner)
-// ============================================================================
-
-export function mapSanctuaryToConciergeInquiryBanner(
-    sanctuary: DbSanctuaryWithExperiencesPayload
-): BespokeInquiryBannerData {
-    const majordomo = resolveMajordomo(sanctuary.staff);
-    const phoneDisplay = sanctuary.contactPhone || majordomo.phone;
-    const phoneTel = phoneDisplay.replace(/\s+/g, '');
+    const priceFormatted = media.tariffFormatted || `${experience.currency === 'EUR' ? '€' : experience.currency + ' '}${experience.pricePerPerson.toLocaleString()}`;
 
     return {
-        hotlineDisplay: phoneDisplay,
-        hotlineTel: phoneTel,
-        majordomoName: majordomo.name,
-        highlights: [
-            `Direct private Riva tender boarding from ${sanctuary.name} sea gate`,
-            'Bespoke Michelin-starred in-cove tasting menu curation',
-            'Full nautical liability, skipper, and fuel clearance',
-            'Room-folio settlement and helipad rendezvous coordination',
-        ],
+        id: experience.id,
+        slug: experience.slug,
+        badgeCategory: media.badgeCategory || experience.category.toUpperCase().replace('-', ' '),
+        imageUrl: media.imageUrl || '/images/experiences/roman-caldarium-bath.jpg',
+        imageAlt: media.imageAlt || experience.title,
+        priceFormatted,
+        priceUnit: media.priceUnit || 'PER GUEST',
+        metrics,
+        title: experience.title,
+        description: narrative.shortDescription || narrative.fullMonograph || experience.tagline,
+        inclusionFootnote: media.inclusionFootnote || 'PRIVATIZED ACCESS',
+        ctaLabel: 'Inquire Session',
+        ctaHref: `/contact?subject=experience-${encodeURIComponent(experience.slug)}`,
     };
 }
+
+export function buildDefaultSanctuaryCredentials(): SanctuaryCredentialMetric[] {
+    return [
+        {
+            id: 'cred-fleet',
+            iconType: 'fleet',
+            eyebrow: 'MARITIME FLEET',
+            value: '3 Vessels',
+            description: 'Riva Aquarama, Wally 48, Gozzo Sorrentino',
+        },
+        {
+            id: 'cred-cellar',
+            iconType: 'cellar',
+            eyebrow: 'CELLAR VINTAGE SPAN',
+            value: '1947 – 2021',
+            description: 'Over 4,200 curated and temperature-governed labels',
+        },
+        {
+            id: 'cred-spring',
+            iconType: 'spring',
+            eyebrow: 'CALDARIUM SOURCE',
+            value: '38.4°C Natural',
+            description: 'Mineral volcanic spring bubbling from granite fault',
+        },
+        {
+            id: 'cred-majordomo',
+            iconType: 'majordomo',
+            eyebrow: 'MAJORDOMO RATIO',
+            value: '1:1 Dedicated',
+            description: 'Personal itinerary planning and private transfer steward',
+        },
+    ];
+}
+
+// ============================================================================
+// 7. PHASE 5 MAPPER: Sovereign Privatization Section Data
+// ============================================================================
+
+export function mapSanctuaryToPrivatizationData(sanctuary?: Sanctuary | null): SovereignPrivatizationData {
+    const estateName = sanctuary?.name || 'Sanctuary Positano';
+    const cleanPhone = sanctuary?.contactPhone || '+39 089 875 111';
+    const tel = cleanPhone.replace(/\s+/g, '');
+
+    return {
+        eyebrow: 'ENTIRE FLEET & ESTATE BUYOUTS • SOVEREIGN CHARTER',
+        headline: `Commission a Private ${estateName} Privatization`,
+        narrative: `For diplomatic summits, multi-generational gatherings, or unannounced coastal retreats, the entire ${estateName} cliffside enclave, maritime fleet, and Michelin culinary brigade may be reserved under a single confidentiality seal.`,
+        primaryCtaLabel: 'REQUEST PRIVATIZATION DOSSIER',
+        primaryCtaHref: `/contact?subject=privatization-${encodeURIComponent(sanctuary?.slug || 'positano')}`,
+        secondaryCtaLabel: 'SPEAK WITH MAJORDOMO DESK',
+        secondaryCtaHref: `tel:${tel}`,
+        gazetteEyebrow: 'THE AURELIA GAZETTE • SEASONAL DISPATCH',
+        gazetteDescription:
+            'Receive private invitations to unreleased cellar allocations, seasonal maritime routes, and off-calendar sanctuary openings.',
+    };
+}
+
